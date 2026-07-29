@@ -1,3 +1,4 @@
+import { cli } from '../bin/utils/cli'
 import type { _MonoEntryInternal, MonoAddon, MonoLicense } from '../mono'
 
 // import path from 'node:path'
@@ -25,9 +26,31 @@ import type { _MonoEntryInternal, MonoAddon, MonoLicense } from '../mono'
 //     }
 // }
 
+export const LICENSES = [
+    'agpl-v3',
+    'cc-by-sa-30',
+    'howion-closed-source',
+    'mit',
+    'mpl-2.0'
+] as const
+
 export function $license(license: MonoLicense): MonoAddon {
+    function callback(entry: _MonoEntryInternal) {
+        if (typeof license !== 'string' || !LICENSES.includes(license)) {
+            throw new Error(`Invalid license type: ${license}`)
+        }
+
+        if (entry.public === false && license !== 'howion-closed-source') {
+            cli.warn(
+                `Entry "${entry.name}" is marked as private, but the license "${license}" is not a closed-source license. Consider using "howion-closed-source" for private entries.`
+            )
+        }
+
+        entry._meta.license = license
+    }
+
     return {
         order: 0,
-        callback: (entry: _MonoEntryInternal) => {}
+        callback
     }
 }

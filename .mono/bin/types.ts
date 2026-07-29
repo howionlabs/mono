@@ -1,7 +1,9 @@
+import type { LICENSES } from '../mono'
+
 export type AuthorMap = Map<string, MonoAuthor>
 export type EntryMap = Map<string, _MonoEntryInternal>
 
-export type MonoLicense = 'agpl-v3' | 'cc-by-sa-30' | 'howion-closed-source' | 'mit' | 'mpl-2.0'
+export type MonoLicense = (typeof LICENSES)[number]
 
 export interface MonoVCS {
     server: 'github.com'
@@ -147,12 +149,6 @@ export interface MonoSetup {
 
     apps?: Partial<MonoEntry>[]
     modules?: Partial<MonoEntry>[]
-
-    /**
-     * Addons that are applied to all entries: both apps and modules. These
-     * addons will be executed **BEFORE** the entry-specific addons.
-     */
-    commonAddons?: MonoAddon[]
 
     defaults: MonoEntryOptionals
 }

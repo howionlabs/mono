@@ -1,6 +1,6 @@
 # mono
 
-Howion's well-crafted (and quite opinionated) monorepo to manage all (public and private) [**@howionlabs**](http://github.com/howionlabs) repositories.
+Howion's custom (and quite opinionated) monorepo to manage all of its (public and private) [**@howionlabs**](http://github.com/howionlabs) repositories.
 
 ## Motivation
 
@@ -17,7 +17,13 @@ This monorepo is currently is being used by us therefore, especially `.mono.ts`,
 * **`.mono.ts`** is the configuration file to customize the setup.
 * **`.editorconfig`**, **`.gitignore`**, **`.markdownlint.jsonc`**, and **`biome.jsonc`** are opinionated configurations whose definitions should match of those in `apps` and `modules`.
 
+## Mono Addons
+
 ## Mono CLI
+
+## Roadmap
+
+1. Better secret management via `env` addon instead of relying manual per-repository .env management.
 
 ## License
 

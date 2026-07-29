@@ -1,4 +1,4 @@
-import { $static, setup } from './.mono/mono'
+import { setup } from './.mono/mono'
 
 export default setup({
     authors: [
@@ -18,7 +18,7 @@ export default setup({
         version: '0.0.1'
     },
 
-    commonAddons: [$static('.editorconfig'), $static('.gitignore'), $static('.markdownlint.jsonc')],
+    // commonAddons: [$static('.editorconfig'), $static('.gitignore'), $static('.markdownlint.jsonc')],
 
     apps: [],
     modules: []
