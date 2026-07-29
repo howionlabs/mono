@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "lib": ["ESNext"],
+        "target": "ESNext",
+        "module": "Preserve",
+        "moduleDetection": "force",
+        "jsx": "react-jsx",
+        "moduleResolution": "bundler",
+        "types": ["bun", "node"],
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": true,
+        "noEmit": true,
+        "strict": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noPropertyAccessFromIndexSignature": false
+    },
+    "include": [".mono/**/*", "apps/**/*", "modules/**/*"],
+    "exclude": ["node_modules", "**/node_modules"]
+}
