@@ -5,8 +5,8 @@ import { cli } from '../bin/utils/cli'
 export const LICENSES = ['agpl-v3', 'cc-by-sa-30', 'mit', 'mpl-2.0'] as const
 
 export function $license(id: MonoLicenseId): MonoAddon {
-    async function updateMeta(entry: _MonoEntryInternal) {
-        if (typeof id !== 'string' || !LICENSES.includes(id)) {
+    async function addLicenseDataToMeta(entry: _MonoEntryInternal) {
+        if (typeof id !== 'string' || !LICENSES.includes(id as MonoLicenseId)) {
             throw new Error(`Invalid license type: ${id}`)
         }
 
@@ -45,14 +45,20 @@ export function $license(id: MonoLicenseId): MonoAddon {
         await copyFile(licensePath, resolveEntryPath(entry, 'LICENSE'), true)
     }
 
-    return [
-        {
-            order: 0,
-            callback: updateMeta
-        },
-        {
-            order: 1,
-            callback: copyLicense
-        }
-    ]
+    return {
+        name: '$license',
+        unique: true,
+        actions: [
+            {
+                name: 'addLicenseDataToMeta',
+                order: 0,
+                callback: addLicenseDataToMeta
+            },
+            {
+                name: 'copyLicense',
+                order: 1,
+                callback: copyLicense
+            }
+        ]
+    }
 }

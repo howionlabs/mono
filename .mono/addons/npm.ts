@@ -42,7 +42,7 @@ async function normalizeDependencies(deps: DependencyRecord) {
 }
 
 export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
-    async function buildAndWritePackageJSON(entry: _MonoEntryInternal) {
+    async function constructAndAddPJSONDataToMeta(entry: _MonoEntryInternal) {
         const pjsonPath = resolveEntryPath(entry, 'package.json')
         const previous = await readJSONFile(pjsonPath)
         const next: any = {}
@@ -165,15 +165,40 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
             }
         }
 
-        const nextText = `${JSON.stringify(next, null, 4)}\n`
+        entry._meta.npm = {
+            latestPJSON: next
+        }
+    }
+
+    async function writePJSON(entry: _MonoEntryInternal) {
+        const pjson = entry._meta.npm?.latestPJSON
+
+        if (!pjson) {
+            throw new Error(
+                `Failed to write package.json for "${entry.id}" because the latest package.json data is missing from the entry's metadata.`
+            )
+        }
+
+        const pjsonPath = resolveEntryPath(entry, 'package.json')
+        const nextText = `${JSON.stringify(pjson, null, 4)}\n`
 
         await writeFile(nextText, pjsonPath, true)
     }
 
-    return [
-        {
-            order: 0,
-            callback: buildAndWritePackageJSON
-        }
-    ]
+    return {
+        name: '$npm',
+        unique: true,
+        actions: [
+            {
+                name: 'constructAndAddPJSONDataToMeta',
+                order: 0,
+                callback: constructAndAddPJSONDataToMeta
+            },
+            {
+                name: 'writePJSON',
+                order: 1,
+                callback: writePJSON
+            }
+        ]
+    }
 }

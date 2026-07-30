@@ -1,3 +1,4 @@
 export type * from './bin/types'
-export { setup } from './bin/setup'
 export * from './addons/_index'
+export { mono } from './bin/setup'
+export { env } from './bin/env'

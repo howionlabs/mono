@@ -35,18 +35,46 @@ export interface MonoPerson {
     url: string
 }
 
-export type MonoAddon = Array<{
+export interface MonoAddonAction {
+    /**
+     * Name of the addon action for debugging and logging purposes. It should
+     * be unique across all addons to avoid confusion. However, this does not
+     * imply that the addon action cannot be used multiple times.
+     */
+    name: string
+
     /**
      * The order in which the addon action should be executed relative to all
      * the other addons' actions. Lower numbers are executed first.
      */
     order: number
+
     callback: (entry: _MonoEntryInternal) => void | Promise<void>
-}>
+}
+
+export interface MonoAddon {
+    /**
+     * Name of the addon for debugging and logging purposes. It should be
+     * unique across all addons to avoid confusion. However, this does not
+     * imply that the addon cannot be used multiple times.
+     */
+    name: string
+
+    /**
+     * Whether the addon could be used multiple times in the same entry. If set
+     * to true, subsequent uses of the addon will result in fatal error.
+     */
+    unique?: boolean
+
+    /**
+     * Non-empty list of actions provided by the addon. Could have multiple
+     * actions with the same name which will be executed in their respective
+     * order.
+     */
+    actions: [MonoAddonAction, ...MonoAddonAction[]]
+}
 
 export interface MonoEntryOptionals {
-    copyright: string
-
     website: `https://${string}`
 
     public: boolean
@@ -91,6 +119,12 @@ export interface _MonoEntryInternal extends Required<MonoEntry> {
     path: string
 
     /**
+     * Ordered list of actions provided by addons. Could have multiple actions
+     * with the same name which will be executed in the order they were added.
+     */
+    _actions: MonoAddonAction[]
+
+    /**
      * Internal metadata for the mono setup, used for storing additional
      * information that may be needed during processing or execution. This can
      * include configuration details, state information, or any other relevant
@@ -106,15 +140,52 @@ export interface _MonoEntryInternal extends Required<MonoEntry> {
         env?: {
             variables: Set<string>
         }
+        npm?: {
+            latestPJSON: Record<string, unknown>
+        }
         // [key: string]: unknown
     }
 }
 
+export interface MonoEnvVariable {
+    _name: string
+
+    /**
+     * Optional description of the environment variable.
+     *
+     * @default undefined
+     */
+    _description?: string
+
+    /**
+     * Whether the environment variable is required or optional.
+     *
+     * @default true
+     */
+    _required: boolean
+
+    /**
+     * The type of the environment variable, which can be either 'string',
+     * 'number', or 'boolean'.
+     *
+     * @default 'string'
+     */
+    _type: 'string' | 'number' | 'boolean'
+
+    /**
+     * Optional default value for the environment variable. If provided, this
+     * value will be used when the environment variable is not set.
+     *
+     * @default undefined
+     */
+    _default?: string | number | boolean
+}
+
 export interface MonoSetup {
+    defaults: MonoEntryOptionals
+
     apps?: Partial<MonoEntry>[]
     modules?: Partial<MonoEntry>[]
-
-    defaults: MonoEntryOptionals
 }
 
 export interface MonoSetupInternal extends Required<MonoSetup> {

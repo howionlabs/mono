@@ -1,5 +1,5 @@
-import { cli } from '../bin/utils/cli'
 import type { _MonoEntryInternal, MonoAddon, MonoGit } from '../mono'
+import { cli } from '../bin/utils/cli'
 
 /**
  * Sets the Git version control system information for a project entry. This
@@ -23,7 +23,7 @@ export function $git(
     protocol: 'ssh' | 'https' = 'ssh',
     server: MonoGit['server'] = 'github.com'
 ): MonoAddon {
-    async function updateMeta(entry: _MonoEntryInternal) {
+    async function addGitDataToMeta(entry: _MonoEntryInternal) {
         if (entry._meta.git) {
             cli.warn(
                 `Git information already exists for the entry ${entry.id}. Overwriting existing Git information.`
@@ -38,10 +38,15 @@ export function $git(
         }
     }
 
-    return [
-        {
-            order: 0,
-            callback: updateMeta
-        }
-    ]
+    return {
+        name: '$git',
+        unique: true,
+        actions: [
+            {
+                name: 'addGitDataToMeta',
+                order: 0,
+                callback: addGitDataToMeta
+            }
+        ]
+    }
 }

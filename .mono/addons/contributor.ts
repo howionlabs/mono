@@ -6,10 +6,15 @@ export function $contributor(details: MonoPerson): MonoAddon {
         entry._meta.contributors.push(details)
     }
 
-    return [
-        {
-            order: 0,
-            callback: addContributorToMeta
-        }
-    ]
+    return {
+        name: '$contributor',
+        unique: false,
+        actions: [
+            {
+                name: 'addContributorToMeta',
+                order: 0,
+                callback: addContributorToMeta
+            }
+        ]
+    }
 }

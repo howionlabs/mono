@@ -1,4 +1,4 @@
-import { $author, $git, $license, $npm, $static, setup } from './.mono/mono'
+import { $author, $git, $license, $npm, $static, mono } from './.mono/mono'
 
 const $authorHowion = $author({
     name: 'howion',
@@ -6,9 +6,8 @@ const $authorHowion = $author({
     url: 'https://howion.com'
 })
 
-export default setup({
+export default mono({
     defaults: {
-        copyright: 'Copyright (c) 2026 Howion Inc.',
         website: 'https://www.howion.com',
         public: false,
         version: '0.0.1'

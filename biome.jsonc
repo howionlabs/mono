@@ -16,6 +16,7 @@
             ".vscode/**",
             ".markdownlint.jsonc",
             ".mono.ts",
+            ".mono.env.ts",
             "biome.jsonc",
             "package.json",
             "tsconfig.json",

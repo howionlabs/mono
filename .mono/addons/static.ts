@@ -11,20 +11,25 @@ import { copyFile, resolveDotMonoPath, resolveEntryPath } from '../bin/utils/fs'
  * provided, the file will be copied to the same path as `from` relative to the
  * target project.
  */
-export function $static(from: string, to?: string): MonoAddon {
-    async function callback(entry: _MonoEntryInternal) {
+export function $static(from: string, to?: string, alwaysOverwrite: boolean = false): MonoAddon {
+    async function writeStaticFile(entry: _MonoEntryInternal) {
         if (to === '') to = from
 
         const fromAbsolute = resolveDotMonoPath(`static/${from}`)
         const toAbsolute = resolveEntryPath(entry, to ?? from)
 
-        await copyFile(fromAbsolute, toAbsolute, true)
+        await copyFile(fromAbsolute, toAbsolute, !alwaysOverwrite)
     }
 
-    return [
-        {
-            order: 0,
-            callback
-        }
-    ]
+    return {
+        name: '$static',
+        unique: false,
+        actions: [
+            {
+                name: 'writeStaticFile',
+                order: 0,
+                callback: writeStaticFile
+            }
+        ]
+    }
 }
