@@ -1,56 +1,58 @@
+import type { _MonoEntryInternal, MonoAddon, MonoLicense, MonoLicenseId } from '../mono'
+import { copyFile, readJSONFile, resolveDotMonoPath, resolveEntryPath } from '../bin/utils/fs'
 import { cli } from '../bin/utils/cli'
-import type { _MonoEntryInternal, MonoAddon, MonoLicense } from '../mono'
 
-// import path from 'node:path'
-// import { licenseDirs, licensesDirPath } from '../paths'
-// import { cli } from '../utils'
+export const LICENSES = ['agpl-v3', 'cc-by-sa-30', 'mit', 'mpl-2.0'] as const
 
-// export const monoLicenseMap: Record<string, MonoLicense> = {}
-
-// for (const licenseDir of licenseDirs) {
-//     const folderName = path.basename(licenseDir)
-//     const folderPath = path.join(licensesDirPath, licenseDir)
-//     const licensePath = path.join(folderPath, 'LICENSE')
-
-//     if (!(await Bun.file(licensePath).exists())) {
-//         cli.warn(`License file not found for "${folderName}" in "${licensePath}". Skipping.`)
-//         continue
-//     }
-
-//     const details = JSON.parse(await Bun.file(path.join(folderPath, 'details.json')).text())
-
-//     monoLicenseMap[folderName] = {
-//         path: licensePath,
-//         name: details.name,
-//         npm: details.npm || undefined
-//     }
-// }
-
-export const LICENSES = [
-    'agpl-v3',
-    'cc-by-sa-30',
-    'howion-closed-source',
-    'mit',
-    'mpl-2.0'
-] as const
-
-export function $license(license: MonoLicense): MonoAddon {
-    function callback(entry: _MonoEntryInternal) {
-        if (typeof license !== 'string' || !LICENSES.includes(license)) {
-            throw new Error(`Invalid license type: ${license}`)
+export function $license(id: MonoLicenseId): MonoAddon {
+    async function updateMeta(entry: _MonoEntryInternal) {
+        if (typeof id !== 'string' || !LICENSES.includes(id)) {
+            throw new Error(`Invalid license type: ${id}`)
         }
 
-        if (entry.public === false && license !== 'howion-closed-source') {
-            cli.warn(
-                `Entry "${entry.name}" is marked as private, but the license "${license}" is not a closed-source license. Consider using "howion-closed-source" for private entries.`
-            )
+        const licenseDetail = await readJSONFile<Omit<MonoLicense, 'id'>>(
+            resolveDotMonoPath(`licenses/${id}/details.json`)
+        )
+
+        if (!licenseDetail) {
+            throw new Error(`License details for "${id}" are missing or invalid.`)
         }
 
-        entry._meta.license = license
+        if (!licenseDetail.name || typeof licenseDetail.name !== 'string') {
+            throw new Error(`License "${id}" does not have a valid name in its details.`)
+        }
+
+        if (!licenseDetail.npm || typeof licenseDetail.npm !== 'string') {
+            if (entry.public) {
+                throw new Error(
+                    `License "${id}" does not have a valid npm field in its details. For public projects, this field is required.`
+                )
+            } else {
+                cli.warn(
+                    `License "${id}" does not have a valid npm field in its details. This may cause issues when publishing to npm.`
+                )
+            }
+        }
+
+        entry._meta.license = {
+            id,
+            ...licenseDetail
+        }
     }
 
-    return {
-        order: 0,
-        callback
+    async function copyLicense(entry: _MonoEntryInternal) {
+        const licensePath = resolveDotMonoPath(`licenses/${entry._meta.license!.id}/LICENSE`)
+        await copyFile(licensePath, resolveEntryPath(entry, 'LICENSE'), true)
     }
+
+    return [
+        {
+            order: 0,
+            callback: updateMeta
+        },
+        {
+            order: 1,
+            callback: copyLicense
+        }
+    ]
 }

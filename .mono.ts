@@ -1,17 +1,13 @@
-import { setup } from './.mono/mono'
+import { $author, setup } from './.mono/mono'
+
+const $authorHowion = $author({
+    name: 'howion',
+    email: 'me@howion.com',
+    url: 'https://howion.com'
+})
 
 export default setup({
-    authors: [
-        {
-            id: 'howion',
-            name: 'howion',
-            email: 'me@howion.com',
-            url: 'https://howion.com'
-        }
-    ],
-
     defaults: {
-        authors: ['howion'],
         copyright: 'Copyright (c) 2026 Howion Inc.',
         website: 'https://www.howion.com',
         public: false,
