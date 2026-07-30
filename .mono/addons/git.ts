@@ -1,4 +1,4 @@
-import type { _MonoEntryInternal, MonoAddon } from '../mono'
+import type { _MonoEntryInternal, MonoAddon, MonoGit } from '../mono'
 
 /**
  * Sets the Git version control system information for a project entry. This function allows you
@@ -13,13 +13,18 @@ import type { _MonoEntryInternal, MonoAddon } from '../mono'
  * @param protocol The protocol to use for accessing the repository, either
  * 'ssh' or 'https'. Defaults to 'ssh'.
  */
-export function $git(owner: string, repo: string, protocol: 'ssh' | 'https' = 'ssh'): MonoAddon {
+export function $git(
+    owner: string,
+    repo: string,
+    protocol: 'ssh' | 'https' = 'ssh',
+    server: MonoGit['server'] = 'github.com'
+): MonoAddon {
     return [
         {
             order: 0,
             callback: (entry: _MonoEntryInternal) => {
                 entry._meta.git = {
-                    server: 'github.com',
+                    server: server,
                     protocol,
                     owner,
                     repo

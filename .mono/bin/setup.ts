@@ -1,7 +1,6 @@
 import type {
     _MonoEntryInternal,
     _MonoEntryType,
-    MonoAuthor,
     MonoEntry,
     MonoSetup,
     MonoSetupInternal

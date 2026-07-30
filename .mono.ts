@@ -1,4 +1,4 @@
-import { $author, setup } from './.mono/mono'
+import { $author, $git, $license, $npm, $static, setup } from './.mono/mono'
 
 const $authorHowion = $author({
     name: 'howion',
@@ -14,8 +14,36 @@ export default setup({
         version: '0.0.1'
     },
 
-    // commonAddons: [$static('.editorconfig'), $static('.gitignore'), $static('.markdownlint.jsonc')],
-
     apps: [],
-    modules: []
+    modules: [
+        {
+            id: 'huid-spec',
+            public: true,
+            name: "Howion's Unique IDentifier",
+            description: "RFC-like specification of Howion's Unique IDentifier (HUID)",
+            addons: [
+                $authorHowion,
+                $git('howionlabs', 'huid-spec'),
+                $license('cc-by-sa-30'),
+                $static('.markdownlint.jsonc')
+            ]
+        },
+        {
+            id: 'huid-ts',
+            public: true,
+            name: "Howion's Unique IDentifier",
+            description:
+                "The official reference implementation in TypeScript for Howion's Unique IDentifier.",
+            addons: [
+                $authorHowion,
+                $git('howionlabs', 'huid-ts'),
+                $license('mit'),
+                $npm('@howionlabs/huid', {}),
+                $static('.editorconfig'),
+                $static('.gitignore'),
+                $static('.markdownlint.jsonc'),
+                $static('biome.jsonc')
+            ]
+        }
+    ]
 })
