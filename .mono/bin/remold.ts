@@ -19,7 +19,7 @@ export async function remold(moduleName?: string, options?: RemoldOptions) {
 
     if (!moduleName) {
         cli.warn('Remolding all modules in 3 seconds...')
-        await new Promise((resolve) => setTimeout(resolve, 3000))
+        await new Promise(resolve => setTimeout(resolve, 3000))
 
         for (const name of Object.keys(monoModuleMap)) {
             await remold(name, opts)
@@ -54,12 +54,14 @@ export async function remold(moduleName?: string, options?: RemoldOptions) {
 
 function hasGitDirSync(root: string) {
     const folder = fs.readdirSync(root, { withFileTypes: true })
-    return folder.some((f) => f.isDirectory() && f.name === '.git')
+    return folder.some(f => f.isDirectory() && f.name === '.git')
 }
 
 async function initializeGitRepo(module: MonoModule) {
     if (!module.git) {
-        cli.error(`Git URL not specified for module ${module.id}. Cannot initialize git repository.`)
+        cli.error(
+            `Git URL not specified for module ${module.id}. Cannot initialize git repository.`
+        )
         return
     }
 

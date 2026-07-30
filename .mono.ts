@@ -15,6 +15,7 @@ export default setup({
     },
 
     apps: [],
+
     modules: [
         {
             id: 'huid-spec',
@@ -23,7 +24,7 @@ export default setup({
             description: "RFC-like specification of Howion's Unique IDentifier (HUID)",
             addons: [
                 $authorHowion,
-                $git('howionlabs', 'huid-spec'),
+                $git('howionlabs', 'huid-spec', 'ssh'),
                 $license('cc-by-sa-30'),
                 $static('.markdownlint.jsonc')
             ]
@@ -36,7 +37,7 @@ export default setup({
                 "The official reference implementation in TypeScript for Howion's Unique IDentifier.",
             addons: [
                 $authorHowion,
-                $git('howionlabs', 'huid-ts'),
+                $git('howionlabs', 'huid-ts', 'ssh'),
                 $license('mit'),
                 $npm('@howionlabs/huid', {}),
                 $static('.editorconfig'),

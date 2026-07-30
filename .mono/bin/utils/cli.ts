@@ -6,7 +6,8 @@ export type CLIModifier = InspectColor | `${InspectColor}.${InspectColor}`
 export const INDENT_WIDTH = 7
 
 /**
- * This is basically a wrapper around console.log, console.warn, and console.error with node styleText.
+ * This is basically a wrapper around console.log, console.warn, and
+ * console.error with node styleText.
  */
 export const cli = {
     _indentation: 0,

@@ -52,7 +52,15 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
         }
 
         next.name = name
-        next.version = entry.version
+
+        if (next.version && next.version !== entry.version) {
+            cli.info(
+                `Updating the NPM version of "${entry.id}" from "${next.version}" to "${entry.version}" based on the entry's current metadata.`
+            )
+
+            next.version = entry.version
+        }
+
         next.description = entry.description
         next.private = !entry.public
         next.homepage = entry.website
