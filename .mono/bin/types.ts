@@ -1,7 +1,5 @@
 import type { LICENSES } from '../mono'
 
-export type EntryMap = Map<string, _MonoEntryInternal>
-
 export type MonoLicenseId = (typeof LICENSES)[number]
 
 export interface MonoLicense {
@@ -109,7 +107,7 @@ export interface MonoEntry extends Partial<MonoEntryOptionals> {
      */
     keywords?: string[]
 
-    addons?: MonoAddon[]
+    addons?: (MonoAddon | MonoAddon[])[]
 }
 
 export type _MonoEntryType = 'app' | 'module'
@@ -148,6 +146,12 @@ export interface _MonoEntryInternal extends Required<MonoEntry> {
 }
 
 export interface MonoEnvVariable {
+    /**
+     * Name of the environment variable, which must be a non-empty string
+     * consisting of uppercase ASCII letters, numbers, and underscores only.
+     * It must not have leading or trailing whitespace. This is the key used to
+     * reference the environment variable in code and configuration.
+     */
     _name: string
 
     /**
@@ -165,12 +169,21 @@ export interface MonoEnvVariable {
     _required: boolean
 
     /**
-     * The type of the environment variable, which can be either 'string',
+     * The type of the environment variable, which can be either 'text',
      * 'number', or 'boolean'.
      *
-     * @default 'string'
+     * @default 'text'
      */
-    _type: 'string' | 'number' | 'boolean'
+    _type: 'text' | 'number' | 'boolean'
+
+    // /**
+    //  * Expected format of the environment variable, represented as a regular
+    //  * expression. If provided, the string value of the environment variable
+    //  * must match this format.
+    //  *
+    //  * @default undefined
+    //  */
+    // format?: RegExp
 
     /**
      * Optional default value for the environment variable. If provided, this
@@ -181,16 +194,17 @@ export interface MonoEnvVariable {
     _default?: string | number | boolean
 }
 
+export type MonoEnvMap = Map<string, MonoEnvVariable>
+
 export interface MonoSetup {
     defaults: MonoEntryOptionals
 
-    apps?: Partial<MonoEntry>[]
-    modules?: Partial<MonoEntry>[]
+    apps?: MonoEntry[]
+    modules?: MonoEntry[]
 }
 
 export interface MonoSetupInternal extends Required<MonoSetup> {
     apps: _MonoEntryInternal[]
     modules: _MonoEntryInternal[]
-
-    _entryMap: EntryMap
+    env?: MonoEnvMap
 }

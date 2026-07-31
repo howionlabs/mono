@@ -33,3 +33,11 @@ export function $static(from: string, to?: string, alwaysOverwrite: boolean = fa
         ]
     }
 }
+
+/**
+ * Shorthand for `$static` that allows specifying multiple files to be copied
+ * to the target project.
+ */
+export function $statics(...files: string[]): MonoAddon[] {
+    return files.map(file => $static(file))
+}

@@ -1,4 +1,4 @@
-import { $author, $git, $license, $npm, $static, mono } from './.mono/mono'
+import { mono, $author, $git, $license, $npm, $statics } from './.mono/mono'
 
 const $authorHowion = $author({
     name: 'howion',
@@ -23,9 +23,9 @@ export default mono({
             description: "RFC-like specification of Howion's Unique IDentifier (HUID)",
             addons: [
                 $authorHowion,
+                $statics('.markdownlint.jsonc'),
                 $git('howionlabs', 'huid-spec', 'ssh'),
-                $license('cc-by-sa-30'),
-                $static('.markdownlint.jsonc')
+                $license('cc-by-sa-30')
             ]
         },
         {
@@ -36,13 +36,10 @@ export default mono({
                 "The official reference implementation in TypeScript for Howion's Unique IDentifier.",
             addons: [
                 $authorHowion,
+                $statics('.editorconfig', '.gitignore', '.markdownlint.jsonc', 'biome.jsonc'),
                 $git('howionlabs', 'huid-ts', 'ssh'),
                 $license('mit'),
-                $npm('@howionlabs/huid', {}),
-                $static('.editorconfig'),
-                $static('.gitignore'),
-                $static('.markdownlint.jsonc'),
-                $static('biome.jsonc')
+                $npm('@howionlabs/huid', {})
             ]
         }
     ]
