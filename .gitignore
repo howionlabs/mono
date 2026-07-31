@@ -2,9 +2,12 @@
 ## CUSTOM
 ###############################################################################
 
+# IGNORE SUB .GIT FOLDERS
+**/.git
+
 # IGNORE WORKSPACES
 /apps
-/modules
+/modules/**
 !/modules/utils-ts
 
 # MAKE SURE MONOREPO KEYS FOLDER IS IGNORED
