@@ -1,0 +1,3 @@
+[submodule "utils-ts"]
+	path = modules/utils-ts
+	url = git://github.com/howionlabs/utils-ts.git
