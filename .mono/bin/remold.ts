@@ -1,8 +1,5 @@
 import fs from 'node:fs'
-import { cli } from './utils'
-import { monoModuleMap } from './mono'
-import { moldMap } from './remold/molds'
-import type { MonoModule } from './mono/mono'
+import { cli } from './utils/cli'
 
 export interface RemoldOptions {
     /**

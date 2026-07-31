@@ -5,6 +5,7 @@
 # IGNORE WORKSPACES
 /apps
 /modules
+!/modules/utils-ts
 
 # MAKE SURE MONOREPO KEYS FOLDER IS IGNORED
 /keys

@@ -195,6 +195,7 @@ export interface MonoEnvVariable {
 }
 
 export type MonoEnvMap = Map<string, MonoEnvVariable>
+export type MonoEnvValueMap = Map<string, string | number | boolean>
 
 export interface MonoSetup {
     defaults: MonoEntryOptionals

@@ -1,4 +1,5 @@
-import type { MonoEnvMap, MonoEnvVariable } from './types'
+import type { MonoEnvMap, MonoEnvValueMap, MonoEnvVariable } from './types'
+import { parse } from 'dotenv'
 import { breakTextToLines } from './utils/misc'
 
 export class EnvVariableBuilder<T extends 'text' | 'number' | 'boolean' = any> {
@@ -120,7 +121,49 @@ export function renderH1(text: string): string {
     return result
 }
 
-export function buildEnvContents(schema: MonoEnvMap): string {
+export function readEnv(source: string | Buffer, schema: MonoEnvMap): MonoEnvValueMap {
+    const result: MonoEnvValueMap = new Map()
+
+    const parsed = parse(source)
+
+    for (const [key, value] of Object.entries(parsed)) {
+        if (!schema.has(key)) {
+            throw new Error(`Unknown environment variable: "${key}"`)
+        }
+
+        const variable = schema.get(key)!
+
+        if (variable._type === 'text') {
+            result.set(key, value)
+        } else if (variable._type === 'number') {
+            const numberValue = Number(value)
+
+            if (Number.isNaN(numberValue)) {
+                throw new Error(
+                    `Invalid value for environment variable "${key}". Expected number, got "${value}".`
+                )
+            }
+
+            result.set(key, numberValue)
+        } else if (variable._type === 'boolean') {
+            const lowerValue = value.toLowerCase()
+
+            if (lowerValue === 'true') {
+                result.set(key, true)
+            } else if (lowerValue === 'false') {
+                result.set(key, false)
+            } else {
+                throw new Error(
+                    `Invalid value for environment variable "${key}". Expected "true" or "false", got "${value}".`
+                )
+            }
+        }
+    }
+
+    return result
+}
+
+export function buildEnv(schema: MonoEnvMap, valueMap?: MonoEnvValueMap): string {
     let result = ``
 
     result += '#'.repeat(ENV_DEFAULT_LINE_WIDTH - 1)
@@ -173,10 +216,16 @@ export function buildEnvContents(schema: MonoEnvMap): string {
 
         result += `${variable._name}=`
 
-        if (variable._default !== undefined) {
-            result += renderValue(variable._default)
-        } else {
-            result += ''
+        let value = variable._default
+
+        if (valueMap?.has(variable._name)) {
+            value = valueMap.get(variable._name)
+        }
+
+        if (value !== undefined) {
+            if (variable._default !== undefined) {
+                result += renderValue(variable._default)
+            }
         }
 
         result += '\n'
