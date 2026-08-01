@@ -220,6 +220,8 @@ export interface MonoSetupInternal extends Required<MonoSetup> {
     apps: _MonoEntryInternal[]
     modules: _MonoEntryInternal[]
 
+    _entries: _MonoEntryInternal[]
+
     env?: {
         schema: MonoEnvMap
         values: MonoEnvValueMap | undefined

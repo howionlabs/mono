@@ -73,9 +73,6 @@ function internalizeEntries(
  * referenced authors exist.
  */
 export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
-    const apps = setup.apps || []
-    const modules = setup.modules || []
-
     const map = new Map<string, _MonoEntryInternal>()
 
     const envSchema: MonoEnvMap = await import(monoEnvPath).then(module => module.default)
@@ -88,9 +85,13 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
         envValueMap = readEnv(envContent, envSchema)
     }
 
+    const apps = internalizeEntries(setup.apps || [], map, 'app')
+    const modules = internalizeEntries(setup.modules || [], map, 'module')
+
     return {
-        apps: internalizeEntries(apps, map, 'app'),
-        modules: internalizeEntries(modules, map, 'module'),
+        apps: apps,
+        modules: modules,
+        _entries: [...apps, ...modules],
         env: {
             schema: envSchema,
             values: envValueMap

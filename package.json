@@ -14,7 +14,7 @@
     "main": "./.mono/mono.ts",
     "bin": "./.mono/cli.ts",
     "scripts": {
-        "remold": "bun run ./bin/index.ts remold",
+        "remold": "bun run ./.mono/cli.ts remold",
         "format": "bunx --bun @biomejs/biome format --write",
         "lint": "bunx --bun @biomejs/biome lint --write"
     },

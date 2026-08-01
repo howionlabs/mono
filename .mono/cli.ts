@@ -4,12 +4,13 @@ import { remold } from './bin/remold'
 
 const cac = _cac('bun run')
 
-cac.command('remold [module]', 'Remolds all the modules unless [module] is specified')
+cac.command('remold [entry]', 'Remolds all the modules unless [entry] is specified')
     .option('-v, --verbose', 'Verbose output')
-    .action((p, options) =>
-        remold(p, {
-            verbose: options.verbose
-        })
+    .action(
+        async (p, options) =>
+            (process.exitCode = await remold(p, {
+                verbose: options.verbose
+            }))
     )
 
 cac.help()
