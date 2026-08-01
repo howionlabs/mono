@@ -1,5 +1,5 @@
 import type { WriteStream } from 'node:tty'
-import { styleText, type InspectColor } from 'node:util'
+import { type InspectColor, styleText } from 'node:util'
 
 export type CLIModifier = InspectColor | `${InspectColor}.${InspectColor}`
 

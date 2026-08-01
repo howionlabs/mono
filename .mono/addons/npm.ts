@@ -1,6 +1,6 @@
-import type { _MonoEntryInternal, MonoAddon } from '../mono'
-import { readJSONFile, resolveEntryPath, resolveRootPath, writeFile } from '../bin/utils/fs'
-import { cli } from '../bin/utils/cli'
+import type { _MonoEntryInternal, MonoAddon } from '../mono.ts'
+import { cli } from '../bin/utils/cli.ts'
+import { readJSONFile, resolveEntryPath, resolveRootPath, writeFile } from '../bin/utils/fs.ts'
 
 export type DependencyRecord = Record<string, string | 'root'>
 
@@ -11,14 +11,14 @@ export interface BuildPJSONOptions {
     mustScripts?: Record<string, string>
 }
 
-let rootPJSON = {} as Record<string, any> | null
+let rootPjson = {} as Record<string, any> | null
 
 async function normalizeDependencies(deps: DependencyRecord) {
-    if (!rootPJSON) {
-        rootPJSON = await readJSONFile(resolveRootPath('package.json'))
+    if (!rootPjson) {
+        rootPjson = await readJSONFile(resolveRootPath('package.json'))
     }
 
-    if (!rootPJSON) {
+    if (!rootPjson) {
         throw new Error(
             'Failed to read the root package.json file. Please ensure that the file exists and is accessible.'
         )
@@ -26,7 +26,7 @@ async function normalizeDependencies(deps: DependencyRecord) {
 
     for (const [dep, version] of Object.entries(deps)) {
         if (version === 'root') {
-            const rootVersion = rootPJSON.dependencies?.[dep] || rootPJSON.devDependencies?.[dep]
+            const rootVersion = rootPjson.dependencies?.[dep] || rootPjson.devDependencies?.[dep]
 
             if (!rootVersion) {
                 throw new Error(
@@ -42,7 +42,7 @@ async function normalizeDependencies(deps: DependencyRecord) {
 }
 
 export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
-    async function constructAndAddPJSONDataToMeta(entry: _MonoEntryInternal) {
+    async function constructAndAddPjsonDataToMeta(entry: _MonoEntryInternal) {
         const pjsonPath = resolveEntryPath(entry, 'package.json')
         const previous = await readJSONFile(pjsonPath)
         const next: any = {}
@@ -65,7 +65,7 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
         next.private = !entry.public
         next.homepage = entry.website
 
-        if (entry.keywords.length > 0) {
+        if (entry.keywords && entry.keywords.length > 0) {
             next.keywords = entry.keywords
         } else {
             delete next.keywords
@@ -92,13 +92,11 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
         }
 
         if (entry._meta.contributors && entry._meta.contributors.length > 0) {
-            next.contributors = entry._meta.contributors.map(contributor => {
-                return {
-                    email: contributor.email,
-                    name: contributor.name,
-                    url: contributor.url
-                }
-            })
+            next.contributors = entry._meta.contributors.map(contributor => ({
+                email: contributor.email,
+                name: contributor.name,
+                url: contributor.url
+            }))
         } else {
             if (next.contributors && next.contributors.length > 0) {
                 cli.warn(
@@ -135,8 +133,8 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
                 const url = `https://github.com/${entry._meta.git.owner}/${entry._meta.git.repo}/issues`
 
                 next.bugs = {
-                    url,
-                    email: entry._meta.author.email
+                    email: entry._meta.author.email,
+                    url
                 }
             }
         } else {
@@ -170,7 +168,7 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
         }
     }
 
-    async function writePJSON(entry: _MonoEntryInternal) {
+    async function writePjson(entry: _MonoEntryInternal) {
         const pjson = entry._meta.npm?.latestPJSON
 
         if (!pjson) {
@@ -186,19 +184,19 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
     }
 
     return {
-        name: '$npm',
-        unique: true,
         actions: [
             {
+                callback: constructAndAddPjsonDataToMeta,
                 name: 'constructAndAddPJSONDataToMeta',
-                order: 0,
-                callback: constructAndAddPJSONDataToMeta
+                order: 0
             },
             {
+                callback: writePjson,
                 name: 'writePJSON',
-                order: 1,
-                callback: writePJSON
+                order: 1
             }
-        ]
+        ],
+        name: '$npm',
+        unique: true
     }
 }

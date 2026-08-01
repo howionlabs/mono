@@ -1,6 +1,6 @@
 import type { _MonoEntryInternal, MonoAddon, MonoLicense, MonoLicenseId } from '../mono'
-import { copyFile, readJSONFile, resolveDotMonoPath, resolveEntryPath } from '../bin/utils/fs'
 import { cli } from '../bin/utils/cli'
+import { copyFile, readJSONFile, resolveDotMonoPath, resolveEntryPath } from '../bin/utils/fs'
 
 export const LICENSES = ['agpl-v3', 'cc-by-sa-30', 'mit', 'mpl-2.0'] as const
 

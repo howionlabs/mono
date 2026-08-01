@@ -10,6 +10,8 @@ This monorepo is currently is being used by us therefore, especially `.mono.ts`,
 
 ## Folder Structure
 
+<!-- ### `.mono` -->
+
 * **`.mono`** for monorepo-related scripts
     * **`.mono/static`** for static files such as opinionated `.gitignore`'s etc. to be copied/upserted into `apps` and `modules` depending on their configuration.
 * (git-ignored) **`apps`** for apps

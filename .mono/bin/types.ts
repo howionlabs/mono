@@ -72,25 +72,22 @@ export interface MonoAddon {
     actions: [MonoAddonAction, ...MonoAddonAction[]]
 }
 
-export interface MonoEntryOptionals {
-    website: `https://${string}`
-
-    public: boolean
-
-    /**
-     * The version of the project, following semantic versioning (semver)
-     * conventions.
-     */
-    version: string
-}
-
-export interface MonoEntry extends Partial<MonoEntryOptionals> {
+export interface MonoEntry {
     /**
      * Unique identifier for the project, used for referencing in other parts
-     * of the configuration. Preferably the folder name of the project in ascii
-     * lowercase with hyphens.
+     * of the configuration.
+     * - Must be unique both in apps and modules.
+     * - Should match the folder name of the project and
+     * must be in lowercase ascii with hyphens without leading or trailing
+     * whitespace.
+     * - Must not contain any special characters or spaces.
      */
     id: string
+
+    /**
+     * Human-readable project description
+     */
+    description?: string
 
     /**
      * Human-readable project name
@@ -98,9 +95,22 @@ export interface MonoEntry extends Partial<MonoEntryOptionals> {
     name: string
 
     /**
-     * Human-readable project description
+     * Whether the project is public or private.
+     *
+     * @default false
      */
-    description: string
+    public?: boolean
+
+    /**
+     * Version of the project, following semantic versioning.
+     */
+    version: string
+
+    /**
+     * URL to the project's website or homepage, providing additional context
+     * and information about the project.
+     */
+    website?: string
 
     /**
      * List of keywords describing the project, used for search and discovery
@@ -112,13 +122,17 @@ export interface MonoEntry extends Partial<MonoEntryOptionals> {
 
 export type _MonoEntryType = 'app' | 'module'
 
-export interface _MonoEntryInternal extends Required<MonoEntry> {
-    type: _MonoEntryType
-    path: string
+export interface _MonoEntryInternal<T extends _MonoEntryType = _MonoEntryType> extends MonoEntry {
+    _type: T
 
     /**
-     * Ordered list of actions provided by addons. Could have multiple actions
-     * with the same name which will be executed in the order they were added.
+     * Absolute path to the project folder.
+     */
+    _path: string
+
+    /**
+     * Order-ascending list of actions provided by addons. Could have multiple
+     * (non-unique) actions with the same name.
      */
     _actions: MonoAddonAction[]
 
@@ -128,7 +142,7 @@ export interface _MonoEntryInternal extends Required<MonoEntry> {
      * include configuration details, state information, or any other relevant
      * data.
      *
-     * Possibly will be edited and consumed among different addons.
+     * Possibly will be edited by and consumed among different addons.
      */
     _meta: {
         license?: MonoLicense
@@ -195,11 +209,9 @@ export interface MonoEnvVariable {
 }
 
 export type MonoEnvMap = Map<string, MonoEnvVariable>
-export type MonoEnvValueMap = Map<string, string | number | boolean>
+export type MonoEnvValueMap = Map<string, string | number | boolean | undefined>
 
 export interface MonoSetup {
-    defaults: MonoEntryOptionals
-
     apps?: MonoEntry[]
     modules?: MonoEntry[]
 }
@@ -207,5 +219,9 @@ export interface MonoSetup {
 export interface MonoSetupInternal extends Required<MonoSetup> {
     apps: _MonoEntryInternal[]
     modules: _MonoEntryInternal[]
-    env?: MonoEnvMap
+
+    env?: {
+        schema: MonoEnvMap
+        values: MonoEnvValueMap | undefined
+    }
 }

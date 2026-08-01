@@ -7,18 +7,7 @@
             "source": {
                 "useSortedInterfaceMembers": "off",
                 "useSortedKeys": "off",
-                "useSortedPackageJson": "off",
-                "organizeImports": {
-                    "level": "on",
-                    "options": {
-                        "identifierOrder": "natural",
-                        "groups": [
-                            {
-                                "type": true
-                            }
-                        ]
-                    }
-                }
+                "useSortedPackageJson": "off"
             }
         },
         "enabled": true
@@ -28,7 +17,7 @@
     "files": {
         "ignoreUnknown": true,
         //  exclusions are handled by .gitignore and .biomeignore
-        "includes": ["**", "!package.json", "!biome.jsonc", "!!.vscode", "!!public", "!!static"],
+        "includes": ["**", "!package.json", "!biome.jsonc", "!!.vscode"],
         // 1MB
         "maxSize": 1000000
     },
@@ -88,26 +77,27 @@
         "enabled": true,
         "rules": {
             "preset": "recommended",
-            "a11y": {
-                "useValidAriaRole": "info",
-                "noSvgWithoutTitle": "info",
-                "noStaticElementInteractions": "info",
-                "useKeyWithClickEvents": "info"
-            },
             "style": {
-                "noDefaultExport": "off",
-                "noNonNullAssertion": "off"
-            },
-            "suspicious": {
-                "noExplicitAny": "info",
-                "noEmptyInterface": "info"
+                "noDefaultExport": "off"
             }
         }
         // "rules": {
-
+        //     "a11y": {
+        //         "useValidAriaRole": "off",
+        //         "noSvgWithoutTitle": "off",
+        //         "noStaticElementInteractions": "off",
+        //         "useKeyWithClickEvents": "off"
+        //     },
         //     "correctness": {
         //         "noUnknownTypeSelector": "off"
         //     },
+        //     "suspicious": {
+        //         "noExplicitAny": "off",
+        //         "noEmptyInterface": "off"
+        //     },
+        //     "style": {
+        //         "noNonNullAssertion": "off"
+        //     }
         // }
     },
     "overrides": [
@@ -128,7 +118,7 @@
         }
     ],
     "plugins": [],
-    "root": true,
+    "root": false,
     "vcs": {
         "clientKind": "git",
         "enabled": true,

@@ -1,5 +1,5 @@
 import type { _MonoEntryInternal, MonoAddon } from '../mono'
-import { copyFile, resolveDotMonoPath, resolveEntryPath } from '../bin/utils/fs'
+import { copyFile, resolveEntryPath, resolveRootPath } from '../bin/utils/fs'
 
 /**
  * Resolves a static file from `.mono/static` and copies it to the target
@@ -12,10 +12,14 @@ import { copyFile, resolveDotMonoPath, resolveEntryPath } from '../bin/utils/fs'
  * target project.
  */
 export function $static(from: string, to?: string, alwaysOverwrite: boolean = false): MonoAddon {
-    async function writeStaticFile(entry: _MonoEntryInternal) {
-        if (to === '') to = from
+    if (!to) to = from
 
-        const fromAbsolute = resolveDotMonoPath(`static/${from}`)
+    if (to.startsWith('.env')) {
+        throw new Error(`$static does not support copying files to .env* paths. Use $env instead.`)
+    }
+
+    async function writeStaticFile(entry: _MonoEntryInternal) {
+        const fromAbsolute = resolveRootPath(`static/${from}`)
         const toAbsolute = resolveEntryPath(entry, to ?? from)
 
         await copyFile(fromAbsolute, toAbsolute, !alwaysOverwrite)

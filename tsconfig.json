@@ -5,16 +5,24 @@
         "module": "Preserve",
         "moduleDetection": "force",
         "jsx": "react-jsx",
-        "moduleResolution": "bundler",
+        "allowJs": true,
         "types": ["bun", "node"],
+
+        "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
         "verbatimModuleSyntax": true,
         "noEmit": true,
+
         "strict": true,
+        "skipLibCheck": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false
     },
-    "include": [".mono/**/*", "apps/**/*", "modules/**/*"],
-    "exclude": ["node_modules", "**/node_modules"]
+    "include": [".mono/**/*", "apps/**/*", "modules/**/*", ".mono.ts", ".mono.env.ts"],
+    "exclude": ["**/node_modules", "**/out", "**/build", "**/dist"]
 }

@@ -1,5 +1,5 @@
-import path from 'node:path'
 import type { _MonoEntryInternal } from '../types'
+import path from 'node:path'
 
 export const CWD = process.cwd()
 
@@ -13,9 +13,9 @@ export function resolveDotMonoPath(_path: string): string {
 
 export function resolveEntryPath(entry: _MonoEntryInternal, _path?: string): string {
     if (_path) {
-        return path.resolve(`${entry.path}/${_path}`)
+        return path.resolve(`${entry._path}/${_path}`)
     } else {
-        return entry.path
+        return entry._path
     }
 }
 

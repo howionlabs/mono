@@ -1,25 +1,19 @@
-import { mono, $author, $git, $license, $npm, $statics } from './.mono/mono'
+import { $author, $git, $license, $npm, $statics, mono } from './.mono/mono.ts'
 
 const $authorHowion = $author({
-    name: 'howion',
     email: 'me@howion.com',
+    name: 'howion',
     url: 'https://howion.com'
 })
 
 export default mono({
-    defaults: {
-        website: 'https://www.howion.com',
-        public: false,
-        version: '0.0.1'
-    },
-
     apps: [],
-
     modules: [
         {
             id: 'huid-spec',
-            public: true,
             name: "Howion's Unique IDentifier",
+            version: '0.1.0',
+            public: true,
             description: "RFC-like specification of Howion's Unique IDentifier (HUID)",
             addons: [
                 $authorHowion,
@@ -30,8 +24,9 @@ export default mono({
         },
         {
             id: 'huid-ts',
-            public: true,
             name: "Howion's Unique IDentifier",
+            version: '0.1.0',
+            public: true,
             description:
                 "The official reference implementation in TypeScript for Howion's Unique IDentifier.",
             addons: [

@@ -1,5 +1,5 @@
-import path from 'node:path'
 import fs from 'node:fs'
+import path from 'node:path'
 
 export const pwd = process.cwd()
 
@@ -12,7 +12,7 @@ export const rootMonoTOMLPath = path.join(pwd, 'mono.toml')
 export const rootPackageJSONPath = path.join(pwd, 'package.json')
 
 export function readSubdirsSync(_path: string): string[] {
-    return fs.readdirSync(_path).filter((file) => {
+    return fs.readdirSync(_path).filter(file => {
         const subdirPath = path.join(_path, file)
         return fs.statSync(subdirPath).isDirectory()
     })

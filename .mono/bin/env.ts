@@ -2,71 +2,6 @@ import type { MonoEnvMap, MonoEnvValueMap, MonoEnvVariable } from './types'
 import { parse } from 'dotenv'
 import { breakTextToLines } from './utils/misc'
 
-export class EnvVariableBuilder<T extends 'text' | 'number' | 'boolean' = any> {
-    protected readonly _name: string = ''
-    protected _description?: string
-    protected _required: boolean = true
-    protected readonly _type: MonoEnvVariable['_type']
-    protected _default?: string | number | boolean
-
-    constructor(name: string, type: T) {
-        this._name = name
-        this._type = type
-    }
-
-    desc(description: string) {
-        if (description.trim() !== description) {
-            throw new Error(
-                `Invalid description for environment variable "${this._name}". Must not have leading or trailing whitespace.`
-            )
-        }
-
-        this._description = description
-
-        return this as Omit<EnvVariableBuilder<T>, 'required' | 'optional' | 'desc'>
-    }
-
-    get required() {
-        this._required = true
-        return this as Omit<EnvVariableBuilder<T>, 'required' | 'optional' | 'default'>
-    }
-
-    get optional() {
-        this._required = false
-        return this as Omit<EnvVariableBuilder<T>, 'required' | 'optional' | 'default'>
-    }
-
-    default(value: T extends 'text' ? string : T extends 'number' ? number : boolean) {
-        if (
-            (this._type === 'text' && typeof value !== 'string') ||
-            (this._type === 'number' && typeof value !== 'number') ||
-            (this._type === 'boolean' && typeof value !== 'boolean')
-        ) {
-            throw new Error(
-                `Invalid default value for environment variable "${this._name}". Expected ${this._type}, got ${typeof value}.`
-            )
-        }
-
-        this._default = value
-
-        return this as Omit<EnvVariableBuilder<T>, 'required' | 'optional' | 'default' | 'desc'>
-    }
-
-    /**
-     * Internal method to retrieve the internal representation of the
-     * environment variable.
-     */
-    __internal(): MonoEnvVariable {
-        return {
-            _name: this._name,
-            _description: this._description,
-            _required: this._required,
-            _type: this._type,
-            _default: this._default
-        }
-    }
-}
-
 export const ENV_NAME_REGEX = /^[A-Z0-9_]+$/
 
 export const ENV_DEFAULT_LINE_WIDTH = 80
@@ -133,30 +68,49 @@ export function readEnv(source: string | Buffer, schema: MonoEnvMap): MonoEnvVal
 
         const variable = schema.get(key)!
 
-        if (variable._type === 'text') {
-            result.set(key, value)
-        } else if (variable._type === 'number') {
-            const numberValue = Number(value)
+        if (value.trim() !== '') {
+            if (variable._type === 'text') {
+                result.set(key, value)
+            } else if (variable._type === 'number') {
+                const numberValue = Number(value)
 
-            if (Number.isNaN(numberValue)) {
-                throw new Error(
-                    `Invalid value for environment variable "${key}". Expected number, got "${value}".`
-                )
+                if (Number.isNaN(numberValue)) {
+                    throw new Error(
+                        `Invalid value for environment variable "${key}". Expected number, got "${value}".`
+                    )
+                }
+
+                result.set(key, numberValue)
+            } else if (variable._type === 'boolean') {
+                const lowerValue = value.toLowerCase()
+
+                if (lowerValue === 'true') {
+                    result.set(key, true)
+                } else if (lowerValue === 'false') {
+                    result.set(key, false)
+                } else {
+                    throw new Error(
+                        `Invalid value for environment variable "${key}". Expected "true" or "false", got "${value}".`
+                    )
+                }
             }
+        }
+    }
 
-            result.set(key, numberValue)
-        } else if (variable._type === 'boolean') {
-            const lowerValue = value.toLowerCase()
+    // make sure all required variables are present
+    const requireds = [...schema.values()].filter(variable => variable._required)
 
-            if (lowerValue === 'true') {
-                result.set(key, true)
-            } else if (lowerValue === 'false') {
-                result.set(key, false)
-            } else {
-                throw new Error(
-                    `Invalid value for environment variable "${key}". Expected "true" or "false", got "${value}".`
-                )
-            }
+    for (const required of requireds) {
+        if (!result.has(required._name)) {
+            throw new Error(`Missing required environment variable: "${required._name}"`)
+        }
+    }
+
+    const optionals = [...schema.values()].filter(variable => !variable._required)
+
+    for (const optional of optionals) {
+        if (!result.has(optional._name)) {
+            result.set(optional._name, optional._default)
         }
     }
 
@@ -179,13 +133,13 @@ export function buildEnv(schema: MonoEnvMap, valueMap?: MonoEnvValueMap): string
     let startsWith: string = ''
 
     for (const i in sorted) {
-        const variable = sorted[i]
-        const head = variable._name.split('_')[0]
+        const variable = sorted[i]!
+        const head = variable._name.split('_')[0]!
         const nextVariable = sorted[Number(i) + 1]
         let nextHead: string | null = null
 
         if (nextVariable) {
-            nextHead = nextVariable._name.split('_')[0]
+            nextHead = nextVariable._name.split('_')[0]!
         }
 
         result += '\n'
@@ -242,7 +196,10 @@ export function buildEnv(schema: MonoEnvMap, valueMap?: MonoEnvValueMap): string
  */
 export const env = {
     schema(
-        variables: Omit<EnvVariableBuilder, 'required' | 'optional' | 'default' | 'desc'>[]
+        variables: Omit<
+            EnvVariableBuilder<'text' | 'number' | 'boolean'>,
+            'required' | 'optional' | 'default' | 'desc'
+        >[]
     ): MonoEnvMap {
         const schema: MonoEnvMap = new Map()
 
@@ -289,4 +246,69 @@ export const env = {
             EnvVariableBuilder<'boolean'>,
             'default' | 'desc'
         >
+}
+
+export class EnvVariableBuilder<T extends 'text' | 'number' | 'boolean'> {
+    protected readonly _name: string = ''
+    protected _description?: string
+    protected _required: boolean = true
+    protected readonly _type: MonoEnvVariable['_type']
+    protected _default?: string | number | boolean
+
+    constructor(name: string, type: T) {
+        this._name = name
+        this._type = type
+    }
+
+    desc(description: string) {
+        if (description.trim() !== description) {
+            throw new Error(
+                `Invalid description for environment variable "${this._name}". Must not have leading or trailing whitespace.`
+            )
+        }
+
+        this._description = description
+
+        return this as Omit<EnvVariableBuilder<T>, 'required' | 'optional' | 'desc'>
+    }
+
+    get required() {
+        this._required = true
+        return this as Omit<EnvVariableBuilder<T>, 'required' | 'optional' | 'default'>
+    }
+
+    get optional() {
+        this._required = false
+        return this as Omit<EnvVariableBuilder<T>, 'required' | 'optional' | 'default'>
+    }
+
+    default(value: T extends 'text' ? string : T extends 'number' ? number : boolean) {
+        if (
+            (this._type === 'text' && typeof value !== 'string') ||
+            (this._type === 'number' && typeof value !== 'number') ||
+            (this._type === 'boolean' && typeof value !== 'boolean')
+        ) {
+            throw new Error(
+                `Invalid default value for environment variable "${this._name}". Expected ${this._type}, got ${typeof value}.`
+            )
+        }
+
+        this._default = value
+
+        return this as Omit<EnvVariableBuilder<T>, 'required' | 'optional' | 'default' | 'desc'>
+    }
+
+    /**
+     * Internal method to retrieve the internal representation of the
+     * environment variable.
+     */
+    __internal(): MonoEnvVariable {
+        return {
+            _name: this._name,
+            _description: this._description,
+            _required: this._required,
+            _type: this._type,
+            _default: this._default
+        }
+    }
 }

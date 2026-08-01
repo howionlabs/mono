@@ -1,4 +1,70 @@
-import type { MonoSetup, MonoSetupInternal } from './types'
+import type {
+    _MonoEntryInternal,
+    MonoAddonAction,
+    MonoEntry,
+    MonoEnvMap,
+    MonoEnvValueMap,
+    MonoSetup,
+    MonoSetupInternal
+} from './types'
+import { readEnv } from './env'
+import { resolveRootPath } from './utils/fs'
+
+export const monoEnvPath = resolveRootPath('.mono.env.ts')
+export const rootEnvFile = resolveRootPath('.env')
+
+export const ENTRY_ID_REGEX = /^[a-z0-9]+[a-z0-9-]+$/
+
+function internalizeEntries(
+    entries: MonoEntry[],
+    map: Map<string, _MonoEntryInternal>,
+    type: 'app' | 'module'
+): _MonoEntryInternal[] {
+    const result: _MonoEntryInternal[] = []
+
+    for (const entry of entries) {
+        if (!entry.id || !ENTRY_ID_REGEX.test(entry.id)) {
+            throw new Error(`Invalid entry ID: ${entry.id}`)
+        }
+
+        if (map.has(entry.id)) {
+            throw new Error(`Duplicate entry ID: ${entry.id}`)
+        }
+
+        const addons = (entry.addons || []).flatMap(addon =>
+            Array.isArray(addon) ? addon : [addon]
+        )
+        const addonSet = new Set<string>()
+        const actions: MonoAddonAction[] = []
+
+        for (const addon of addons) {
+            if (addon.unique === true && addonSet.has(addon.name)) {
+                throw new Error(
+                    `Unique addon "${addon.name}" is already registered for the entry "${entry.id}". Unique addons can only be registered once per entry.`
+                )
+            }
+
+            addonSet.add(addon.name)
+            actions.push(...addon.actions)
+        }
+
+        // in-place sort, asc
+        actions.sort((a, b) => a.order - b.order)
+
+        const internal: _MonoEntryInternal = {
+            ...entry,
+            _type: type,
+            _path: resolveRootPath(`${type}s/${entry.id}`),
+            _actions: actions,
+            _meta: {}
+        }
+
+        map.set(entry.id, internal)
+        result.push(internal)
+    }
+
+    return result
+}
 
 /**
  * Returns a MonoSetupInternal object based on the provided MonoSetup
@@ -6,52 +72,28 @@ import type { MonoSetup, MonoSetupInternal } from './types'
  * (apps and modules), ensuring that there are no duplicate IDs and that all
  * referenced authors exist.
  */
-export function mono(setup: MonoSetup): MonoSetupInternal {
-    // const authorMap = new Map<string, MonoAuthor>()
-    // for (const author of setup.authors) {
-    //     if (authorMap.has(author.id)) {
-    //         throw new Error(`Duplicate author ID: ${author.id}`)
-    //     }
-    //     authorMap.set(author.id, author)
-    // }
-    // const entryMap = new Map<string, _MonoEntryInternal>()
-    // function processEntries(
-    //     type: _MonoEntryType,
-    //     entries: Partial<MonoEntry>[]
-    // ): _MonoEntryInternal[] {
-    //     const result = []
-    //     for (const entry of entries) {
-    //         if (!entry.id) {
-    //             throw new Error(`Entry is missing required 'id' field`)
-    //         }
-    //         if (entryMap.has(entry.id)) {
-    //             throw new Error(`Duplicate entry ID: ${entry.id}`)
-    //         }
-    //         const author =
-    //             typeof entry.author === 'string' ? authorMap.get(entry.author) : entry.author
-    //         if (!author) {
-    //             throw new Error(`Entry ${entry.id} references unknown author ID: ${entry.author}`)
-    //         }
-    //         const internalEntry: _MonoEntryInternal = {
-    //             ...setup.defaults,
-    //             ...entry,
-    //             author,
-    //             type,
-    //             path: ''
-    //         }
-    //         entryMap.set(internalEntry.id, internalEntry)
-    //         result.push(internalEntry)
-    //     }
-    //     return result
-    // }
-    // const apps = processEntries('app', setup.apps || [])
-    // const modules = processEntries('module', setup.modules || [])
-    // return {
-    //     authors: setup.authors,
-    //     defaults: setup.defaults,
-    //     apps: apps,
-    //     modules: modules,
-    //     _authorMap: authorMap,
-    //     _entryMap: entryMap
-    // }
+export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
+    const apps = setup.apps || []
+    const modules = setup.modules || []
+
+    const map = new Map<string, _MonoEntryInternal>()
+
+    const envSchema: MonoEnvMap = await import(monoEnvPath).then(module => module.default)
+    let envValueMap: MonoEnvValueMap | undefined
+
+    const envFile = Bun.file(rootEnvFile)
+
+    if (await envFile.exists()) {
+        const envContent = await envFile.text()
+        envValueMap = readEnv(envContent, envSchema)
+    }
+
+    return {
+        apps: internalizeEntries(apps, map, 'app'),
+        modules: internalizeEntries(modules, map, 'module'),
+        env: {
+            schema: envSchema,
+            values: envValueMap
+        }
+    }
 }
