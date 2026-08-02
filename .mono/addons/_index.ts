@@ -6,11 +6,6 @@ export * from './npm'
 export * from './static'
 
 /**
- * About the order of the addon actions, we have this general rule of thumb:
- *
- * 0-63: Actions that modify the metadata of the entry
- * 64-127: Actions that modify the content of the entry
- *
  * A single addon can have multiple actions, and they will be executed in the
  * order of their `order` property. The `order` property is a number that
  * indicates the order in which the action should be executed among all the
@@ -24,4 +19,23 @@ export * from './static'
  * Moreover, this ordering also makes it fail-safe so that no matter what order
  * the addons are registered, the actions will always be executed in the
  * correct order.
+ */
+
+/**
+ * 0 $author.addAuthorToMeta
+ * 0 $contributor.addAuthorToMeta
+ * 0 $env.addEnvVariablesToMeta
+ * 0 $license.addLicenseDataToMeta
+ * 0 $git.addGitDataToMeta
+ *
+ * 10 $static.writeStaticFile
+ * 10 $env.writeEnvFiles
+ * 10 $license.copyLicense
+ *
+ * 20 $npm.constructAndAddPJSONDataToMeta
+ *
+ * 30 $npm.writePJSON
+ *
+ * 40 $keys
+ *
  */

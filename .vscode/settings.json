@@ -4,5 +4,8 @@
     },
     "editor.defaultFormatter": "biomejs.biome",
     "js/ts.experimental.useTsgo": true,
-    "js/ts.tsdk.path": "./node_modules/typescript"
+    "js/ts.tsdk.path": "./node_modules/typescript",
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    }
 }

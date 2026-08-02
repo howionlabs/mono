@@ -50,13 +50,13 @@ export function $license(id: MonoLicenseId): MonoAddon {
         unique: true,
         actions: [
             {
-                name: 'addLicenseDataToMeta',
+                name: '$license.addLicenseDataToMeta',
                 order: 0,
                 callback: addLicenseDataToMeta
             },
             {
-                name: 'copyLicense',
-                order: 1,
+                name: '$license.copyLicense',
+                order: 10,
                 callback: copyLicense
             }
         ]

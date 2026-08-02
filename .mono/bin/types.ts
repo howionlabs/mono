@@ -47,7 +47,7 @@ export interface MonoAddonAction {
      */
     order: number
 
-    callback: (entry: _MonoEntryInternal) => void | Promise<void>
+    callback: (entry: _MonoEntryInternal, verbose?: boolean) => void | Promise<void>
 }
 
 export interface MonoAddon {
@@ -209,7 +209,7 @@ export interface MonoEnvVariable {
 }
 
 export type MonoEnvMap = Map<string, MonoEnvVariable>
-export type MonoEnvValueMap = Map<string, string | number | boolean | undefined>
+export type MonoEnvValueMap = Map<string, string | number | boolean>
 
 export interface MonoSetup {
     apps?: MonoEntry[]
@@ -222,8 +222,9 @@ export interface MonoSetupInternal extends Required<MonoSetup> {
 
     _entries: _MonoEntryInternal[]
 
-    env?: {
+    env: {
         schema: MonoEnvMap
         values: MonoEnvValueMap | undefined
+        valuesProduction: MonoEnvValueMap | undefined
     }
 }

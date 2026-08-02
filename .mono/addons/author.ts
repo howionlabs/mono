@@ -17,7 +17,7 @@ export function $author(details: MonoPerson): MonoAddon {
         unique: true,
         actions: [
             {
-                name: 'addAuthorToMeta',
+                name: '$author.addAuthorToMeta',
                 order: 0,
                 callback: addAuthorToMeta
             }

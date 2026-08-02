@@ -3,7 +3,9 @@ import { type InspectColor, styleText } from 'node:util'
 
 export type CLIModifier = InspectColor | `${InspectColor}.${InspectColor}`
 
-export const INDENT_WIDTH = 7
+export type ItemIcon = 'bullet' | 'check' | 'cross' | 'dash'
+
+export const INDENT_WIDTH = 2
 
 /**
  * This is basically a wrapper around console.log, console.warn, and
@@ -11,6 +13,7 @@ export const INDENT_WIDTH = 7
  */
 export const cli = {
     _indentation: 0,
+    noOutput: false,
 
     indent(n: number = INDENT_WIDTH) {
         this._indentation += n
@@ -28,6 +31,11 @@ export const cli = {
         return this
     },
 
+    reset() {
+        this._indentation = 0
+        return this
+    },
+
     setIndentation(n: number) {
         this._indentation = n
 
@@ -38,28 +46,28 @@ export const cli = {
         return this
     },
 
-    warn(m?: unknown) {
+    warn(m?: unknown, modifier: CLIModifier = 'white') {
         this.__writeIndentation()
-        return this.write(`[WARN] `, 'yellow')
-            .indent(7)
-            .write(m, 'bold.white')
-            .dedent(7)
-            .write('\n')
+        return this.write(`! `, 'yellow.bold').indent(3).write(m, modifier).dedent(3).write('\n')
     },
 
-    error(m?: unknown) {
+    error(m?: unknown, modifier: CLIModifier = 'white') {
         this.__writeIndentation()
-        return this.write(`[FAIL] `, 'red').indent(7).write(m, 'bold.white').dedent(7).write('\n')
+        return this.write(`✖ `, 'red.bold').indent(3).write(m, modifier).dedent(3).write('\n')
     },
 
-    info(m?: unknown) {
+    info(m?: unknown, modifier: CLIModifier = 'white') {
         this.__writeIndentation()
-        return this.write(`[INFO] `, 'blue').indent(7).write(m, 'bold.white').dedent(7).write('\n')
+        return this.write(`i `, 'blue.bold').indent(3).write(m, modifier).dedent(3).write('\n')
     },
 
-    success(m?: unknown) {
+    success(m?: unknown, modifier: CLIModifier = 'white') {
         this.__writeIndentation()
-        return this.write(`[ OK ] `, 'green').indent(7).write(m, 'bold.white').dedent(7).write('\n')
+        return this.write(`✔ `, 'green.bold').indent(3).write(m, modifier).dedent(3).write('\n')
+    },
+
+    title(m?: unknown, modifier: CLIModifier = 'white.bold') {
+        return this.log(m, modifier)
     },
 
     log(m?: unknown, modifier: CLIModifier = 'gray') {
@@ -67,9 +75,33 @@ export const cli = {
         return this.write(m, modifier).write('\n')
     },
 
-    item(m?: unknown, modifier: CLIModifier = 'gray') {
+    delay(duration: number) {
+        return new Promise(resolve => setTimeout(() => resolve(this), duration))
+    },
+
+    item(m?: unknown, modifier: CLIModifier = 'gray', icon: ItemIcon = 'bullet') {
         this.__writeIndentation()
-        return this.write(`- `, modifier).indent(2).write(m, modifier).dedent(2).write('\n')
+
+        return this.write(`${this.__getIconSymbol(icon)} `, modifier)
+            .indent(2)
+            .write(m, modifier)
+            .dedent(2)
+            .write('\n')
+    },
+
+    __getIconSymbol(icon: ItemIcon) {
+        switch (icon) {
+            case 'bullet':
+                return '•'
+            case 'check':
+                return '✔'
+            case 'cross':
+                return '✖'
+            case 'dash':
+                return '-'
+            default:
+                throw new Error(`Unknown icon type: ${icon}`)
+        }
     },
 
     write(m?: unknown, modifier: CLIModifier = 'gray') {
@@ -134,6 +166,27 @@ export const cli = {
     },
 
     __write(buffer: string | Uint8Array, stream: WriteStream = process.stdout) {
+        if (this.noOutput) {
+            return
+        }
+
         stream.write(buffer)
+    },
+
+    handleError(e: unknown) {
+        const stack =
+            new Error().stack
+                ?.split('\n')
+                .map(l => l.trim())
+                .slice(2)
+                .join('\n') ?? 'No stack trace available'
+
+        if (e instanceof Error) {
+            this.error(e.message, 'red.bold').indent().log(stack, 'gray')
+        } else {
+            this.error(`Unknown error: ${e}`, 'red.bold')
+        }
+
+        this.log('')
     }
 }

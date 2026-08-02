@@ -11,7 +11,7 @@ export function $contributor(details: MonoPerson): MonoAddon {
         unique: false,
         actions: [
             {
-                name: 'addContributorToMeta',
+                name: '$contributor.addContributorToMeta',
                 order: 0,
                 callback: addContributorToMeta
             }

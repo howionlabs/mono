@@ -1,7 +1,13 @@
 import type { _MonoEntryInternal } from '../types'
+import { readdir } from 'node:fs/promises'
 import path from 'node:path'
 
 export const CWD = process.cwd()
+
+export function absoluteToRelative(absolutePath: string, basePath: string = CWD): string {
+    const relativePath = path.relative(basePath, absolutePath)
+    return relativePath.startsWith('.') ? relativePath : `./${relativePath}`
+}
 
 export function resolveRootPath(_path: string): string {
     return path.resolve(`${CWD}/${_path}`)
@@ -71,4 +77,13 @@ export async function writeFile(
     await toFile.write(data)
 
     return true
+}
+
+export async function dirExists(dirPath: string): Promise<boolean> {
+    try {
+        await readdir(dirPath)
+        return true
+    } catch (_) {
+        return false
+    }
 }

@@ -72,11 +72,7 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
         }
 
         if (entry._meta.author) {
-            const author = entry._meta.author
-
-            next.author.email = author.email
-            next.author.name = author.name
-            next.author.url = author.url
+            next.author = entry._meta.author
         } else {
             if (next.author) {
                 cli.warn(
@@ -187,13 +183,13 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
         actions: [
             {
                 callback: constructAndAddPjsonDataToMeta,
-                name: 'constructAndAddPJSONDataToMeta',
-                order: 0
+                name: '$npm.constructAndAddPJSONDataToMeta',
+                order: 20
             },
             {
                 callback: writePjson,
-                name: 'writePJSON',
-                order: 1
+                name: '$npm.writePJSON',
+                order: 30
             }
         ],
         name: '$npm',

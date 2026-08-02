@@ -43,7 +43,7 @@ export function $git(
         unique: true,
         actions: [
             {
-                name: 'addGitDataToMeta',
+                name: '$git.addGitDataToMeta',
                 order: 0,
                 callback: addGitDataToMeta
             }

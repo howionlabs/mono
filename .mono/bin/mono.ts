@@ -8,10 +8,14 @@ import type {
     MonoSetupInternal
 } from './types'
 import { readEnv } from './env'
+import { cli } from './utils/cli'
 import { resolveRootPath } from './utils/fs'
 
 export const monoEnvPath = resolveRootPath('.mono.env.ts')
-export const rootEnvFile = resolveRootPath('.env')
+
+export const rootEnvFile = Bun.file(resolveRootPath('.env'))
+export const rootEnvExampleFile = Bun.file(resolveRootPath('.env.example'))
+export const rootEnvProductionFile = Bun.file(resolveRootPath('.env.production'))
 
 export const ENTRY_ID_REGEX = /^[a-z0-9]+[a-z0-9-]+$/
 
@@ -24,11 +28,11 @@ function internalizeEntries(
 
     for (const entry of entries) {
         if (!entry.id || !ENTRY_ID_REGEX.test(entry.id)) {
-            throw new Error(`Invalid entry ID: ${entry.id}`)
+            throw new Error(`Invalid entry identifier "${entry.id}"`)
         }
 
         if (map.has(entry.id)) {
-            throw new Error(`Duplicate entry ID: ${entry.id}`)
+            throw new Error(`Duplicate entry identifier "${entry.id}"`)
         }
 
         const addons = (entry.addons || []).flatMap(addon =>
@@ -73,28 +77,44 @@ function internalizeEntries(
  * referenced authors exist.
  */
 export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
-    const map = new Map<string, _MonoEntryInternal>()
+    try {
+        const map = new Map<string, _MonoEntryInternal>()
 
-    const envSchema: MonoEnvMap = await import(monoEnvPath).then(module => module.default)
-    let envValueMap: MonoEnvValueMap | undefined
-
-    const envFile = Bun.file(rootEnvFile)
-
-    if (await envFile.exists()) {
-        const envContent = await envFile.text()
-        envValueMap = readEnv(envContent, envSchema)
-    }
-
-    const apps = internalizeEntries(setup.apps || [], map, 'app')
-    const modules = internalizeEntries(setup.modules || [], map, 'module')
-
-    return {
-        apps: apps,
-        modules: modules,
-        _entries: [...apps, ...modules],
-        env: {
-            schema: envSchema,
-            values: envValueMap
+        if (!(await Bun.file(monoEnvPath).exists())) {
+            throw new Error(
+                `Mono environment file ".mono.env.ts" could not be found. Please ensure that the file exists and is accessible.`
+            )
         }
+
+        const envSchema: MonoEnvMap = await import(monoEnvPath).then(module => module.default)
+        let envValueMap: MonoEnvValueMap | undefined
+        let envValueMapProduction: MonoEnvValueMap | undefined
+
+        if (await rootEnvFile.exists()) {
+            const envContent = await rootEnvFile.text()
+            envValueMap = readEnv(envContent, envSchema)
+        }
+
+        if (await rootEnvProductionFile.exists()) {
+            const envContent = await rootEnvProductionFile.text()
+            envValueMapProduction = readEnv(envContent, envSchema)
+        }
+
+        const apps = internalizeEntries(setup.apps || [], map, 'app')
+        const modules = internalizeEntries(setup.modules || [], map, 'module')
+
+        return {
+            apps: apps,
+            modules: modules,
+            _entries: [...apps, ...modules],
+            env: {
+                schema: envSchema,
+                values: envValueMap,
+                valuesProduction: envValueMapProduction
+            }
+        }
+    } catch (e: unknown) {
+        cli.handleError(e)
+        process.exit(1)
     }
 }

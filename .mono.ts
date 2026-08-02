@@ -1,4 +1,4 @@
-import { $author, $git, $license, $npm, $statics, mono } from './.mono/mono.ts'
+import { $author, $git, $license, $npm, $statics, mono } from 'mono'
 
 const $authorHowion = $author({
     email: 'me@howion.com',

@@ -1,6 +1,6 @@
-# mono
+# <sup><samp>howionlabs</samp></sup>mono
 
-Howion's custom (and quite opinionated) monorepo to manage all of its (public and private) [**@howionlabs**](http://github.com/howionlabs) repositories.
+Howion's custom (and quite opinionated) monorepo to manage all of its (public and private) [@howionlabs](http://github.com/howionlabs) repositories.
 
 ## Motivation
 
@@ -21,12 +21,33 @@ This monorepo is currently is being used by us therefore, especially `.mono.ts`,
 
 ## Mono Addons
 
+### `$author`
+
+### `$contributor`
+
+### `$env`
+
+### `$git`
+
+### `$keys`
+
+### `$license`
+
+### `$npm`
+
+### `$static`
+
 ## Mono CLI
+
+## Best Practices
+
+## Tech Stack
 
 ## Roadmap
 
-1. Better secret management via `env` addon instead of relying manual per-repository .env management.
+1. Better key management via `keys` addon.
+2. `bun mono push` safety checks.
 
 ## License
 
-The code related to the monorepo skeleton (which excludes the contents of git-ignored `apps` and `modules` folders that contain proprietary/private code) is licensed under the [MIT License](./LICENSE).
+The code related to the monorepo skeleton (which excludes `./apps` and `./modules` that contain proprietary code) is licensed under the [MIT License](./LICENSE).

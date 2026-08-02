@@ -1,6 +1,8 @@
 import type { MonoSetupInternal } from './types'
+import { buildEnv } from './env'
+import { rootEnvExampleFile, rootEnvFile, rootEnvProductionFile } from './mono'
 import { cli } from './utils/cli'
-import { resolveRootPath } from './utils/fs'
+import { absoluteToRelative, dirExists, resolveRootPath } from './utils/fs'
 
 export const monoSetupPath = resolveRootPath('.mono.ts')
 
@@ -20,9 +22,36 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
     const setup: MonoSetupInternal = await import(monoSetupPath).then(m => m.default)
 
     if (!id) {
-        // cli.warn('Remolding all the entries...').log('')
+        cli.info('Remolding the monorepo itself...', 'green.bold').indent()
+        cli.item("Set up root .env's", 'white.bold').indent()
+
+        // .env
+
+        cli.item('.env')
+        const envContent = buildEnv(setup.env.schema, setup.env.values)
+        await rootEnvFile.write(envContent)
+
+        // .env.example
+
+        cli.item('.env.example')
+        const envExample = buildEnv(setup.env.schema, undefined)
+        await rootEnvExampleFile.write(envExample)
+
+        // .env.production
+
+        cli.item('.env.production')
+        const envProduction = buildEnv(setup.env.schema, setup.env.valuesProduction)
+        await rootEnvProductionFile.write(envProduction)
+
+        cli.reset()
+
+        // entries
+
+        cli.info('Remolding all the entries...', 'green.bold').indent()
 
         let exitCode = 0
+
+        cli.reset()
 
         // TODO: Consider parallelizing?
         for (const entry of setup._entries) {
@@ -34,6 +63,8 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
             }
         }
 
+        cli.log('').success('Remolded all the entries successfully!', 'green.bold')
+
         return exitCode
     }
 
@@ -41,26 +72,39 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
 
     if (!entry) {
         cli.error(`Entry with the identifier "${id}" could not be found.`)
+        cli.reset()
         return 1
     }
 
-    cli.info(`Remolding ${entry.id}...`)
+    // make sure the entry path exists
+    const folder = entry._path
+    const linkablePath = `${entry._type}s/${entry.id}`
+
+    cli.indent().item(linkablePath, 'white.bold').indent()
+
+    if (!(await dirExists(folder))) {
+        cli.item(`Create non-existent folder ${absoluteToRelative(folder)}`, 'gray.bold')
+        await Bun.$`mkdir -p ${folder}`.quiet()
+    }
+
+    if (entry._actions.length > 0) {
+        cli.item('Run addon actions', 'gray.bold').indent()
+    }
+
+    for (const action of entry._actions) {
+        if (opts.verbose) {
+            cli.item(`${action.name}`, 'gray.italic').indent()
+        }
+
+        await action.callback(entry)
+
+        if (opts.verbose) cli.dedent()
+    }
+
+    cli.reset()
 
     return 0
 }
-
-// export async function remold(moduleName?: string, options?: RemoldOptions) {
-//     if (module.git) {
-//         const gitDirExists = hasGitDirSync(module.path)
-//         if (gitDirExists) {
-//             cli.item(`Git repository already exists, skipping initialization`)
-//         } else {
-//             cli.item(`Initializing git repository...`)
-//             await initializeGitRepo(module)
-//         }
-//     }
-//     cli.item(`Remolded ${module.id} successfully.`, 'green')
-// }
 
 // function hasGitDirSync(root: string) {
 //     const folder = fs.readdirSync(root, { withFileTypes: true })

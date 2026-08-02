@@ -14,13 +14,13 @@ export function $env(...variables: string[]): MonoAddon {
         unique: false,
         actions: [
             {
-                name: 'addEnvVariablesToMeta',
+                name: '$env.addEnvVariablesToMeta',
                 order: 0,
                 callback: addEnvVariablesToMeta
             },
             {
-                name: 'writeEnvFiles',
-                order: 1,
+                name: '$env.writeEnvFiles',
+                order: 10,
                 callback: () => {}
             }
         ]

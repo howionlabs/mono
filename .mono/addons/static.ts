@@ -30,8 +30,8 @@ export function $static(from: string, to?: string, alwaysOverwrite: boolean = fa
         unique: false,
         actions: [
             {
-                name: 'writeStaticFile',
-                order: 0,
+                name: '$static.writeStaticFile',
+                order: 10,
                 callback: writeStaticFile
             }
         ]
