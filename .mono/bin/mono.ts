@@ -3,6 +3,7 @@ import type {
     MonoAddonAction,
     MonoEntry,
     MonoEnvMap,
+    MonoEnvSetup,
     MonoEnvValueMap,
     MonoSetup,
     MonoSetupInternal
@@ -11,6 +12,7 @@ import { readEnv } from './env'
 import { cli } from './utils/cli'
 import { resolveRootPath } from './utils/fs'
 
+export const monoSetupPath = resolveRootPath('.mono.ts')
 export const monoEnvPath = resolveRootPath('.mono.env.ts')
 
 export const rootEnvFile = Bun.file(resolveRootPath('.env'))
@@ -86,6 +88,23 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
             )
         }
 
+        const apps = internalizeEntries(setup.apps || [], map, 'app')
+        const modules = internalizeEntries(setup.modules || [], map, 'module')
+
+        return {
+            apps: apps,
+            modules: modules,
+            _entries: [...apps, ...modules],
+            env: await _monoEnvSetup()
+        }
+    } catch (e: unknown) {
+        cli.handleError(e)
+        process.exit(1)
+    }
+}
+
+export async function _monoEnvSetup(): Promise<MonoEnvSetup> {
+    try {
         const envSchema: MonoEnvMap = await import(monoEnvPath).then(module => module.default)
         let envValueMap: MonoEnvValueMap | undefined
         let envValueMapProduction: MonoEnvValueMap | undefined
@@ -100,18 +119,10 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
             envValueMapProduction = readEnv(envContent, envSchema)
         }
 
-        const apps = internalizeEntries(setup.apps || [], map, 'app')
-        const modules = internalizeEntries(setup.modules || [], map, 'module')
-
         return {
-            apps: apps,
-            modules: modules,
-            _entries: [...apps, ...modules],
-            env: {
-                schema: envSchema,
-                values: envValueMap,
-                valuesProduction: envValueMapProduction
-            }
+            schema: envSchema,
+            values: envValueMap,
+            valuesProduction: envValueMapProduction
         }
     } catch (e: unknown) {
         cli.handleError(e)

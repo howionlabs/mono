@@ -13,6 +13,11 @@ export interface MonoGit {
     protocol: 'ssh' | 'https'
     owner: string
     repo: string
+
+    /**
+     * Defaults to the branch name of the mono(repository).
+     */
+    branch: string
 }
 
 export interface MonoPerson {
@@ -33,6 +38,10 @@ export interface MonoPerson {
     url: string
 }
 
+export interface MonoAddonActionOptions {
+    verbose?: boolean
+}
+
 export interface MonoAddonAction {
     /**
      * Name of the addon action for debugging and logging purposes. It should
@@ -47,7 +56,7 @@ export interface MonoAddonAction {
      */
     order: number
 
-    callback: (entry: _MonoEntryInternal, verbose?: boolean) => void | Promise<void>
+    callback: (entry: _MonoEntryInternal, opts: MonoAddonActionOptions) => void | Promise<void>
 }
 
 export interface MonoAddon {
@@ -219,12 +228,13 @@ export interface MonoSetup {
 export interface MonoSetupInternal extends Required<MonoSetup> {
     apps: _MonoEntryInternal[]
     modules: _MonoEntryInternal[]
+    env: MonoEnvSetup
 
     _entries: _MonoEntryInternal[]
+}
 
-    env: {
-        schema: MonoEnvMap
-        values: MonoEnvValueMap | undefined
-        valuesProduction: MonoEnvValueMap | undefined
-    }
+export interface MonoEnvSetup {
+    schema: MonoEnvMap
+    values: MonoEnvValueMap | undefined
+    valuesProduction: MonoEnvValueMap | undefined
 }

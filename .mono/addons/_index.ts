@@ -8,9 +8,9 @@ export * from './static'
 /**
  * A single addon can have multiple actions, and they will be executed in the
  * order of their `order` property. The `order` property is a number that
- * indicates the order in which the action should be executed among all the
- * actions of all the addons. The lower the number, the earlier the action will
- * be executed.
+ * indicates the order in which the action should be executed among all actions
+ * of all addons. The lower the number, the earlier the action will be
+ * executed.
  *
  * This way, for example, $npm addon can read the metadata of the entry about
  * $author, $git, and $license etc, and then modify the content of the entry

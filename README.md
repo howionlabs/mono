@@ -8,16 +8,14 @@ None of the existing monorepo tools or structures were good enough and always re
 
 This monorepo is currently is being used by us therefore, especially `.mono.ts`, is subject to change. You probably just don't get to see `apps` and `modules` contents unless you have access to relative (sub)repositories.
 
-## Folder Structure
-
-<!-- ### `.mono` -->
+<!-- ## Folder Structure
 
 * **`.mono`** for monorepo-related scripts
     * **`.mono/static`** for static files such as opinionated `.gitignore`'s etc. to be copied/upserted into `apps` and `modules` depending on their configuration.
 * (git-ignored) **`apps`** for apps
 * (git-ignored) **`modules`** for modules that are possibly seperate projects which could be accessed from `apps` or from other `modules`.
 * **`.mono.ts`** is the configuration file to customize the setup.
-* **`.editorconfig`**, **`.gitignore`**, **`.markdownlint.jsonc`**, and **`biome.jsonc`** are opinionated configurations whose definitions should match of those in `apps` and `modules`.
+* **`.editorconfig`**, **`.gitignore`**, **`.markdownlint.jsonc`**, and **`biome.jsonc`** are opinionated configurations whose definitions should match of those in `apps` and `modules`. -->
 
 ## Mono Addons
 
@@ -40,6 +38,8 @@ This monorepo is currently is being used by us therefore, especially `.mono.ts`,
 ## Mono CLI
 
 ## Best Practices
+
+* This monorepo supports single branch for managing it's git-tracked entries. By default it uses the "main" branch, however you could overwrite this per entry.
 
 ## Tech Stack
 

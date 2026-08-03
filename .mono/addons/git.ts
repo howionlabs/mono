@@ -1,4 +1,5 @@
 import type { _MonoEntryInternal, MonoAddon, MonoGit } from '../mono'
+import { rootGitBranchName } from '../bin/git'
 import { cli } from '../bin/utils/cli'
 
 /**
@@ -21,6 +22,7 @@ export function $git(
     owner: string,
     repo: string,
     protocol: 'ssh' | 'https' = 'ssh',
+    branch?: string,
     server: MonoGit['server'] = 'github.com'
 ): MonoAddon {
     async function addGitDataToMeta(entry: _MonoEntryInternal) {
@@ -34,7 +36,8 @@ export function $git(
             server,
             protocol,
             owner,
-            repo
+            repo,
+            branch: branch ?? (await rootGitBranchName())
         }
     }
 

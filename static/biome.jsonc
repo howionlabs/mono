@@ -7,7 +7,18 @@
             "source": {
                 "useSortedInterfaceMembers": "off",
                 "useSortedKeys": "off",
-                "useSortedPackageJson": "off"
+                "useSortedPackageJson": "off",
+                "organizeImports": {
+                    "level": "on",
+                    "options": {
+                        "identifierOrder": "natural",
+                        "groups": [
+                            {
+                                "type": true
+                            }
+                        ]
+                    }
+                }
             }
         },
         "enabled": true
@@ -17,7 +28,14 @@
     "files": {
         "ignoreUnknown": true,
         //  exclusions are handled by .gitignore and .biomeignore
-        "includes": ["**", "!package.json", "!biome.jsonc", "!!.vscode"],
+        "includes": [
+            "**",
+            "!package.json",
+            "!biome.jsonc",
+            "!!.vscode",
+            "!!public",
+            "!!static"
+        ],
         // 1MB
         "maxSize": 1000000
     },
@@ -77,32 +95,34 @@
         "enabled": true,
         "rules": {
             "preset": "recommended",
+            "a11y": {
+                "useValidAriaRole": "info",
+                "noSvgWithoutTitle": "info",
+                "noStaticElementInteractions": "info",
+                "useKeyWithClickEvents": "info"
+            },
             "style": {
-                "noDefaultExport": "off"
+                "noDefaultExport": "off",
+                "noNonNullAssertion": "off"
+            },
+            "suspicious": {
+                "noExplicitAny": "info",
+                "noEmptyInterface": "info"
             }
         }
         // "rules": {
-        //     "a11y": {
-        //         "useValidAriaRole": "off",
-        //         "noSvgWithoutTitle": "off",
-        //         "noStaticElementInteractions": "off",
-        //         "useKeyWithClickEvents": "off"
-        //     },
         //     "correctness": {
         //         "noUnknownTypeSelector": "off"
         //     },
-        //     "suspicious": {
-        //         "noExplicitAny": "off",
-        //         "noEmptyInterface": "off"
-        //     },
-        //     "style": {
-        //         "noNonNullAssertion": "off"
-        //     }
         // }
     },
     "overrides": [
         {
-            "includes": ["**/*.svelte", "**/*.astro", "**/*.vue"],
+            "includes": [
+                "**/*.svelte",
+                "**/*.astro",
+                "**/*.vue"
+            ],
             "linter": {
                 "rules": {
                     "correctness": {

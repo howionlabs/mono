@@ -1,4 +1,6 @@
 import type { _MonoEntryInternal, MonoAddon } from '../mono'
+import { constructAndWriteEnvFiles } from '../bin/env'
+import { _monoEnvSetup } from '../bin/mono'
 
 export function $env(...variables: string[]): MonoAddon {
     async function addEnvVariablesToMeta(entry: _MonoEntryInternal) {
@@ -7,6 +9,19 @@ export function $env(...variables: string[]): MonoAddon {
         for (const variable of variables) {
             entry._meta.env.variables.add(variable)
         }
+    }
+
+    async function writeEnvFiles(entry: _MonoEntryInternal) {
+        const envSetup = await _monoEnvSetup()
+
+        await constructAndWriteEnvFiles(
+            entry._path,
+            envSetup.schema,
+            envSetup.values,
+            envSetup.valuesProduction
+        )
+
+        // .env
     }
 
     return {
@@ -21,7 +36,7 @@ export function $env(...variables: string[]): MonoAddon {
             {
                 name: '$env.writeEnvFiles',
                 order: 10,
-                callback: () => {}
+                callback: writeEnvFiles
             }
         ]
     }

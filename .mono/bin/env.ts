@@ -77,7 +77,7 @@ export function readEnv(source: string | Buffer, schema: MonoEnvMap): MonoEnvVal
 
                 if (Number.isNaN(numberValue)) {
                     throw new Error(
-                        `Invalid value for environment variable "${key}". Expected number, got "${value}".`
+                        `Invalid value for the environment variable "${key}". Expected number, got "${value}".`
                     )
                 }
 
@@ -91,7 +91,7 @@ export function readEnv(source: string | Buffer, schema: MonoEnvMap): MonoEnvVal
                     result.set(key, false)
                 } else {
                     throw new Error(
-                        `Invalid value for environment variable "${key}". Expected "true" or "false", got "${value}".`
+                        `Invalid value for the environment variable "${key}". Expected "true" or "false", got "${value}".`
                     )
                 }
             }
@@ -194,6 +194,25 @@ export function buildEnv(schema: MonoEnvMap, valueMap?: MonoEnvValueMap): string
     return result
 }
 
+export async function constructAndWriteEnvFiles(
+    absoluteBasePath: string,
+    schema: MonoEnvMap,
+    valueMap?: MonoEnvValueMap,
+    valueMapProduction?: MonoEnvValueMap
+): Promise<void> {
+    const envFile = Bun.file(`${absoluteBasePath}/.env`)
+    const envExampleFile = Bun.file(`${absoluteBasePath}/.env.example`)
+    const envProductionFile = Bun.file(`${absoluteBasePath}/.env.production`)
+
+    const envContent = buildEnv(schema, valueMap)
+    const envExampleContent = buildEnv(schema, undefined)
+    const envProductionContent = buildEnv(schema, valueMapProduction)
+
+    await envFile.write(envContent)
+    await envExampleFile.write(envExampleContent)
+    await envProductionFile.write(envProductionContent)
+}
+
 /**
  * Environment variable builder utility.
  */
@@ -271,7 +290,7 @@ export class EnvVariableBuilder<T extends 'text' | 'number' | 'boolean'> {
     desc(description: string) {
         if (description.trim() !== description) {
             throw new Error(
-                `Invalid description for environment variable "${this._name}". Must not have leading or trailing whitespace.`
+                `Invalid description for the environment variable "${this._name}". Must not have leading or trailing whitespace.`
             )
         }
 
@@ -297,7 +316,7 @@ export class EnvVariableBuilder<T extends 'text' | 'number' | 'boolean'> {
             (this._type === 'boolean' && typeof value !== 'boolean')
         ) {
             throw new Error(
-                `Invalid default value for environment variable "${this._name}". Expected ${this._type}, got ${typeof value}.`
+                `Invalid default value for the environment variable "${this._name}". Expected ${this._type}, got ${typeof value}.`
             )
         }
 

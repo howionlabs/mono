@@ -7,5 +7,31 @@
     "js/ts.tsdk.path": "./node_modules/typescript",
     "[jsonc]": {
         "editor.defaultFormatter": "vscode.json-language-features"
-    }
+    },
+    "search.exclude": {
+        "**/.git": true,
+        "**/node_modules": true,
+        "**/.vscode": true,
+        "**/dist": true,
+        "**/build": true,
+        // "**/.mono": true,
+        // ".editorconfig": true,
+        // ".markdownlint.jsonc": true,
+        // "biome.jsonc": true,
+        // "bun.lock": true,
+        // "README.md": true,
+        // "tsconfig.json": true
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/node_modules": true,
+        "**/.DS_Store": true,
+        // "**/.mono": true,
+        // ".editorconfig": true,
+        // ".markdownlint.jsonc": true,
+        // "biome.jsonc": true,
+        // "bun.lock": true,
+        // "README.md": true,
+        // "tsconfig.json": true
+    },
 }
