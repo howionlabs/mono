@@ -8,10 +8,16 @@ import type {
     MonoSetup,
     MonoSetupInternal
 } from './types'
-import { ENTRY_ID_REGEX, monoEnvPath, rootEnvFile, rootEnvProductionFile } from './constants'
+import {
+    ENTRY_ID_REGEX,
+    monoEnvPath,
+    monoSetupPath,
+    rootEnvFile,
+    rootEnvProductionFile
+} from './constants'
 import { readEnv } from './env'
 import { cli } from './utils/cli'
-import { resolveRootPath } from './utils/fs'
+import { readDir, resolveRootPath } from './utils/fs'
 
 function internalizeEntries(
     entries: MonoEntry[],
@@ -86,7 +92,7 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
         return {
             apps: apps,
             modules: modules,
-            _entries: [...apps, ...modules],
+            _entriesMap: map,
             env: await _monoEnvSetup()
         }
     } catch (e: unknown) {
@@ -115,6 +121,40 @@ export async function _monoEnvSetup(): Promise<MonoEnvSetup> {
             schema: envSchema,
             values: envValueMap,
             valuesProduction: envValueMapProduction
+        }
+    } catch (e: unknown) {
+        cli.handleError(e)
+        process.exit(1)
+    }
+}
+
+export async function assertMonoSetup(): Promise<void> {
+    try {
+        const setup: MonoSetupInternal = await import(monoSetupPath).then(m => m.default)
+
+        const appsDir = await readDir(resolveRootPath('apps'))
+        const modulesDir = await readDir(resolveRootPath('modules'))
+
+        const entries = [...appsDir, ...modulesDir]
+
+        for (const entry of entries) {
+            if (!entry.isDirectory()) {
+                throw new Error(
+                    `Invalid entry "${entry.name}" found in the monorepo. All entries must be directories.`
+                )
+            }
+
+            if (entry.isSymbolicLink()) {
+                throw new Error(
+                    `Invalid entry "${entry.name}" found in the monorepo. Symbolic links are not allowed for entries.`
+                )
+            }
+
+            if (!setup._entriesMap.has(entry.name)) {
+                throw new Error(
+                    `Entry "${entry.name}" found in "${entry.parentPath}" does not have a corresponding entry in the .mono.ts configuration. Please ensure that all entries are defined in the setup.`
+                )
+            }
         }
     } catch (e: unknown) {
         cli.handleError(e)

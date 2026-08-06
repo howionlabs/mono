@@ -1,15 +1,11 @@
 import { $author, $biomejs, $git, $license, $markdownlint, $npm, $vscode, mono } from 'mono'
 
-const $howion = $author({
-    email: 'me@howion.com',
-    name: 'howion',
-    url: 'https://howion.com'
-})
+const $howion = $author('howion <me@howion.com> (https://howion.com)')
 
 export default mono({
     apps: [
         {
-            id: 'ionizer-vite',
+            id: 'ionizer',
             name: 'Ionizer',
             description: '',
             version: '0.1.0',
@@ -20,7 +16,7 @@ export default mono({
                 $vscode(),
                 $markdownlint(),
                 $biomejs(),
-                $git('howionlabs', 'ionizer-vite', 'ssh'),
+                $git('ssh://git@github.com/howionlabs/ionizer.git'),
                 $npm('@howionlabs/ionizer')
             ]
         }
@@ -35,7 +31,7 @@ export default mono({
             addons: [
                 $howion,
                 $markdownlint(),
-                $git('howionlabs', 'huid-spec', 'ssh'),
+                $git('ssh://git@github.com/howionlabs/huid-spec.git'),
                 $license('cc-by-sa-30')
             ]
         },
@@ -45,14 +41,14 @@ export default mono({
             version: '0.1.0',
             public: true,
             description:
-                "The official reference implementation in TypeScript for Howion's Unique IDentifier.",
+                "The official reference implementation of Howion's Unique IDentifier in TypeScript.",
             addons: [
                 $howion,
                 $license('mit'),
                 $vscode(),
                 $markdownlint(),
                 $biomejs(),
-                $git('howionlabs', 'huid-ts', 'ssh'),
+                $git('ssh://git@github.com/howionlabs/huid-ts.git'),
                 $npm('@howionlabs/huid')
             ]
         }

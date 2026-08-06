@@ -8,16 +8,33 @@ export interface MonoLicense {
     npm?: string
 }
 
-export interface MonoGit {
-    server: 'github.com'
-    protocol: 'ssh' | 'https'
-    owner: string
-    repo: string
+export type MonoGitProtocol = 'ssh' | 'https'
+export type MonoGitServer = string
+export type MonoGitOwner = string
+export type MonoGitRepo = string
 
-    /**
-     * Defaults to the branch name of the mono(repository).
-     */
-    branch: string
+export type MonoGitSSHUser = string
+export type MonoGitPort = number
+
+export type MonoGitURI = string
+// // https syntax
+// | `https://${MonoGitServer}/${MonoGitOwner}/${MonoGitRepo}.git`
+// | `https://${MonoGitServer}:${MonoGitPort}/${MonoGitOwner}/${MonoGitRepo}.git`
+// // scp syntax
+// | `${MonoGitSSHUser}@${MonoGitServer}:${MonoGitOwner}/${MonoGitRepo}.git`
+// | `${MonoGitSSHUser}@${MonoGitServer}:${MonoGitPort}/${MonoGitOwner}/${MonoGitRepo}.git`
+// // standard SSH syntax
+// | `ssh://${MonoGitSSHUser}@${MonoGitServer}/${MonoGitOwner}/${MonoGitRepo}.git`
+// | `ssh://${MonoGitSSHUser}@${MonoGitServer}:${MonoGitPort}/${MonoGitOwner}/${MonoGitRepo}.git`
+
+export interface MonoGit {
+    server: MonoGitServer
+    protocol: MonoGitProtocol
+    owner: MonoGitOwner
+    repo: MonoGitRepo
+
+    user?: MonoGitSSHUser
+    port?: MonoGitPort
 }
 
 export interface MonoPerson {
@@ -29,13 +46,13 @@ export interface MonoPerson {
     /**
      * Email address of the author, used for contact and attribution purposes
      */
-    email: string
+    email?: string
 
     /**
      * URL to the author's personal or professional website, providing
      * additional context and information about the author
      */
-    url: string
+    url?: string
 }
 
 export interface MonoAddonActionOptions {
@@ -255,7 +272,7 @@ export interface MonoSetupInternal extends Required<MonoSetup> {
     modules: _MonoEntryInternal[]
     env: MonoEnvSetup
 
-    _entries: _MonoEntryInternal[]
+    _entriesMap: Map<string, _MonoEntryInternal>
 }
 
 export interface MonoEnvSetup {

@@ -25,7 +25,7 @@ export async function commit(id?: string, options?: PullOptions): Promise<number
 
             let exitCode = 0
 
-            for (const entry of setup._entries) {
+            for (const entry of setup._entriesMap.values()) {
                 if (entry._meta.git === undefined) {
                     cli.item(
                         `Skipping "${entry._type}s/${entry.id}" because it is not git tracked.`,
@@ -43,7 +43,7 @@ export async function commit(id?: string, options?: PullOptions): Promise<number
 
             return exitCode
         }
-        const entry = setup._entries.find(e => e.id === id)
+        const entry = setup._entriesMap.get(id)
 
         if (!entry) {
             cli.error(`Entry with the identifier "${id}" could not be found.`)

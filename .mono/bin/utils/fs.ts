@@ -1,3 +1,4 @@
+import type { Dirent } from 'node:fs'
 import type { _MonoEntryInternal } from '../types'
 import { readdir } from 'node:fs/promises'
 import path from 'node:path'
@@ -85,5 +86,16 @@ export async function dirExists(dirPath: string): Promise<boolean> {
         return true
     } catch (_) {
         return false
+    }
+}
+
+export async function readDir(dirPath: string): Promise<Dirent[]> {
+    try {
+        return await readdir(dirPath, {
+            withFileTypes: true,
+            recursive: false
+        })
+    } catch (error) {
+        throw new Error(`Failed to read directory "${dirPath}": ${error}`)
     }
 }

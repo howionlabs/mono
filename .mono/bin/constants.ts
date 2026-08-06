@@ -8,6 +8,15 @@ export const CLI_INDENT_WIDTH = 2
 
 export const LICENSES = ['agpl-v3', 'cc-by-sa-30', 'mit', 'mpl-2.0'] as const
 
+export const MONO_GIT_URI_HTTPS_REGEX =
+    /^https:\/\/(?:(?<user>[^/:]+)@)?(?<server>[^/:@]+)(?::(?<port>\d+))?\/(?<owner>[^/]+)\/(?<repo>[^/]+)\.git$/
+
+export const MONO_GIT_URI_SSH_REGEX =
+    /^ssh:\/\/(?<user>[^/:]+)@(?<server>[^/:@]+)(?::(?<port>\d+))?\/(?<owner>[^/]+)\/(?<repo>[^/]+)\.git$/
+
+export const MONO_GIT_URI_SCP_REGEX =
+    /^(?<user>[^/:]+)@(?<server>[^/:@]+):(?:(?<port>\d+)\/|\/)?(?<owner>[^/]+)\/(?<repo>[^/]+)\.git$/
+
 export const ENV_NAME_REGEX = /^[A-Z0-9_]+$/
 export const ENV_DEFAULT_LINE_WIDTH = 80
 
@@ -28,6 +37,9 @@ export const rootEnvExampleFile = Bun.file(resolveRootPath('.env.example'))
 export const rootEnvProductionFile = Bun.file(resolveRootPath('.env.production'))
 
 export const ENTRY_ID_REGEX = /^[a-z0-9]+[a-z0-9-]+$/
+
+export const AUTHOR_REGEX =
+    /^(?<name>[^<]+?)\s*(?:<(?<email>[^@>]+@[^>]+)>)?\s*(?:\((?<url>[^)]+)\))?$/
 
 // biome is not a dev dependency at the root
 export const monoBiomeVersion = monoPJSON.dependencies['@biomejs/biome']

@@ -33,7 +33,8 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
 
             // entries
 
-            cli.reset()
+            cli.log('').reset()
+
             cli.info('Remolding all entries...', 'green.bold').indent()
 
             let exitCode = 0
@@ -41,7 +42,7 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
             cli.reset()
 
             // TODO: Consider parallelizing?
-            for (const entry of setup._entries) {
+            for (const entry of setup._entriesMap.values()) {
                 const code = await remold(entry.id, opts)
 
                 if (code !== 0) {
@@ -55,7 +56,7 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
             return exitCode
         }
 
-        const entry = setup._entries.find(e => e.id === id)
+        const entry = setup._entriesMap.get(id)
 
         if (!entry) {
             cli.error(`Entry with the identifier "${id}" could not be found.`)

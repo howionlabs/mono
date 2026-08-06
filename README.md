@@ -37,6 +37,14 @@ This monorepo is currently is being used by us therefore, especially `.mono.ts`,
 
 ## Mono CLI
 
+### `remold`
+
+### `pull [id]`
+
+### `commit [id]`
+
+### `push [id]`
+
 ## Best Practices
 
 * This monorepo supports single branch for managing it's git-tracked entries. By default it uses the "main" branch, however you could overwrite this per entry.
@@ -46,8 +54,12 @@ This monorepo is currently is being used by us therefore, especially `.mono.ts`,
 
 ## Roadmap
 
-1. Better key management via `keys` addon.
-2. `bun mono push` safety checks.
+1. Git branch management.
+2. Better tracking reporting both by mono and git for all workspace directories.
+3. Consider adding `.example` to mono env schema for `.env.example`.
+4. `bun mono push` safety checks.
+5. Better key management via `keys` addon.
+6. Gitleaks or Betterleaks?
 
 ## License
 
