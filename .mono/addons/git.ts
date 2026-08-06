@@ -1,5 +1,5 @@
 import type { _MonoEntryInternal, MonoAddon, MonoGit } from '../mono'
-import { MONO_AUTOGEN_DISCLAIMER, monoAddonGitignoreFile } from '../bin/constants'
+import { MONO_AUTOGEN_DISCLAIMER, MONO_HASHTAG_BAR, monoAddonGitignoreFile } from '../bin/constants'
 import { rootGitBranchName } from '../bin/git'
 import { cli } from '../bin/utils/cli'
 import { resolveEntryPath, writeFile } from '../bin/utils/fs'
@@ -9,8 +9,9 @@ let constructedGitignore = ''
 async function constructGitignoreContent(): Promise<string> {
     if (constructedGitignore) return constructedGitignore
 
-    let content = MONO_AUTOGEN_DISCLAIMER
-    content += '\n\n'
+    let content = `${MONO_HASHTAG_BAR}\n`
+    content += MONO_AUTOGEN_DISCLAIMER
+    content += `\n${MONO_HASHTAG_BAR}\n\n`
 
     content += await monoAddonGitignoreFile.text()
 

@@ -1,6 +1,11 @@
 import type { MonoEnvMap, MonoEnvValueMap, MonoEnvVariable } from './types'
 import { parse } from 'dotenv'
-import { ENV_DEFAULT_LINE_WIDTH, ENV_NAME_REGEX, MONO_AUTOGEN_DISCLAIMER } from './constants'
+import {
+    ENV_DEFAULT_LINE_WIDTH,
+    ENV_NAME_REGEX,
+    MONO_AUTOGEN_DISCLAIMER,
+    MONO_HASHTAG_BAR
+} from './constants'
 import { cli } from './utils/cli'
 import { breakTextToLines } from './utils/misc'
 
@@ -110,9 +115,9 @@ export function readEnv(source: string | Buffer, schema: MonoEnvMap): MonoEnvVal
 export function buildEnv(schema: MonoEnvMap, valueMap?: MonoEnvValueMap): string {
     let result = ``
 
-    result += '#'.repeat(ENV_DEFAULT_LINE_WIDTH - 1)
+    result += MONO_HASHTAG_BAR
     result += `\n${MONO_AUTOGEN_DISCLAIMER}\n`
-    result += '#'.repeat(ENV_DEFAULT_LINE_WIDTH - 1)
+    result += MONO_HASHTAG_BAR
     result += `\n`
 
     // a -> z

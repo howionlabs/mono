@@ -1,5 +1,9 @@
 import type { _MonoEntryInternal, MonoAddon } from '../mono'
-import { MONO_AUTOGEN_DISCLAIMER, monoAddonEditorConfigFile } from '../bin/constants'
+import {
+    MONO_AUTOGEN_DISCLAIMER,
+    MONO_HASHTAG_BAR,
+    monoAddonEditorConfigFile
+} from '../bin/constants'
 import { resolveEntryPath, writeFile } from '../bin/utils/fs'
 
 let constructedEditorConfig = ''
@@ -7,8 +11,9 @@ let constructedEditorConfig = ''
 async function constructEditorConfigContent(): Promise<string> {
     if (constructedEditorConfig) return constructedEditorConfig
 
-    let content = MONO_AUTOGEN_DISCLAIMER
-    content += '\n\n'
+    let content = `${MONO_HASHTAG_BAR}\n`
+    content += MONO_AUTOGEN_DISCLAIMER
+    content += `\n${MONO_HASHTAG_BAR}\n\n`
 
     content += await monoAddonEditorConfigFile.text()
 
