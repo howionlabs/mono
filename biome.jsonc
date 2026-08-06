@@ -1,5 +1,5 @@
 {
-    "$schema": "https://biomejs.dev/schemas/2.5.6/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
     "assist": {
         "actions": {
             "preset": "recommended",
@@ -28,7 +28,16 @@
     "files": {
         "ignoreUnknown": true,
         //  exclusions are handled by .gitignore and .biomeignore
-        "includes": ["**", "!package.json", "!biome.jsonc", "!!.vscode", "!!public", "!!static"],
+        "includes": [
+            "**",
+            "!biome.jsonc",
+            "!package.json",
+            "!!static",
+            "!!.vscode",
+            "!!public",
+            "!!dist",
+            "!!out"
+        ],
         // 1MB
         "maxSize": 1000000
     },
@@ -104,7 +113,6 @@
             }
         }
         // "rules": {
-
         //     "correctness": {
         //         "noUnknownTypeSelector": "off"
         //     },
@@ -132,6 +140,6 @@
     "vcs": {
         "clientKind": "git",
         "enabled": true,
-        "useIgnoreFile": true
+        "useIgnoreFile": false
     }
 }

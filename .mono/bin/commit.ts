@@ -1,5 +1,5 @@
-import { INDICATES_TRACKING_ACTION_NAME, type MonoSetupInternal } from 'mono'
-import { monoSetupPath } from './mono'
+import type { MonoSetupInternal } from 'mono'
+import { monoSetupPath } from './constants'
 import { cli } from './utils/cli'
 
 export interface PullOptions {
@@ -26,11 +26,11 @@ export async function commit(id?: string, options?: PullOptions): Promise<number
             let exitCode = 0
 
             for (const entry of setup._entries) {
-                if (
-                    entry._actions.find(a => a.name === INDICATES_TRACKING_ACTION_NAME) ===
-                    undefined
-                ) {
-                    cli.warn(`Skipping ${entry.id} because it is not tracked`, 'yellow.bold')
+                if (entry._meta.git === undefined) {
+                    cli.item(
+                        `Skipping "${entry._type}s/${entry.id}" because it is not git tracked.`,
+                        'gray'
+                    )
                 }
 
                 const code = await commit(entry.id, opts)

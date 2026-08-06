@@ -1,8 +1,7 @@
 import type { _MonoEntryInternal, MonoAddon, MonoLicense, MonoLicenseId } from '../mono'
+import { LICENSES } from '../bin/constants'
 import { cli } from '../bin/utils/cli'
 import { copyFile, readJSONFile, resolveDotMonoPath, resolveEntryPath } from '../bin/utils/fs'
-
-export const LICENSES = ['agpl-v3', 'cc-by-sa-30', 'mit', 'mpl-2.0'] as const
 
 export function $license(id: MonoLicenseId): MonoAddon {
     async function addLicenseDataToMeta(entry: _MonoEntryInternal) {

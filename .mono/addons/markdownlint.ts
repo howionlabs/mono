@@ -1,0 +1,37 @@
+import type { _MonoEntryInternal, MonoAddon } from '../mono'
+import { monoMDLintConf, monoMDLintVersion } from '../bin/constants'
+import { resolveEntryPath, writeFile } from '../bin/utils/fs'
+
+async function writeMDLintFile(entry: _MonoEntryInternal) {
+    const newMDLintConf = structuredClone(monoMDLintConf)
+    const newMDLintContents = JSON.stringify(newMDLintConf, null, 4)
+
+    const newMDLintFile = Bun.file(resolveEntryPath(entry, '.markdownlint.jsonc'))
+    await writeFile(newMDLintContents, newMDLintFile, true)
+}
+
+async function syncNPMDependencies(entry: _MonoEntryInternal) {
+    if (!entry._meta.npm?.nextPJSON) return
+
+    delete entry._meta.npm.nextPJSON.dependencies.markdownlint
+    entry._meta.npm.nextPJSON.devDependencies.markdownlint = monoMDLintVersion
+}
+
+export function $markdownlint(): MonoAddon {
+    return {
+        name: '$markdownlint',
+        unique: true,
+        actions: [
+            {
+                name: '$markdownlint.writeMDLintFile',
+                order: 0,
+                callback: writeMDLintFile
+            },
+            {
+                name: '$markdownlint.syncNPMDependencies',
+                order: 1,
+                callback: syncNPMDependencies
+            }
+        ]
+    }
+}

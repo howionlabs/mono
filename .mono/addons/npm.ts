@@ -1,47 +1,48 @@
 import type { _MonoEntryInternal, MonoAddon } from '../mono.ts'
 import { cli } from '../bin/utils/cli.ts'
-import { readJSONFile, resolveEntryPath, resolveRootPath, writeFile } from '../bin/utils/fs.ts'
+import { readJSONFile, resolveEntryPath, writeFile } from '../bin/utils/fs.ts'
 
-export type DependencyRecord = Record<string, string | 'root'>
+// export type DependencyRecord = Record<
+//     string,
+//     | 'workspace:*'
+//     | `^${number}.${number}.${number}`
+//     | `~${number}.${number}.${number}`
+//     | `${number}.${number}.${number}`
+// >
 
-export interface BuildPJSONOptions {
-    mustDependencies?: DependencyRecord
-    mustDevDependencies?: DependencyRecord
-    mustPeerDependencies?: DependencyRecord
-    mustScripts?: Record<string, string>
-}
+// export type BuildPJSONOptions = {}
 
-let rootPjson = {} as Record<string, any> | null
+// let rootPjson = {} as Record<string, any> | null
 
-async function normalizeDependencies(deps: DependencyRecord) {
-    if (!rootPjson) {
-        rootPjson = await readJSONFile(resolveRootPath('package.json'))
-    }
+// async function normalizeDependencies() {
+//     if (!rootPjson) {
+//         rootPjson = await readJSONFile(resolveRootPath('package.json'))
+//     }
 
-    if (!rootPjson) {
-        throw new Error(
-            'Failed to read the root package.json file. Please ensure that the file exists and is accessible.'
-        )
-    }
+//     if (!rootPjson) {
+//         throw new Error(
+//             'Failed to read the root package.json file. Please ensure that the file exists and is accessible.'
+//         )
+//     }
 
-    for (const [dep, version] of Object.entries(deps)) {
-        if (version === 'root') {
-            const rootVersion = rootPjson.dependencies?.[dep] || rootPjson.devDependencies?.[dep]
+//     for (const [dep, version] of Object.entries(deps)) {
+//         if (version === 'same-as-root') {
+//             const rootVersion = rootPjson.dependencies?.[dep] || rootPjson.devDependencies?.[dep]
 
-            if (!rootVersion) {
-                throw new Error(
-                    `Failed to resolve dependency version for "${dep}" because it was not found in the root package.json.`
-                )
-            }
+//             if (!rootVersion) {
+//                 throw new Error(
+//                     `Failed to resolve dependency version for "${dep}" because it was not found in the root package.json.`
+//                 )
+//             }
 
-            deps[dep] = rootVersion
-        }
-    }
+//             deps[dep] = rootVersion
+//         }
+//     }
 
-    return deps
-}
+//     return deps
+// }
 
-export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
+export function $npm(name: string): MonoAddon {
     async function constructAndAddPjsonDataToMeta(entry: _MonoEntryInternal) {
         const pjsonPath = resolveEntryPath(entry, 'package.json')
         const previous = await readJSONFile(pjsonPath)
@@ -138,34 +139,35 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
         }
 
         next.dependencies = {
-            ...next.dependencies,
-            ...(await normalizeDependencies(options?.mustDependencies ?? {}))
+            ...next.dependencies
+            // ...(await normalizeDependencies(options?.mustDependencies ?? {}))
         }
 
         next.devDependencies = {
-            ...next.devDependencies,
-            ...(await normalizeDependencies(options?.mustDevDependencies ?? {}))
+            ...next.devDependencies
+            // ...(await normalizeDependencies(options?.mustDevDependencies ?? {}))
         }
 
         next.peerDependencies = {
-            ...next.peerDependencies,
-            ...(await normalizeDependencies(options?.mustPeerDependencies ?? {}))
+            ...next.peerDependencies
+            // ...(await normalizeDependencies(options?.mustPeerDependencies ?? {}))
         }
 
-        if (options?.mustScripts) {
-            next.scripts = {
-                ...next.scripts,
-                ...options.mustScripts
-            }
-        }
+        // if (options?.mustScripts) {
+        //     next.scripts = {
+        //         ...next.scripts,
+        //         ...options.mustScripts
+        //     }
+        // }
 
         entry._meta.npm = {
-            latestPJSON: next
+            nextPJSON: next
         }
     }
 
     async function writePjson(entry: _MonoEntryInternal) {
-        const pjson = entry._meta.npm?.latestPJSON
+        // note that this object could have been modified by other addons
+        const pjson = entry._meta.npm?.nextPJSON
 
         if (!pjson) {
             throw new Error(
@@ -180,6 +182,8 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
     }
 
     return {
+        name: '$npm',
+        unique: true,
         actions: [
             {
                 callback: constructAndAddPjsonDataToMeta,
@@ -191,8 +195,6 @@ export function $npm(name: string, options?: BuildPJSONOptions): MonoAddon {
                 name: '$npm.writePJSON',
                 order: 30
             }
-        ],
-        name: '$npm',
-        unique: true
+        ]
     }
 }

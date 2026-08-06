@@ -1,11 +1,10 @@
 import type { WriteStream } from 'node:tty'
 import { type InspectColor, styleText } from 'node:util'
+import { CLI_INDENT_WIDTH } from '../constants'
 
 export type CLIModifier = InspectColor | `${InspectColor}.${InspectColor}`
 
 export type ItemIcon = 'bullet' | 'check' | 'cross' | 'dash'
-
-export const INDENT_WIDTH = 2
 
 /**
  * This is basically a wrapper around console.log, console.warn, and
@@ -15,13 +14,13 @@ export const cli = {
     _indentation: 0,
     noOutput: false,
 
-    indent(n: number = INDENT_WIDTH) {
+    indent(n: number = CLI_INDENT_WIDTH) {
         this._indentation += n
 
         return this
     },
 
-    dedent(n: number = INDENT_WIDTH) {
+    dedent(n: number = CLI_INDENT_WIDTH) {
         this._indentation -= n
 
         if (this._indentation < 0) {

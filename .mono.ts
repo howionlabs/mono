@@ -1,13 +1,30 @@
-import { $author, $git, $license, $npm, $statics, mono } from 'mono'
+import { $author, $biomejs, $git, $license, $markdownlint, $npm, $vscode, mono } from 'mono'
 
-const $authorHowion = $author({
+const $howion = $author({
     email: 'me@howion.com',
     name: 'howion',
     url: 'https://howion.com'
 })
 
 export default mono({
-    apps: [],
+    apps: [
+        {
+            id: 'ionizer-vite',
+            name: 'Ionizer',
+            description: '',
+            version: '0.1.0',
+            public: false,
+            addons: [
+                // $license(''),
+                $howion,
+                $vscode(),
+                $markdownlint(),
+                $biomejs(),
+                $git('howionlabs', 'ionizer-vite', 'ssh'),
+                $npm('@howionlabs/ionizer')
+            ]
+        }
+    ],
     modules: [
         {
             id: 'huid-spec',
@@ -16,8 +33,8 @@ export default mono({
             public: true,
             description: "RFC-like specification of Howion's Unique IDentifier (HUID)",
             addons: [
-                $authorHowion,
-                $statics('.markdownlint.jsonc'),
+                $howion,
+                $markdownlint(),
                 $git('howionlabs', 'huid-spec', 'ssh'),
                 $license('cc-by-sa-30')
             ]
@@ -30,11 +47,13 @@ export default mono({
             description:
                 "The official reference implementation in TypeScript for Howion's Unique IDentifier.",
             addons: [
-                $authorHowion,
-                $statics('.editorconfig', '.gitignore', '.markdownlint.jsonc', 'biome.jsonc'),
-                $git('howionlabs', 'huid-ts', 'ssh'),
+                $howion,
                 $license('mit'),
-                $npm('@howionlabs/huid', {})
+                $vscode(),
+                $markdownlint(),
+                $biomejs(),
+                $git('howionlabs', 'huid-ts', 'ssh'),
+                $npm('@howionlabs/huid')
             ]
         }
     ]

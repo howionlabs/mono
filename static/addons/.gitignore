@@ -1,11 +1,5 @@
 ###############################################################################
-## CUSTOM
-###############################################################################
-
-
-
-###############################################################################
-## GENERAL
+# GENERAL
 ###############################################################################
 
 # IGNORE NOSYNC ENTRIES
@@ -50,9 +44,9 @@ yarn-error.log*
 ## VSCODE
 .vscode/*
 !.vscode/settings.json
+!.vscode/extensions.json
 !.vscode/tasks.json
 !.vscode/launch.json
-!.vscode/extensions.json
 !.vscode/*.code-snippets
 
 ## NEXTJS
@@ -83,7 +77,7 @@ next-env.d.ts
 ## ENV FILES
 .env
 .env.production
-.env*.local
+.env.*
 !.env.example
 
 ## WINDOWS
@@ -138,7 +132,7 @@ tramp
 .\#*
 
 ###############################################################################
-## PYTHON
+# PYTHON
 ###############################################################################
 
 # byte-compiled, cache

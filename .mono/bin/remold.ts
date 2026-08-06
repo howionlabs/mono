@@ -1,6 +1,6 @@
 import type { MonoSetupInternal } from './types'
+import { monoSetupPath } from './constants'
 import { constructAndWriteEnvFiles } from './env'
-import { monoSetupPath } from './mono'
 import { cli } from './utils/cli'
 import { absoluteToRelative, CWD, dirExists } from './utils/fs'
 

@@ -1,7 +1,7 @@
 import type { MonoSetupInternal } from 'mono'
 import { availableParallelism } from 'node:os'
 import { type SimpleGit, type SimpleGitOptions, simpleGit } from 'simple-git'
-import { monoSetupPath } from './mono'
+import { monoSetupPath } from './constants'
 import { cli } from './utils/cli'
 import { dirExists } from './utils/fs'
 

@@ -1,9 +1,12 @@
 export * from './author'
+export * from './biomejs'
 export * from './env'
 export * from './git'
 export * from './license'
+export * from './markdownlint'
 export * from './npm'
 export * from './static'
+export * from './vscode'
 
 /**
  * A single addon can have multiple actions, and they will be executed in the

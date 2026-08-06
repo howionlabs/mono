@@ -40,6 +40,7 @@ This monorepo is currently is being used by us therefore, especially `.mono.ts`,
 ## Best Practices
 
 * This monorepo supports single branch for managing it's git-tracked entries. By default it uses the "main" branch, however you could overwrite this per entry.
+<!-- * Each entry must be indepent of  -->
 
 ## Tech Stack
 

@@ -1,6 +1,36 @@
 import type { _MonoEntryInternal, MonoAddon, MonoGit } from '../mono'
+import { MONO_AUTOGEN_DISCLAIMER, monoAddonGitignoreFile } from '../bin/constants'
 import { rootGitBranchName } from '../bin/git'
 import { cli } from '../bin/utils/cli'
+import { resolveEntryPath, writeFile } from '../bin/utils/fs'
+
+let constructedGitignore = ''
+
+async function constructGitignoreContent(): Promise<string> {
+    if (constructedGitignore) return constructedGitignore
+
+    let content = MONO_AUTOGEN_DISCLAIMER
+    content += '\n\n'
+
+    content += await monoAddonGitignoreFile.text()
+
+    constructedGitignore = content
+
+    return content
+}
+
+async function writeGitignoreFile(entry: _MonoEntryInternal) {
+    if (!entry._meta.git) {
+        throw new Error(
+            `Cannot write .gitignore file for the entry "${entry.id}" because Git information is missing. Please ensure that the $git addon has been properly applied to this entry before attempting to write the .gitignore file.`
+        )
+    }
+
+    const newGitignoreContent = await constructGitignoreContent()
+    const newGitignoreFile = Bun.file(resolveEntryPath(entry, '.gitignore'))
+
+    await writeFile(newGitignoreContent, newGitignoreFile, true)
+}
 
 /**
  * Sets the Git version control system information for a project entry. This
@@ -49,6 +79,11 @@ export function $git(
                 name: '$git.addGitDataToMeta',
                 order: 0,
                 callback: addGitDataToMeta
+            },
+            {
+                name: '$git.writeGitignoreFile',
+                order: 10,
+                callback: writeGitignoreFile
             }
         ]
     }

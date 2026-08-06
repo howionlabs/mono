@@ -8,18 +8,10 @@ import type {
     MonoSetup,
     MonoSetupInternal
 } from './types'
+import { ENTRY_ID_REGEX, monoEnvPath, rootEnvFile, rootEnvProductionFile } from './constants'
 import { readEnv } from './env'
 import { cli } from './utils/cli'
 import { resolveRootPath } from './utils/fs'
-
-export const monoSetupPath = resolveRootPath('.mono.ts')
-export const monoEnvPath = resolveRootPath('.mono.env.ts')
-
-export const rootEnvFile = Bun.file(resolveRootPath('.env'))
-export const rootEnvExampleFile = Bun.file(resolveRootPath('.env.example'))
-export const rootEnvProductionFile = Bun.file(resolveRootPath('.env.production'))
-
-export const ENTRY_ID_REGEX = /^[a-z0-9]+[a-z0-9-]+$/
 
 function internalizeEntries(
     entries: MonoEntry[],
@@ -44,7 +36,7 @@ function internalizeEntries(
         const actions: MonoAddonAction[] = []
 
         for (const addon of addons) {
-            if (addon.unique === true && addonSet.has(addon.name)) {
+            if (addon.unique !== false && addonSet.has(addon.name)) {
                 throw new Error(
                     `Unique addon "${addon.name}" is already registered for the entry "${entry.id}". Unique addons can only be registered once per entry.`
                 )

@@ -1,4 +1,4 @@
-import type { LICENSES } from '../mono'
+import type { LICENSES } from './constants'
 
 export type MonoLicenseId = (typeof LICENSES)[number]
 
@@ -70,6 +70,8 @@ export interface MonoAddon {
     /**
      * Whether the addon could be used multiple times in the same entry. If set
      * to true, subsequent uses of the addon will result in fatal error.
+     *
+     * @default true
      */
     unique?: boolean
 
@@ -131,6 +133,16 @@ export interface MonoEntry {
 
 export type _MonoEntryType = 'app' | 'module'
 
+export interface PJSON extends Record<string, unknown> {
+    name: string
+    version: string
+    description?: string
+
+    dependencies: Record<string, string>
+    devDependencies: Record<string, string>
+    peerDependencies: Record<string, string>
+}
+
 export interface _MonoEntryInternal<T extends _MonoEntryType = _MonoEntryType> extends MonoEntry {
     _type: T
 
@@ -162,7 +174,7 @@ export interface _MonoEntryInternal<T extends _MonoEntryType = _MonoEntryType> e
             variables: Set<string>
         }
         npm?: {
-            latestPJSON: Record<string, unknown>
+            nextPJSON: PJSON
         }
         // [key: string]: unknown
     }
@@ -220,9 +232,22 @@ export interface MonoEnvVariable {
 export type MonoEnvMap = Map<string, MonoEnvVariable>
 export type MonoEnvValueMap = Map<string, string | number | boolean>
 
+// export type MonoSetupWorkspace = {
+//     /**
+//      * Name of the workspace, which must be a non-empty string consisting of
+//      * lowercase ASCII letters, numbers, and hyphens only. It must not have
+//      * leading or trailing whitespace. This is the key used to reference the
+//      * workspace in code and configuration.
+//      */
+//     name: string
+
+//     entries: string[]
+// }
+
 export interface MonoSetup {
     apps?: MonoEntry[]
     modules?: MonoEntry[]
+    // workspaces?: MonoSetupWorkspace[]
 }
 
 export interface MonoSetupInternal extends Required<MonoSetup> {
