@@ -55,6 +55,8 @@ export interface MonoPerson {
     readonly url?: string
 }
 
+export type MonoFormattedPersonText = string
+
 export interface MonoAddonActionOptions {
     readonly verbose?: boolean
 }
@@ -62,12 +64,12 @@ export interface MonoAddonActionOptions {
 export type MonoAddonActionCallback = (entry: _MonoEntryInternal) => void | Promise<void>
 
 export interface MonoAddonAction {
-    /**
-     * Name of the addon action for debugging and logging purposes. It should
-     * be unique across all addons to avoid confusion. However, this does not
-     * imply that the addon action cannot be used multiple times.
-     */
-    readonly name: string
+    // /**
+    //  * Name of the addon action for debugging and logging purposes. It should
+    //  * be unique across all addons to avoid confusion. However, this does not
+    //  * imply that the addon action cannot be used multiple times.
+    //  */
+    // readonly name: string
 
     /**
      * The order in which the addon action should be executed relative to all
@@ -166,7 +168,7 @@ export interface MonoEntry {
     /**
      * List of keywords describing the project, used for search and discovery
      */
-    readonly keywords?: string[]
+    readonly keywords?: readonly string[]
 
     readonly addons?: readonly MonoAddon[]
 }

@@ -4,7 +4,7 @@ import {
     MONO_HASHTAG_BAR,
     monoAddonEditorConfigFile
 } from '../bin/constants'
-import { resolveEntryPath, writeFile } from '../bin/utils/fs'
+import { resolveEntryPath, resolveRootPath, writeFile } from '../bin/utils/fs'
 
 let constructedEditorConfig = ''
 
@@ -29,15 +29,25 @@ async function writeDotEditorConfig(entry: _MonoEntryInternal) {
     await writeFile(newEditorConfigContent, newEditorConfigFile, true)
 }
 
+async function copyDotVSCodeFolder(entry: _MonoEntryInternal) {
+    const rootVSCodeFolder = resolveRootPath('.vscode')
+    const entryVSCodeFolder = resolveEntryPath(entry, '.vscode')
+
+    await Bun.$`cp -r ${rootVSCodeFolder} ${entryVSCodeFolder}`
+}
+
 export function $vscode(): MonoAddon {
     return {
-        name: '$vscode',
+        name: $vscode.name,
         unique: true,
         remold: [
             {
-                name: '$vscode.writeDotEditorConfig',
                 order: 0,
                 callback: writeDotEditorConfig
+            },
+            {
+                order: 1,
+                callback: copyDotVSCodeFolder
             }
         ]
     }

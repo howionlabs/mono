@@ -1,10 +1,10 @@
 ## CUSTOM #####################################################################
 
+# IGNORE ZONE CONTENTS
+/zones
+
 # IGNORE SUB .GIT FOLDERS
 **/.git
-
-# IGNORE MONO ENTRIES
-/zones
 
 ## GENERAL ####################################################################
 

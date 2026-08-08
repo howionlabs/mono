@@ -10,7 +10,7 @@ async function writeMDLintFile(entry: _MonoEntryInternal) {
     await writeFile(newMDLintContents, newMDLintFile, true)
 }
 
-async function syncNPMDependencies(entry: _MonoEntryInternal) {
+async function addMDLintToPJSON(entry: _MonoEntryInternal) {
     if (!entry._meta.npm?.nextPJSON) return
 
     delete entry._meta.npm.nextPJSON.dependencies.markdownlint
@@ -19,18 +19,16 @@ async function syncNPMDependencies(entry: _MonoEntryInternal) {
 
 export function $markdownlint(): MonoAddon {
     return {
-        name: '$markdownlint',
+        name: $markdownlint.name,
         unique: true,
         setup: [
             {
-                name: '$markdownlint.syncNPMDependencies',
                 order: 1,
-                callback: syncNPMDependencies
+                callback: addMDLintToPJSON
             }
         ],
         remold: [
             {
-                name: '$markdownlint.writeMDLintFile',
                 order: 0,
                 callback: writeMDLintFile
             }

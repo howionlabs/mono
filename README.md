@@ -8,6 +8,12 @@ None of the existing monorepo tools or structures were good enough and always re
 
 This monorepo is currently is being used by us therefore, especially `.mono.ts`, is subject to change. You probably just don't get to see `apps` and `modules` contents unless you have access to relative (sub)repositories.
 
+## Dependencies
+
+In order to work under this monorepo structure, make sure `bun` and `git` are installed.
+
+Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` are assumed.
+
 <!-- ## Folder Structure
 
 * **`.mono`** for monorepo-related scripts
@@ -17,23 +23,22 @@ This monorepo is currently is being used by us therefore, especially `.mono.ts`,
 * **`.mono.ts`** is the configuration file to customize the setup.
 * **`.editorconfig`**, **`.gitignore`**, **`.markdownlint.jsonc`**, and **`biome.jsonc`** are opinionated configurations whose definitions should match of those in `apps` and `modules`. -->
 
-## Mono Addons
+## Addons
 
-### `$author`
-
-### `$contributor`
-
-### `$env`
-
-### `$git`
-
-### `$keys`
-
-### `$license`
-
-### `$npm`
-
-### `$static`
+* `$author(author: MonoPerson | MonoFormattedPersonText)`
+* `$biomejs()`
+* `$contributor(contributor: MonoPerson | MonoFormattedPersonText)`
+* `$dependency(id: string)`
+* `$env(...variables: string[])`
+* `$git(uri: MonoGitURI)`
+* `$github()` Not implemented yet.
+* `$keys()` Not implemented yet.
+* `$license(id: MonoLicenseId)`
+* `$markdownlint()`
+* `$npm(name: string)`
+* `$static(from: string, to?: string, alwaysOverwrite = false)`
+* `$typescript()` Not implemented yet.
+* `$vscode()`
 
 ## Mono CLI
 
@@ -54,12 +59,13 @@ This monorepo is currently is being used by us therefore, especially `.mono.ts`,
 
 ## Roadmap
 
-1. Git branch management.
-2. Better tracking reporting both by mono and git for all workspace directories.
-3. Consider adding `.example` to mono env schema for `.env.example`.
-4. `bun mono push` safety checks.
-5. Better key management via `keys` addon.
-6. Gitleaks or Betterleaks?
+1. Better mono documentation.
+2. Git branch management.
+3. Better tracking reporting both by mono and git for all workspace directories.
+4. Consider adding `.example` to mono env schema/builder for `.env.example`.
+5. `bun mono push` safety checks.
+6. Better key management via `keys` addon.
+7. Gitleaks or Betterleaks?
 
 ## License
 

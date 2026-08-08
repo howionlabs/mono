@@ -33,9 +33,7 @@ cac.command('commit [id]', 'Auto stage and commit all changes')
         return 0
     })
 
-cac.command('push [id]', 'Push the changes').action(async id => {
-    await pull(id)
-})
+cac.command('push [id]', 'Push the changes').action(async id => {})
 
 // cac.command('[--]', '').action(async () => {
 //     cac.outputHelp()

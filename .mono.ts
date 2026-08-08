@@ -33,6 +33,19 @@ export default {
         ],
         modules: [
             {
+                id: 'utils-ts',
+                name: "Howion's Typescript Utilities",
+                version: '0.1.0',
+                addons: [
+                    $howion,
+                    $git('ssh://git@github.com/howionlabs/utils-ts.git'),
+                    $license('mit'),
+                    $biomejs(),
+                    $markdownlint(),
+                    $vscode
+                ]
+            },
+            {
                 id: 'huid-spec',
                 name: "Howion's Unique IDentifier",
                 version: '1.0.0',
@@ -40,9 +53,11 @@ export default {
                 description: "RFC-like specification of Howion's Unique IDentifier (HUID)",
                 addons: [
                     $howion,
-                    $markdownlint(),
                     $git('ssh://git@github.com/howionlabs/huid-spec.git'),
-                    $license('cc-by-sa-30')
+                    $license('cc-by-sa-30'),
+                    $biomejs(),
+                    $markdownlint(),
+                    $vscode()
                 ]
             },
             {
@@ -54,12 +69,12 @@ export default {
                     "The official reference implementation of Howion's Unique IDentifier in TypeScript.",
                 addons: [
                     $howion,
-                    $license('mit'),
-                    $vscode(),
-                    $markdownlint(),
-                    $biomejs(),
                     $git('ssh://git@github.com/howionlabs/huid-ts.git'),
-                    $npm('@howionlabs/huid')
+                    $license('mit'),
+                    $npm('@howionlabs/huid'),
+                    $biomejs(),
+                    $markdownlint(),
+                    $vscode()
                 ]
             }
         ]

@@ -23,13 +23,6 @@
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false
     },
-    "include": [
-        ".mono/**/*",
-        ".nosync/**/*",
-        "apps/**/*",
-        "modules/**/*",
-        ".mono.ts",
-        ".mono.env.ts"
-    ],
-    "exclude": ["**/node_modules", "**/out", "**/build", "**/dist"]
+    "include": [".mono/**/*", ".mono.ts", ".mono.env.ts"],
+    "exclude": ["**/node_modules", "zones"]
 }

@@ -11,7 +11,7 @@ import { copyFile, resolveEntryPath, resolveRootPath } from '../bin/utils/fs'
  * provided, the file will be copied to the same path as `from` relative to the
  * target project.
  */
-export function $static(from: string, to?: string, alwaysOverwrite: boolean = false): MonoAddon {
+export function $static(from: string, to?: string, alwaysOverwrite = false): MonoAddon {
     if (!to) to = from
 
     if (to.startsWith('.env')) {
@@ -26,11 +26,10 @@ export function $static(from: string, to?: string, alwaysOverwrite: boolean = fa
     }
 
     return {
-        name: '$static',
+        name: $static.name,
         unique: false,
         remold: [
             {
-                name: '$static.writeStaticFile',
                 order: 10,
                 callback: writeStaticFile
             }

@@ -1,8 +1,8 @@
-import type { _MonoEntryInternal, MonoAddon, MonoPerson } from '../mono'
+import type { _MonoEntryInternal, MonoAddon, MonoFormattedPersonText, MonoPerson } from '../mono'
 import { parseFormattedPersonText } from '../bin/mono'
 import { cli } from '../bin/utils/cli'
 
-export function $author(author: MonoPerson | string): MonoAddon {
+export function $author(author: MonoPerson | MonoFormattedPersonText): MonoAddon {
     const details: MonoPerson =
         typeof author === 'string' ? parseFormattedPersonText(author) : author
 
@@ -17,11 +17,10 @@ export function $author(author: MonoPerson | string): MonoAddon {
     }
 
     return {
-        name: '$author',
+        name: $author.name,
         unique: true,
         setup: [
             {
-                name: '$author.addAuthorToMeta',
                 order: 0,
                 callback: addAuthorToMeta
             }

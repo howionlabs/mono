@@ -117,23 +117,20 @@ export function $git($uri: MonoGitURI): MonoAddon {
     }
 
     return {
-        name: '$git',
+        name: $git.name,
         unique: true,
         setup: [
             {
-                name: '$git.addGitDataToMeta',
                 order: 0,
                 callback: addGitDataToMeta
             }
         ],
         remold: [
             {
-                name: '$git.writeGitignoreFile',
                 order: 10,
                 callback: writeGitignoreFile
             },
             {
-                name: '$git.initializeGit',
                 order: 20,
                 callback: initializeGit
             }

@@ -1,7 +1,7 @@
-import type { _MonoEntryInternal, MonoAddon, MonoPerson } from '../mono'
+import type { _MonoEntryInternal, MonoAddon, MonoFormattedPersonText, MonoPerson } from '../mono'
 import { parseFormattedPersonText } from '../bin/mono'
 
-export function $contributor(contributor: MonoPerson | string): MonoAddon {
+export function $contributor(contributor: MonoPerson | MonoFormattedPersonText): MonoAddon {
     const details =
         typeof contributor === 'string' ? parseFormattedPersonText(contributor) : contributor
 
@@ -11,11 +11,10 @@ export function $contributor(contributor: MonoPerson | string): MonoAddon {
     }
 
     return {
-        name: '$contributor',
+        name: $contributor.name,
         unique: false,
         setup: [
             {
-                name: '$contributor.addContributorToMeta',
                 order: 0,
                 callback: addContributorToMeta
             }

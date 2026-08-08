@@ -21,18 +21,16 @@ async function syncPJSONDependencies(entry: _MonoEntryInternal) {
 
 export function $biomejs(): MonoAddon {
     return {
-        name: '$biomejs',
+        name: $biomejs.name,
         unique: true,
         setup: [
             {
-                name: '$biomejs.syncPJSONDependencies',
                 order: 1,
                 callback: syncPJSONDependencies
             }
         ],
         remold: [
             {
-                name: '$biomejs.writeBiomeFile',
                 order: 0,
                 callback: writeBiomeFile
             }

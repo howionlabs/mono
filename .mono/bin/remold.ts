@@ -125,7 +125,11 @@ export async function remold(
 
         for (const action of entry._remoldActions) {
             if (opts.verbose) {
-                cli.item(`${action.name.slice(1)}`, 'gray', '$').indent()
+                cli.item(
+                    `${action.callback.name || '<anonymous action callback>'}`,
+                    'gray',
+                    '$'
+                ).indent()
             }
 
             await action.callback(entry)

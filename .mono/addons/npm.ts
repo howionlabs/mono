@@ -182,19 +182,17 @@ export function $npm(name: string): MonoAddon {
     }
 
     return {
-        name: '$npm',
+        name: $npm.name,
         unique: true,
         setup: [
             {
                 callback: constructAndAddPjsonDataToMeta,
-                name: '$npm.constructAndAddPJSONDataToMeta',
                 order: 20
             }
         ],
         remold: [
             {
                 callback: writePJSON,
-                name: '$npm.writePJSON',
                 order: 30
             }
         ]

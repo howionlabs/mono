@@ -45,18 +45,16 @@ export function $license(id: MonoLicenseId): MonoAddon {
     }
 
     return {
-        name: '$license',
+        name: $license.name,
         unique: true,
         setup: [
             {
-                name: '$license.addLicenseDataToMeta',
                 order: -1,
                 callback: addLicenseDataToMeta
             }
         ],
         remold: [
             {
-                name: '$license.copyLicense',
                 order: 10,
                 callback: copyLicense
             }

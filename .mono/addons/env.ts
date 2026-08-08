@@ -22,18 +22,16 @@ export function $env(...variables: string[]): MonoAddon {
     }
 
     return {
-        name: '$env',
+        name: $env.name,
         unique: false,
         setup: [
             {
-                name: '$env.addEnvVariablesToMeta',
                 order: 0,
                 callback: addEnvVariablesToMeta
             }
         ],
         remold: [
             {
-                name: '$env.writeEnvFiles',
                 order: 10,
                 callback: writeEnvFiles
             }

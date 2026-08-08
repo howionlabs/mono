@@ -2,6 +2,7 @@ import type {
     _MonoEntryInternal,
     MonoAddonAction,
     MonoEntry,
+    MonoFormattedPersonText,
     MonoPerson,
     MonoSetup,
     MonoSetupInternal
@@ -158,7 +159,7 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
     }
 }
 
-export function parseFormattedPersonText(author: string): MonoPerson {
+export function parseFormattedPersonText(author: MonoFormattedPersonText): MonoPerson {
     const match = FORMATTED_PERSON_TEXT_REGEX.exec(author)
 
     if (!match?.groups) {
