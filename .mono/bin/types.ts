@@ -3,9 +3,9 @@ import type { LICENSES } from './constants'
 export type MonoLicenseId = (typeof LICENSES)[number]
 
 export interface MonoLicense {
-    id: MonoLicenseId
-    name: string
-    npm?: string
+    readonly id: MonoLicenseId
+    readonly name: string
+    readonly npm?: string
 }
 
 export type MonoGitProtocol = 'ssh' | 'https'
@@ -28,35 +28,35 @@ export type MonoGitURI = string
 // | `ssh://${MonoGitSSHUser}@${MonoGitServer}:${MonoGitPort}/${MonoGitOwner}/${MonoGitRepo}.git`
 
 export interface MonoGit {
-    server: MonoGitServer
-    protocol: MonoGitProtocol
-    owner: MonoGitOwner
-    repo: MonoGitRepo
+    readonly server: MonoGitServer
+    readonly protocol: MonoGitProtocol
+    readonly owner: MonoGitOwner
+    readonly repo: MonoGitRepo
 
-    user?: MonoGitSSHUser
-    port?: MonoGitPort
+    readonly user?: MonoGitSSHUser
+    readonly port?: MonoGitPort
 }
 
 export interface MonoPerson {
     /**
      * Human-readable name of the author
      */
-    name: string
+    readonly name: string
 
     /**
      * Email address of the author, used for contact and attribution purposes
      */
-    email?: string
+    readonly email?: string
 
     /**
      * URL to the author's personal or professional website, providing
      * additional context and information about the author
      */
-    url?: string
+    readonly url?: string
 }
 
 export interface MonoAddonActionOptions {
-    verbose?: boolean
+    readonly verbose?: boolean
 }
 
 export type MonoAddonActionCallback = (entry: _MonoEntryInternal) => void | Promise<void>
@@ -67,19 +67,19 @@ export interface MonoAddonAction {
      * be unique across all addons to avoid confusion. However, this does not
      * imply that the addon action cannot be used multiple times.
      */
-    name: string
+    readonly name: string
 
     /**
      * The order in which the addon action should be executed relative to all
      * the other addons' actions. Lower numbers are executed first.
      */
-    order: number
+    readonly order: number
 
     /**
      * The callback function that will be executed when the addon action is
      * run.
      */
-    callback: MonoAddonActionCallback
+    readonly callback: MonoAddonActionCallback
 }
 
 export interface MonoAddon {
@@ -88,7 +88,7 @@ export interface MonoAddon {
      * unique across all addons to avoid confusion. However, this does not
      * imply that the addon cannot be used multiple times.
      */
-    name: string
+    readonly name: string
 
     /**
      * Whether the addon could be used multiple times in the same entry. If set
@@ -96,19 +96,19 @@ export interface MonoAddon {
      *
      * @default true
      */
-    unique?: boolean
+    readonly unique?: boolean
 
     /**
      * Non-empty lsit of actions which will always be executed on every mono
      * setup is loaded.
      */
-    setup?: [MonoAddonAction, ...MonoAddonAction[]]
+    readonly setup?: readonly [MonoAddonAction, ...MonoAddonAction[]]
 
     /**
      * Non-empty list of actions which will be executed when the remold command
      * is run.
      */
-    remold?: [MonoAddonAction, ...MonoAddonAction[]]
+    readonly remold?: readonly [MonoAddonAction, ...MonoAddonAction[]]
 
     // /**
     //  * Non-empty list of actions which will be executed when the pull command
@@ -133,42 +133,42 @@ export interface MonoEntry {
      * whitespace.
      * - Must not contain any special characters or spaces.
      */
-    id: string
+    readonly id: string
 
     /**
      * Human-readable project description
      */
-    description?: string
+    readonly description?: string
 
     /**
      * Human-readable project name
      */
-    name: string
+    readonly name: string
 
     /**
      * Whether the project is public or private.
      *
      * @default false
      */
-    public?: boolean
+    readonly public?: boolean
 
     /**
      * Version of the project, following semantic versioning.
      */
-    version: string
+    readonly version: string
 
     /**
      * URL to the project's website or homepage, providing additional context
      * and information about the project.
      */
-    website?: string
+    readonly website?: string
 
     /**
      * List of keywords describing the project, used for search and discovery
      */
-    keywords?: string[]
+    readonly keywords?: string[]
 
-    addons?: MonoAddon[]
+    readonly addons?: readonly MonoAddon[]
 }
 
 export interface PJSON extends Record<string, unknown> {
@@ -194,9 +194,9 @@ export interface _MonoEntryInternal extends MonoEntry {
      * Order-ascending list of actions provided by addons. Could have multiple
      * (non-unique) actions with the same name.
      */
-    _remoldActions: MonoAddonAction[]
-    // _pullActions: MonoAddonAction[]
-    // _pushActions: MonoAddonAction[]
+    readonly _remoldActions: readonly MonoAddonAction[]
+    // readonly _pullActions: readonly MonoAddonAction[]
+    // readonly _pushActions: readonly MonoAddonAction[]
 
     /**
      * Internal metadata for the mono setup, used for storing additional
@@ -228,21 +228,21 @@ export interface MonoEnvVariable {
      * It must not have leading or trailing whitespace. This is the key used to
      * reference the environment variable in code and configuration.
      */
-    _name: string
+    readonly _name: string
 
     /**
      * Optional description of the environment variable.
      *
      * @default undefined
      */
-    _description?: string
+    readonly _description?: string
 
     /**
      * Whether the environment variable is required or optional.
      *
      * @default true
      */
-    _required: boolean
+    readonly _required: boolean
 
     /**
      * The type of the environment variable, which can be either 'text',
@@ -250,7 +250,7 @@ export interface MonoEnvVariable {
      *
      * @default 'text'
      */
-    _type: 'text' | 'number' | 'boolean'
+    readonly _type: 'text' | 'number' | 'boolean'
 
     // /**
     //  * Expected format of the environment variable, represented as a regular
@@ -267,7 +267,7 @@ export interface MonoEnvVariable {
      *
      * @default undefined
      */
-    _default?: string | number | boolean
+    readonly _default?: string | number | boolean
 }
 
 export type MonoEnvMap = Map<string, MonoEnvVariable>
@@ -286,20 +286,20 @@ export type MonoEnvValueMap = Map<string, string | number | boolean>
 // }
 
 export interface MonoSetup {
-    zones: Record<string, MonoEntry[]>
-    workspaces?: Record<string, string[]>
+    readonly zones: Record<string, readonly MonoEntry[]>
+    readonly workspaces?: Record<string, readonly string[]>
 }
 
 export interface MonoSetupInternal extends Required<MonoSetup> {
-    env: MonoEnvSetup
-    zones: Record<string, _MonoEntryInternal[]>
+    readonly env: _MonoEnvInternal
+    readonly zones: Record<string, readonly _MonoEntryInternal[]>
 
-    _workspacesMap: Map<string, _MonoEntryInternal[]>
-    _entriesMap: Map<string, _MonoEntryInternal>
+    readonly _workspacesMap: Map<string, readonly _MonoEntryInternal[]>
+    readonly _entriesMap: Map<string, _MonoEntryInternal>
 }
 
-export interface MonoEnvSetup {
-    schema: MonoEnvMap
-    values: MonoEnvValueMap | undefined
-    valuesProduction: MonoEnvValueMap | undefined
+export interface _MonoEnvInternal {
+    readonly schema: MonoEnvMap
+    readonly values: MonoEnvValueMap | undefined
+    readonly valuesProduction: MonoEnvValueMap | undefined
 }

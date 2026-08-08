@@ -63,6 +63,8 @@ export default {
                 ]
             }
         ]
+    },
+    workspaces: {
+        huid: ['huid-spec', 'huid-ts']
     }
-    // workspaces: [],
 } as const satisfies MonoSetup

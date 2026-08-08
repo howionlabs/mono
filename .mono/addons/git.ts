@@ -1,4 +1,4 @@
-import type { _MonoEntryInternal, MonoAddon, MonoAddonActionOptions, MonoGitURI } from '../mono'
+import type { _MonoEntryInternal, MonoAddon, MonoGitURI } from '../mono'
 import {
     MONO_AUTOGEN_DISCLAIMER,
     MONO_HASHTAG_BAR,

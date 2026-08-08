@@ -1,3 +1,4 @@
+export type { MonoEnv } from './bin/env'
 export type * from './bin/types'
 export * from './addons/_index'
 export { env } from './bin/env'

@@ -2,9 +2,6 @@ import type {
     _MonoEntryInternal,
     MonoAddonAction,
     MonoEntry,
-    MonoEnvMap,
-    MonoEnvSetup,
-    MonoEnvValueMap,
     MonoPerson,
     MonoSetup,
     MonoSetupInternal
@@ -13,16 +10,14 @@ import {
     ENTRY_ID_REGEX,
     FORMATTED_PERSON_TEXT_REGEX,
     monoEnvPath,
-    monoSetupPath,
-    rootEnvFile,
-    rootEnvProductionFile
+    monoSetupPath
 } from './constants'
-import { readEnv } from './env'
+import { readMonoEnv } from './env'
 import { cli } from './utils/cli'
 import { resolveRootPath } from './utils/fs'
 
 function internalizeEntries(
-    entries: MonoEntry[],
+    entries: readonly MonoEntry[],
     map: Map<string, _MonoEntryInternal>,
     zone: string
 ): _MonoEntryInternal[] {
@@ -123,7 +118,7 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
             for (const [wsName, wsEntries] of Object.entries(setup.workspaces)) {
                 if (!Array.isArray(wsEntries) || wsEntries.length === 0) {
                     throw new Error(
-                        `Workspace "${wsName}" must be an array of entry identifiers and cannot be empty.`
+                        `Workspace "${wsName}" must be an non-empty array of existing entry identifiers.`
                     )
                 }
 
@@ -140,7 +135,6 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
 
                     const value = workspacesMap.get(wsName)!
                     value.push(map.get(eid)!)
-                    value.sort((a, b) => a.id.localeCompare(b.id))
                 }
             }
         }
@@ -148,37 +142,10 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
         return {
             zones: internalZones,
             workspaces: setup.workspaces || {},
-            env: await _monoEnvSetup(),
+            env: await readMonoEnv(),
 
             _entriesMap: map,
             _workspacesMap: workspacesMap
-        }
-    } catch (e: unknown) {
-        cli.handleError(e)
-        process.exit(1)
-    }
-}
-
-export async function _monoEnvSetup(): Promise<MonoEnvSetup> {
-    try {
-        const envSchema: MonoEnvMap = await import(monoEnvPath).then(module => module.default)
-        let envValueMap: MonoEnvValueMap | undefined
-        let envValueMapProduction: MonoEnvValueMap | undefined
-
-        if (await rootEnvFile.exists()) {
-            const envContent = await rootEnvFile.text()
-            envValueMap = readEnv(envContent, envSchema)
-        }
-
-        if (await rootEnvProductionFile.exists()) {
-            const envContent = await rootEnvProductionFile.text()
-            envValueMapProduction = readEnv(envContent, envSchema)
-        }
-
-        return {
-            schema: envSchema,
-            values: envValueMap,
-            valuesProduction: envValueMapProduction
         }
     } catch (e: unknown) {
         cli.handleError(e)

@@ -1,10 +1,13 @@
-import type { MonoEnvMap, MonoEnvValueMap, MonoEnvVariable } from './types'
+import type { _MonoEnvInternal, MonoEnvMap, MonoEnvValueMap, MonoEnvVariable } from './types'
 import { parse } from 'dotenv'
 import {
     ENV_DEFAULT_LINE_WIDTH,
     ENV_NAME_REGEX,
     MONO_AUTOGEN_DISCLAIMER,
-    MONO_HASHTAG_BAR
+    MONO_HASHTAG_BAR,
+    monoEnvPath,
+    rootEnvFile,
+    rootEnvProductionFile
 } from './constants'
 import { cli } from './utils/cli'
 import { breakTextToLines } from './utils/misc'
@@ -51,7 +54,7 @@ export function renderH1(text: string): string {
     return result
 }
 
-export function readEnv(source: string | Buffer, schema: MonoEnvMap): MonoEnvValueMap {
+export function readEnvFile(source: string | Buffer, schema: MonoEnvMap): MonoEnvValueMap {
     const result: MonoEnvValueMap = new Map()
 
     const parsed = parse(source)
@@ -207,49 +210,15 @@ export async function constructAndWriteEnvFiles(
     await envProductionFile.write(envProductionContent)
 }
 
+export type MonoEnvBuilderVariable = Omit<
+    EnvVariableBuilder<'text' | 'number' | 'boolean'>,
+    'required' | 'optional' | 'default' | 'desc'
+>
+
 /**
  * Environment variable builder utility.
  */
 export const env = {
-    schema(
-        variables: Omit<
-            EnvVariableBuilder<'text' | 'number' | 'boolean'>,
-            'required' | 'optional' | 'default' | 'desc'
-        >[]
-    ): MonoEnvMap {
-        try {
-            const schema: MonoEnvMap = new Map()
-
-            for (const variable of variables) {
-                const internal = variable.__internal()
-
-                if (schema.has(internal._name)) {
-                    throw new Error(`Duplicate environment variable name: "${internal._name}"`)
-                }
-
-                if (internal._name.trim() !== internal._name) {
-                    throw new Error(
-                        `Invalid environment variable name: "${internal._name}". Must not have leading or trailing whitespace.`
-                    )
-                }
-
-                // name must be uppercase ascii letters, numbers, and underscores only
-                if (!ENV_NAME_REGEX.test(internal._name)) {
-                    throw new Error(
-                        `Invalid environment variable name: "${internal._name}". Must be non-empty uppercase ASCII letters, numbers, and underscores only.`
-                    )
-                }
-
-                schema.set(internal._name, internal)
-            }
-
-            return schema
-        } catch (e: unknown) {
-            cli.handleError(e)
-            process.exit(1)
-        }
-    },
-
     number: (name: string) =>
         new EnvVariableBuilder(name, 'number') as Omit<
             EnvVariableBuilder<'number'>,
@@ -331,5 +300,62 @@ export class EnvVariableBuilder<T extends 'text' | 'number' | 'boolean'> {
             _type: this._type,
             _default: this._default
         }
+    }
+}
+
+export type MonoEnv = readonly MonoEnvBuilderVariable[]
+
+export async function readMonoEnv(): Promise<_MonoEnvInternal> {
+    try {
+        const monoEnvBuilderVariables: MonoEnv = await import(monoEnvPath).then(
+            module => module.default
+        )
+
+        const envSchema: MonoEnvMap = new Map()
+
+        for (const variable of monoEnvBuilderVariables) {
+            const internal = variable.__internal()
+
+            if (envSchema.has(internal._name)) {
+                throw new Error(`Duplicate environment variable name: "${internal._name}"`)
+            }
+
+            if (internal._name.trim() !== internal._name) {
+                throw new Error(
+                    `Invalid environment variable name: "${internal._name}". Must not have leading or trailing whitespace.`
+                )
+            }
+
+            // name must be uppercase ascii letters, numbers, and underscores only
+            if (!ENV_NAME_REGEX.test(internal._name)) {
+                throw new Error(
+                    `Invalid environment variable name: "${internal._name}". Must be non-empty uppercase ASCII letters, numbers, and underscores only.`
+                )
+            }
+
+            envSchema.set(internal._name, internal)
+        }
+
+        let envValueMap: MonoEnvValueMap | undefined
+        let envValueMapProduction: MonoEnvValueMap | undefined
+
+        if (await rootEnvFile.exists()) {
+            const envContent = await rootEnvFile.text()
+            envValueMap = readEnvFile(envContent, envSchema)
+        }
+
+        if (await rootEnvProductionFile.exists()) {
+            const envContent = await rootEnvProductionFile.text()
+            envValueMapProduction = readEnvFile(envContent, envSchema)
+        }
+
+        return {
+            schema: envSchema,
+            values: envValueMap,
+            valuesProduction: envValueMapProduction
+        }
+    } catch (e: unknown) {
+        cli.handleError(e)
+        process.exit(1)
     }
 }
