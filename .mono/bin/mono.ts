@@ -16,11 +16,11 @@ import { readMonoEnv } from './env'
 import { cli } from './utils/cli'
 import { resolveRootPath } from './utils/fs'
 
-function internalizeEntries(
+async function internalizeEntries(
     entries: readonly MonoEntry[],
     map: Map<string, _MonoEntryInternal>,
     zone: string
-): _MonoEntryInternal[] {
+): Promise<_MonoEntryInternal[]> {
     const result: _MonoEntryInternal[] = []
 
     for (const entry of entries) {
@@ -65,13 +65,10 @@ function internalizeEntries(
         setupActions.sort((a, b) => a.order - b.order)
         remoldActions.sort((a, b) => a.order - b.order)
 
-        const pathRelative = `zones/${zone}/${entry.id}`
-
         const internal: _MonoEntryInternal = {
             ...entry,
             _zone: zone,
-            _path: resolveRootPath(pathRelative),
-            _pathRelative: pathRelative,
+            _path: resolveRootPath(`zones/${zone}/${entry.id}`),
             _remoldActions: remoldActions,
             _meta: {}
         }
@@ -80,7 +77,7 @@ function internalizeEntries(
 
         for (const action of setupActions) {
             // execute the action
-            action.callback(internal)
+            await action.callback(internal)
         }
 
         result.push(internal)
@@ -96,6 +93,8 @@ function internalizeEntries(
  * referenced authors exist.
  */
 export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
+    // cli.info('Reading the mono setup: .mono.ts, .mono.env.ts', 'bold.green').indent()
+
     try {
         const map = new Map<string, _MonoEntryInternal>()
 
@@ -108,7 +107,7 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
         const internalZones: Record<string, _MonoEntryInternal[]> = {}
 
         for (const [zone, entries] of Object.entries(setup.zones)) {
-            internalZones[zone] = internalizeEntries(entries, map, zone)
+            internalZones[zone] = await internalizeEntries(entries, map, zone)
         }
 
         const workspacesMap = new Map<string, _MonoEntryInternal[]>()
@@ -120,6 +119,10 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
                     throw new Error(
                         `Workspace "${wsName}" must be an non-empty array of existing entry identifiers.`
                     )
+                }
+
+                if (!ENTRY_ID_REGEX.test(wsName)) {
+                    throw new Error()
                 }
 
                 if (!workspacesMap.has(wsName)) {
@@ -139,6 +142,8 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
             }
         }
 
+        cli.log('').dedent()
+
         return {
             zones: internalZones,
             workspaces: setup.workspaces || {},
@@ -152,37 +157,6 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
         process.exit(1)
     }
 }
-
-// export async function assertMonoSetup(): Promise<void> {
-//     try {
-//         const setup: MonoSetupInternal = await import(monoSetupPath).then(m => m.default)
-
-//         const entries = [...appsDir, ...modulesDir]
-
-//         for (const entry of entries) {
-//             if (!entry.isDirectory()) {
-//                 throw new Error(
-//                     `Invalid entry "${entry.name}" found in the monorepo. All entries must be directories.`
-//                 )
-//             }
-
-//             if (entry.isSymbolicLink()) {
-//                 throw new Error(
-//                     `Invalid entry "${entry.name}" found in the monorepo. Symbolic links are not allowed for entries.`
-//                 )
-//             }
-
-//             if (!setup._entriesMap.has(entry.name)) {
-//                 throw new Error(
-//                     `Entry "${entry.name}" found in "${entry.parentPath}" does not have a corresponding entry in the .mono.ts configuration. Please ensure that all entries are defined in the setup.`
-//                 )
-//             }
-//         }
-//     } catch (e: unknown) {
-//         cli.handleError(e)
-//         process.exit(1)
-//     }
-// }
 
 export function parseFormattedPersonText(author: string): MonoPerson {
     const match = FORMATTED_PERSON_TEXT_REGEX.exec(author)

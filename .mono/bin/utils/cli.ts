@@ -4,7 +4,7 @@ import { CLI_INDENT_WIDTH } from '../constants'
 
 export type CLIModifier = InspectColor | `${InspectColor}.${InspectColor}`
 
-export type ItemIcon = 'bullet' | 'check' | 'cross' | 'dash'
+export type ItemIcon = 'bullet' | 'check' | 'cross' | '-' | '$'
 
 /**
  * This is basically a wrapper around console.log, console.warn, and
@@ -96,10 +96,8 @@ export const cli = {
                 return '✔'
             case 'cross':
                 return '✖'
-            case 'dash':
-                return '-'
             default:
-                throw new Error(`Unknown icon type: ${icon}`)
+                return icon
         }
     },
 

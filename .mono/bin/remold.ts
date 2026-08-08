@@ -1,7 +1,8 @@
+import type { MonoSetupInternal } from 'mono'
 import { constructAndWriteEnvFiles } from './env'
 import { readMonoSetup } from './mono'
 import { cli } from './utils/cli'
-import { absoluteToRelative, CWD, dirExists } from './utils/fs'
+import { absoluteToRelative, CWD, dirExists, readDir, resolveRootPath } from './utils/fs'
 
 export interface RemoldOptions {
     /**
@@ -10,18 +11,58 @@ export interface RemoldOptions {
     verbose?: boolean
 }
 
-export async function remold(id?: string, options?: RemoldOptions): Promise<number> {
+export async function remoldWorkspacesFolder(setup: MonoSetupInternal): Promise<void> {
+    const map = setup._workspacesMap
+    const workspacePath = resolveRootPath('workspaces')
+
+    // clear all workspace files first
+    const allWorkspaceDirents = await readDir(workspacePath)
+    const doNotTouch = new Set<string>()
+
+    for (const [name, entries] of map.entries()) {
+        const filename = `${name}.code-workspace`
+        doNotTouch.add(filename)
+
+        const codeWorkspacePath = `${workspacePath}/${name}.code-workspace`
+
+        const folders = entries.map(entry => ({
+            name: entry.id,
+            path: `../zones/${entry._zone}/${entry.id}`
+        }))
+
+        const codeWorkspace = { folders } as const
+
+        const codeWorkspaceContent = JSON.stringify(codeWorkspace, null, 4)
+
+        const codeWorkspaceFile = Bun.file(codeWorkspacePath)
+        await codeWorkspaceFile.write(codeWorkspaceContent)
+    }
+
+    for (const dirent of allWorkspaceDirents) {
+        if (!doNotTouch.has(dirent.name)) {
+            const filePath = `${workspacePath}/${dirent.name}`
+            cli.item(`Removing previous workspace file ${absoluteToRelative(filePath)}`)
+            await Bun.$`rm -f ${filePath}`.quiet()
+        }
+    }
+}
+
+export async function remold(
+    id?: string,
+    options?: RemoldOptions,
+    _setup?: MonoSetupInternal
+): Promise<number> {
     try {
         const opts = {
             verbose: false,
             ...options
         }
 
-        const setup = await readMonoSetup()
+        const setup = _setup ?? (await readMonoSetup())
 
         if (!id) {
             cli.info('Remolding the monorepo itself...', 'green.bold').indent()
-            cli.item("Set up root .env's", 'gray.bold').indent()
+            cli.item("Set up root .env's...", 'white').indent()
 
             await constructAndWriteEnvFiles(
                 CWD,
@@ -29,6 +70,10 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
                 setup.env.values,
                 setup.env.valuesProduction
             )
+
+            cli.dedent().item('Set up workspaces...', 'white').indent()
+
+            await remoldWorkspacesFolder(setup)
 
             // entries
 
@@ -42,7 +87,7 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
 
             // TODO: Consider parallelizing?
             for (const entry of setup._entriesMap.values()) {
-                const code = await remold(entry.id, opts)
+                const code = await remold(entry.id, opts, setup)
 
                 if (code !== 0) {
                     exitCode = code
@@ -56,7 +101,7 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
                 return exitCode
             } else {
                 cli.log('').success('Remolded all entries successfully!', 'green.bold').reset()
-                return exitCode
+                return 0
             }
         }
 
@@ -71,20 +116,16 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
         // make sure the entry path exists
         const folder = entry._path
 
-        cli.indent().item(entry._pathRelative, 'white.bold').indent()
+        cli.indent().item(`${entry._zone}/${entry.id}`, 'white.bold').indent()
 
         if (!(await dirExists(folder))) {
             cli.item(`Create non-existent folder ${absoluteToRelative(folder)}`, 'gray.bold')
             await Bun.$`mkdir -p ${folder}`.quiet()
         }
 
-        if (entry._remoldActions.length > 0) {
-            cli.item('Run addon actions', 'gray.bold').indent()
-        }
-
         for (const action of entry._remoldActions) {
             if (opts.verbose) {
-                cli.item(`${action.name}`, 'gray.italic').indent()
+                cli.item(`${action.name.slice(1)}`, 'gray', '$').indent()
             }
 
             await action.callback(entry)

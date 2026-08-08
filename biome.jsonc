@@ -77,7 +77,6 @@
             "semicolons": "asNeeded",
             "trailingCommas": "none"
         },
-        "linter": {},
         "parser": {
             "jsxEverywhere": false
         },
@@ -106,6 +105,9 @@
             "suspicious": {
                 "noExplicitAny": "info",
                 "noEmptyInterface": "info"
+            },
+            "nursery": {
+                "noFloatingPromises": "warn"
             }
         }
     },

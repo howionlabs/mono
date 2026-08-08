@@ -188,7 +188,6 @@ export interface _MonoEntryInternal extends MonoEntry {
      * Absolute path to the project folder.
      */
     _path: string
-    _pathRelative: string
 
     /**
      * Order-ascending list of actions provided by addons. Could have multiple

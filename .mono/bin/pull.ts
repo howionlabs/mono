@@ -1,3 +1,4 @@
+import type { MonoSetupInternal } from 'mono'
 import { availableParallelism } from 'node:os'
 import { type SimpleGit, type SimpleGitOptions, simpleGit } from 'simple-git'
 import { ROOT_GIT_BRANCH_NAME } from './constants'
@@ -23,40 +24,40 @@ export interface PullOptions {
     verbose?: boolean
 }
 
-export async function pull(id?: string, options?: PullOptions): Promise<number> {
+export async function pull(
+    id?: string,
+    options?: PullOptions,
+    _setup?: MonoSetupInternal
+): Promise<number> {
     try {
         const opts = {
             verbose: false,
             ...options
         }
 
-        const setup = await readMonoSetup()
+        const setup = _setup ?? (await readMonoSetup())
 
         if (!id) {
             cli.info('Pulling all tracked entries...', 'green.bold').indent()
 
-            let exitCode = 0
-
             for (const entry of setup._entriesMap.values()) {
                 if (entry._meta.git === undefined) {
                     cli.item(
-                        `Skipping "${entry._pathRelative}" because it is not git tracked.`,
+                        `Skipping "${entry._zone}/${entry.id}" because it is not git tracked.`,
                         'gray'
                     )
                     continue
                 }
 
-                const code = await pull(entry.id, opts)
+                const code = await pull(entry.id, opts, setup)
 
                 if (code !== 0) {
-                    exitCode = code
-                    break
+                    cli.reset()
+                    return code
                 }
             }
 
-            cli.reset()
-
-            return exitCode
+            return 0
         }
 
         const entry = setup._entriesMap.get(id)
@@ -70,17 +71,17 @@ export async function pull(id?: string, options?: PullOptions): Promise<number> 
         // make sure the entry path exists
         const baseDir = entry._path
         const gitFolder = `${baseDir}/.git`
-        const relativePath = entry._pathRelative
+        const identifierZoned = `${entry._zone}/${entry.id}`
 
         if (!(await dirExists(baseDir))) {
             throw new Error(
-                `Tracked entry "${relativePath}" folder does not exist. Please run "bun mono remold" first.`
+                `Tracked entry "${identifierZoned}" folder does not exist. Please run "bun mono remold" first.`
             )
         }
 
         if (!(await dirExists(gitFolder))) {
             throw new Error(
-                `Tracked entry "${relativePath}" is not a git repository. Please run "bun mono remold" first.`
+                `Tracked entry "${identifierZoned}" is not a git repository. Please run "bun mono remold" first.`
             )
         }
 
@@ -91,15 +92,13 @@ export async function pull(id?: string, options?: PullOptions): Promise<number> 
 
         if (currentBranch !== monoBranch) {
             throw new Error(
-                `Tracked entry "${relativePath}" is on branch "${currentBranch}", but the mono branch is "${monoBranch}". Please switch to the correct branch and try again.`
+                `Tracked entry "${identifierZoned}" is on branch "${currentBranch}", but the mono branch is "${monoBranch}". Please switch to the correct branch and try again.`
             )
         }
 
-        await git.fetch().pull('origin', monoBranch, ['--no-rebase', '--allow-unrelated-histories'])
+        await git.fetch().pull()
 
-        cli.indent().item(relativePath, 'white.bold').indent()
-
-        cli.reset()
+        cli.item(identifierZoned, 'white')
 
         return 0
     } catch (e: unknown) {

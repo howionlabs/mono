@@ -50,7 +50,7 @@ export function $license(id: MonoLicenseId): MonoAddon {
         setup: [
             {
                 name: '$license.addLicenseDataToMeta',
-                order: 0,
+                order: -1,
                 callback: addLicenseDataToMeta
             }
         ],
