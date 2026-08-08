@@ -4,12 +4,6 @@ import { _monoEnvSetup } from '../bin/mono'
 
 export function $env(...variables: string[]): MonoAddon {
     async function addEnvVariablesToMeta(entry: _MonoEntryInternal) {
-        if (entry._type !== 'app') {
-            throw new Error(
-                `Failed to add $env to "${entry.id}": $env addon can only be used on apps, not on ${entry._type}s.`
-            )
-        }
-
         entry._meta.env ??= { variables: new Set() }
 
         for (const variable of variables) {
@@ -33,12 +27,14 @@ export function $env(...variables: string[]): MonoAddon {
     return {
         name: '$env',
         unique: false,
-        actions: [
+        setup: [
             {
                 name: '$env.addEnvVariablesToMeta',
                 order: 0,
                 callback: addEnvVariablesToMeta
-            },
+            }
+        ],
+        remold: [
             {
                 name: '$env.writeEnvFiles',
                 order: 10,

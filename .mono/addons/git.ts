@@ -1,8 +1,13 @@
 import type { _MonoEntryInternal, MonoAddon, MonoAddonActionOptions, MonoGitURI } from '../mono'
-import { MONO_AUTOGEN_DISCLAIMER, MONO_HASHTAG_BAR, monoAddonGitignoreFile } from '../bin/constants'
-import { initializeGitRepo, parseGitURI, rootGitBranchName } from '../bin/git'
+import {
+    MONO_AUTOGEN_DISCLAIMER,
+    MONO_HASHTAG_BAR,
+    monoAddonGitignoreFile,
+    ROOT_GIT_BRANCH_NAME
+} from '../bin/constants'
+import { buildRemoteUrl, parseGitURI, simpleGitFactory } from '../bin/git'
 import { cli } from '../bin/utils/cli'
-import { resolveEntryPath, writeFile } from '../bin/utils/fs'
+import { dirExists, resolveEntryPath, writeFile } from '../bin/utils/fs'
 
 let constructedGitignore = ''
 
@@ -46,28 +51,82 @@ export function $git($uri: MonoGitURI): MonoAddon {
         entry._meta.git = monoGit
     }
 
-    async function initializeGit(entry: _MonoEntryInternal, opts: MonoAddonActionOptions) {
+    async function initializeGit(
+        entry: _MonoEntryInternal /*, { verbose }: MonoAddonActionOptions */
+    ) {
         if (!entry._meta.git) {
             throw new Error(
                 `Cannot initialize Git for the entry "${entry.id}" because Git information is missing. Please ensure that the $git addon has been properly applied to this entry before attempting to initialize Git.`
             )
         }
 
-        // if (opts.verbose) {
-        // }
+        // if (opts.verbose) { }
 
-        await initializeGitRepo(resolveEntryPath(entry), entry._meta.git)
+        // note: git.checkIsRepo() returns true since the parent directory that
+        // is our mono(repo) is a git repository
+
+        if (await dirExists(resolveEntryPath(entry, '.git'))) {
+            // note that this git instance is for the entry's directory, not
+            // the mono root directory
+            // todo: check this better
+            const git = simpleGitFactory(entry._path)
+
+            // make sure the repo is correctly initialized with the correct
+            // remote and branch
+            const remote = await git.getRemotes(true)
+            const remoteOrigin = remote.find(r => r.name === 'origin')
+
+            if (!remoteOrigin) {
+                throw new Error(
+                    `Git repository for entry "${entry.id}" is missing the "origin" remote. Please either uninitialize the repository or add the correct "origin" remote manually.`
+                )
+            }
+
+            const { fetch, push } = remoteOrigin.refs
+
+            const correctRemoteUrl = buildRemoteUrl(entry._meta.git)
+
+            if (fetch !== correctRemoteUrl || push !== correctRemoteUrl) {
+                throw new Error(
+                    `Git repository for entry "${entry.id}" has an "origin" remote that does not match the expected URL. Expected: fetch=push=${correctRemoteUrl}, Found: fetch=${fetch}, push=${push}. Please either uninitialize the repository or update the "origin" remote manually.`
+                )
+            }
+
+            // make sure the branch is correct
+            const monoBranch = ROOT_GIT_BRANCH_NAME
+            const currentBranch = (await git.branchLocal()).current
+
+            if (currentBranch !== monoBranch) {
+                throw new Error(
+                    `Git repository for entry "${entry.id}" is on branch "${currentBranch}", but the expected branch is "${monoBranch}". Please either uninitialize the repository or switch to the correct branch manually.`
+                )
+            }
+
+            // make sure the repo is up to date with the remote
+            await git.fetch()
+        } else {
+            const git = simpleGitFactory(entry._path)
+
+            await git
+                .init()
+                .addRemote('origin', buildRemoteUrl(entry._meta.git))
+                .fetch()
+                .branch(['-M', ROOT_GIT_BRANCH_NAME])
+                .checkout(['-f', ROOT_GIT_BRANCH_NAME])
+        }
     }
 
     return {
         name: '$git',
         unique: true,
-        actions: [
+        setup: [
             {
                 name: '$git.addGitDataToMeta',
                 order: 0,
                 callback: addGitDataToMeta
-            },
+            }
+        ],
+        remold: [
             {
                 name: '$git.writeGitignoreFile',
                 order: 10,

@@ -165,7 +165,7 @@ export function $npm(name: string): MonoAddon {
         }
     }
 
-    async function writePjson(entry: _MonoEntryInternal) {
+    async function writePJSON(entry: _MonoEntryInternal) {
         // note that this object could have been modified by other addons
         const pjson = entry._meta.npm?.nextPJSON
 
@@ -184,14 +184,16 @@ export function $npm(name: string): MonoAddon {
     return {
         name: '$npm',
         unique: true,
-        actions: [
+        setup: [
             {
                 callback: constructAndAddPjsonDataToMeta,
                 name: '$npm.constructAndAddPJSONDataToMeta',
                 order: 20
-            },
+            }
+        ],
+        remold: [
             {
-                callback: writePjson,
+                callback: writePJSON,
                 name: '$npm.writePJSON',
                 order: 30
             }

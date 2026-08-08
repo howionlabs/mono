@@ -23,16 +23,18 @@ export function $biomejs(): MonoAddon {
     return {
         name: '$biomejs',
         unique: true,
-        actions: [
-            {
-                name: '$biomejs.writeBiomeFile',
-                order: 0,
-                callback: writeBiomeFile
-            },
+        setup: [
             {
                 name: '$biomejs.syncPJSONDependencies',
                 order: 1,
                 callback: syncPJSONDependencies
+            }
+        ],
+        remold: [
+            {
+                name: '$biomejs.writeBiomeFile',
+                order: 0,
+                callback: writeBiomeFile
             }
         ]
     }

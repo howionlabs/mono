@@ -1,29 +1,10 @@
 import type { _MonoEntryInternal, MonoAddon, MonoPerson } from '../mono'
-import { AUTHOR_REGEX } from '../bin/constants'
+import { parseFormattedPersonText } from '../bin/mono'
 import { cli } from '../bin/utils/cli'
 
-function parseAuthorString(author: string): MonoPerson {
-    const match = AUTHOR_REGEX.exec(author)
-
-    if (!match?.groups) {
-        throw new Error(
-            `Invalid author string "${author}". Expected format: "name <email> (url)" where email and url are optional.`
-        )
-    }
-
-    const { name, email, url } = match.groups
-
-    return {
-        name: name!.trim(),
-        email: email?.trim(),
-        url: url?.trim()
-    }
-}
-
-export function $author(author: MonoPerson): MonoAddon
-export function $author(author: string): MonoAddon
 export function $author(author: MonoPerson | string): MonoAddon {
-    const details: MonoPerson = typeof author === 'string' ? parseAuthorString(author) : author
+    const details: MonoPerson =
+        typeof author === 'string' ? parseFormattedPersonText(author) : author
 
     async function addAuthorToMeta(entry: _MonoEntryInternal) {
         if (entry._meta.author) {
@@ -38,7 +19,7 @@ export function $author(author: MonoPerson | string): MonoAddon {
     return {
         name: '$author',
         unique: true,
-        actions: [
+        setup: [
             {
                 name: '$author.addAuthorToMeta',
                 order: 0,

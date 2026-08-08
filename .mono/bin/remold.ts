@@ -1,6 +1,5 @@
-import type { MonoSetupInternal } from './types'
-import { monoSetupPath } from './constants'
 import { constructAndWriteEnvFiles } from './env'
+import { readMonoSetup } from './mono'
 import { cli } from './utils/cli'
 import { absoluteToRelative, CWD, dirExists } from './utils/fs'
 
@@ -18,7 +17,7 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
             ...options
         }
 
-        const setup: MonoSetupInternal = await import(monoSetupPath).then(m => m.default)
+        const setup = await readMonoSetup()
 
         if (!id) {
             cli.info('Remolding the monorepo itself...', 'green.bold').indent()
@@ -51,9 +50,14 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
                 }
             }
 
-            cli.log('').success('Remolded all entries successfully!', 'green.bold').reset()
-
-            return exitCode
+            if (exitCode !== 0) {
+                cli.error('Remolding failed for one or more entries.', 'red.bold')
+                cli.reset()
+                return exitCode
+            } else {
+                cli.log('').success('Remolded all entries successfully!', 'green.bold').reset()
+                return exitCode
+            }
         }
 
         const entry = setup._entriesMap.get(id)
@@ -66,27 +70,24 @@ export async function remold(id?: string, options?: RemoldOptions): Promise<numb
 
         // make sure the entry path exists
         const folder = entry._path
-        const linkablePath = `${entry._type}s/${entry.id}`
 
-        cli.indent().item(linkablePath, 'white.bold').indent()
+        cli.indent().item(entry._pathRelative, 'white.bold').indent()
 
         if (!(await dirExists(folder))) {
             cli.item(`Create non-existent folder ${absoluteToRelative(folder)}`, 'gray.bold')
             await Bun.$`mkdir -p ${folder}`.quiet()
         }
 
-        if (entry._actions.length > 0) {
+        if (entry._remoldActions.length > 0) {
             cli.item('Run addon actions', 'gray.bold').indent()
         }
 
-        for (const action of entry._actions) {
+        for (const action of entry._remoldActions) {
             if (opts.verbose) {
                 cli.item(`${action.name}`, 'gray.italic').indent()
             }
 
-            await action.callback(entry, {
-                verbose: opts.verbose
-            })
+            await action.callback(entry)
 
             if (opts.verbose) cli.dedent()
         }

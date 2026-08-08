@@ -34,16 +34,6 @@ export function buildRemoteUrl(opts: MonoGit): string {
     }
 }
 
-export async function initializeGitRepo(baseDir: string, opts: MonoGit): Promise<SimpleGit> {
-    const git = simpleGitFactory(baseDir)
-
-    const branch = await rootGitBranchName()
-
-    await git.init().addRemote('origin', buildRemoteUrl(opts)).branch(['-M', branch]).fetch()
-
-    return git
-}
-
 export function parseGitURI(uri: MonoGitURI): MonoGit {
     if (uri.startsWith('https://')) {
         const match = uri.match(MONO_GIT_URI_HTTPS_REGEX)

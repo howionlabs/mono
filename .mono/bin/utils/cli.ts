@@ -186,6 +186,7 @@ export const cli = {
             this.error(`Unknown error: ${e}`, 'red.bold')
         }
 
+        cli.reset()
         this.log('')
     }
 }

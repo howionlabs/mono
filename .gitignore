@@ -3,9 +3,8 @@
 # IGNORE SUB .GIT FOLDERS
 **/.git
 
-# IGNORE WORKSPACES
-/apps
-/modules
+# IGNORE MONO ENTRIES
+/zones
 
 ## GENERAL ####################################################################
 

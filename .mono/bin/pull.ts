@@ -1,7 +1,7 @@
-import type { MonoSetupInternal } from 'mono'
 import { availableParallelism } from 'node:os'
 import { type SimpleGit, type SimpleGitOptions, simpleGit } from 'simple-git'
-import { monoSetupPath } from './constants'
+import { ROOT_GIT_BRANCH_NAME } from './constants'
+import { readMonoSetup } from './mono'
 import { cli } from './utils/cli'
 import { dirExists } from './utils/fs'
 
@@ -30,7 +30,7 @@ export async function pull(id?: string, options?: PullOptions): Promise<number> 
             ...options
         }
 
-        const setup: MonoSetupInternal = await import(monoSetupPath).then(m => m.default)
+        const setup = await readMonoSetup()
 
         if (!id) {
             cli.info('Pulling all tracked entries...', 'green.bold').indent()
@@ -40,9 +40,10 @@ export async function pull(id?: string, options?: PullOptions): Promise<number> 
             for (const entry of setup._entriesMap.values()) {
                 if (entry._meta.git === undefined) {
                     cli.item(
-                        `Skipping "${entry._type}s/${entry.id}" because it is not git tracked.`,
+                        `Skipping "${entry._pathRelative}" because it is not git tracked.`,
                         'gray'
                     )
+                    continue
                 }
 
                 const code = await pull(entry.id, opts)
@@ -69,34 +70,34 @@ export async function pull(id?: string, options?: PullOptions): Promise<number> 
         // make sure the entry path exists
         const baseDir = entry._path
         const gitFolder = `${baseDir}/.git`
-        const linkablePath = `${entry._type}s/${entry.id}`
+        const relativePath = entry._pathRelative
 
         if (!(await dirExists(baseDir))) {
             throw new Error(
-                `Tracked entry "${linkablePath}" folder does not exist. Please run "bun mono remold" first.`
+                `Tracked entry "${relativePath}" folder does not exist. Please run "bun mono remold" first.`
             )
         }
 
         if (!(await dirExists(gitFolder))) {
             throw new Error(
-                `Tracked entry "${linkablePath}" is not a git repository. Please run "bun mono remold" first.`
+                `Tracked entry "${relativePath}" is not a git repository. Please run "bun mono remold" first.`
             )
         }
 
         const git = simpleGitFactory(baseDir)
 
-        const gitBranch = entry._meta.git!.branch
+        const monoBranch = ROOT_GIT_BRANCH_NAME
         const currentBranch = (await git.branchLocal()).current
 
-        if (currentBranch !== gitBranch) {
+        if (currentBranch !== monoBranch) {
             throw new Error(
-                `Tracked entry "${linkablePath}" is on branch "${currentBranch}", but the expected branch is "${gitBranch}". Please switch to the correct branch and try again.`
+                `Tracked entry "${relativePath}" is on branch "${currentBranch}", but the mono branch is "${monoBranch}". Please switch to the correct branch and try again.`
             )
         }
 
-        await git.fetch().pull('origin', gitBranch)
+        await git.fetch().pull('origin', monoBranch, ['--no-rebase', '--allow-unrelated-histories'])
 
-        cli.indent().item(linkablePath, 'white.bold').indent()
+        cli.indent().item(relativePath, 'white.bold').indent()
 
         cli.reset()
 

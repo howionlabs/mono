@@ -33,7 +33,7 @@ export function $vscode(): MonoAddon {
     return {
         name: '$vscode',
         unique: true,
-        actions: [
+        remold: [
             {
                 name: '$vscode.writeDotEditorConfig',
                 order: 0,

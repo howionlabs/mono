@@ -28,7 +28,7 @@ export function $static(from: string, to?: string, alwaysOverwrite: boolean = fa
     return {
         name: '$static',
         unique: false,
-        actions: [
+        remold: [
             {
                 name: '$static.writeStaticFile',
                 order: 10,

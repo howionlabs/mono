@@ -15,7 +15,14 @@
                         "groups": [
                             {
                                 "type": true
-                            }
+                            },
+                            ":URL:",
+                            ":BUN:",
+                            ":PACKAGE_WITH_PROTOCOL:",
+                            ":NODE:",
+                            ":PACKAGE:",
+                            ":PATH:",
+                            ":STYLE:"
                         ]
                     }
                 }
@@ -27,7 +34,6 @@
     "extends": [],
     "files": {
         "ignoreUnknown": true,
-        //  exclusions are handled by .gitignore and .biomeignore
         "includes": [
             "**",
             "!biome.jsonc",
@@ -38,7 +44,6 @@
             "!!dist",
             "!!out"
         ],
-        // 1MB
         "maxSize": 1000000
     },
     "formatter": {
@@ -50,10 +55,6 @@
         "expand": "auto",
         "formatWithErrors": true,
         "lineWidth": 100,
-        // "indentStyle": "space",
-        // "indentWidth": 4,
-        // "lineEnding": "lf",
-        // "trailingNewline": true,
         "useEditorconfig": true
     },
     "graphql": {},
@@ -76,16 +77,11 @@
             "semicolons": "asNeeded",
             "trailingCommas": "none"
         },
-        // "experimentalEmbeddedSnippetsEnabled": true,
-        // "jsxRuntime"
         "linter": {},
         "parser": {
             "jsxEverywhere": false
-            // "unsafeParameterDecoratorsEnabled": false
         },
-        "resolver": {
-            // "experimentalPnpmCatalogs": false
-        }
+        "resolver": {}
     },
     "json": {
         "assist": {},
@@ -112,25 +108,21 @@
                 "noEmptyInterface": "info"
             }
         }
-        // "rules": {
-        //     "correctness": {
-        //         "noUnknownTypeSelector": "off"
-        //     },
-        // }
     },
     "overrides": [
         {
             "includes": ["**/*.svelte", "**/*.astro", "**/*.vue"],
             "linter": {
                 "rules": {
-                    "correctness": {
-                        // "noUnusedImports": "off",
-                        // "noUnusedVariables": "off"
-                    },
-                    "style": {
-                        // "useConst": "off"
-                        // "useImportType": "off"
-                    }
+                    "a11y": {},
+                    "complexity": {},
+                    "correctness": {},
+                    "nursery": {},
+                    "performance": {},
+                    "preset": "recommended",
+                    "style": {},
+                    "security": {},
+                    "suspicious": {}
                 }
             }
         }

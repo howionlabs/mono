@@ -1,6 +1,7 @@
 import monoMDLintConf from '../../.markdownlint.jsonc'
 import monoBiomeConf from '../../biome.jsonc'
 import monoPJSON from '../../package.json'
+import { rootGitBranchName } from './git'
 import { resolveRootPath } from './utils/fs'
 import { breakTextToLines } from './utils/misc'
 
@@ -38,7 +39,7 @@ export const rootEnvProductionFile = Bun.file(resolveRootPath('.env.production')
 
 export const ENTRY_ID_REGEX = /^[a-z0-9]+[a-z0-9-]+$/
 
-export const AUTHOR_REGEX =
+export const FORMATTED_PERSON_TEXT_REGEX =
     /^(?<name>[^<]+?)\s*(?:<(?<email>[^@>]+@[^>]+)>)?\s*(?:\((?<url>[^)]+)\))?$/
 
 // biome is not a dev dependency at the root
@@ -51,3 +52,5 @@ export { monoMDLintConf }
 
 export const monoAddonGitignoreFile = Bun.file(resolveRootPath('static/addons/.gitignore'))
 export const monoAddonEditorConfigFile = Bun.file(resolveRootPath('static/addons/.editorconfig'))
+
+export const ROOT_GIT_BRANCH_NAME = await rootGitBranchName()

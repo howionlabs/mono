@@ -5,11 +5,13 @@ import type {
     MonoEnvMap,
     MonoEnvSetup,
     MonoEnvValueMap,
+    MonoPerson,
     MonoSetup,
     MonoSetupInternal
 } from './types'
 import {
     ENTRY_ID_REGEX,
+    FORMATTED_PERSON_TEXT_REGEX,
     monoEnvPath,
     monoSetupPath,
     rootEnvFile,
@@ -17,12 +19,12 @@ import {
 } from './constants'
 import { readEnv } from './env'
 import { cli } from './utils/cli'
-import { readDir, resolveRootPath } from './utils/fs'
+import { resolveRootPath } from './utils/fs'
 
 function internalizeEntries(
     entries: MonoEntry[],
     map: Map<string, _MonoEntryInternal>,
-    type: 'app' | 'module'
+    zone: string
 ): _MonoEntryInternal[] {
     const result: _MonoEntryInternal[] = []
 
@@ -35,35 +37,57 @@ function internalizeEntries(
             throw new Error(`Duplicate entry identifier "${entry.id}"`)
         }
 
-        const addons = (entry.addons || []).flatMap(addon =>
-            Array.isArray(addon) ? addon : [addon]
-        )
-        const addonSet = new Set<string>()
-        const actions: MonoAddonAction[] = []
+        const setupActions: MonoAddonAction[] = []
+        const remoldActions: MonoAddonAction[] = []
 
-        for (const addon of addons) {
-            if (addon.unique !== false && addonSet.has(addon.name)) {
-                throw new Error(
-                    `Unique addon "${addon.name}" is already registered for the entry "${entry.id}". Unique addons can only be registered once per entry.`
-                )
+        if (entry.addons) {
+            const addonSet = new Set<string>()
+
+            for (const addon of entry.addons) {
+                if (addon.unique !== false && addonSet.has(addon.name)) {
+                    throw new Error(
+                        `Unique addon "${addon.name}" is already registered for the entry "${entry.id}". Unique addons can only be registered once per entry.`
+                    )
+                }
+
+                addonSet.add(addon.name)
+
+                if (addon.setup) {
+                    for (const action of addon.setup) {
+                        setupActions.push(action)
+                    }
+                }
+
+                if (addon.remold) {
+                    for (const action of addon.remold) {
+                        remoldActions.push(action)
+                    }
+                }
             }
-
-            addonSet.add(addon.name)
-            actions.push(...addon.actions)
         }
 
         // in-place sort, asc
-        actions.sort((a, b) => a.order - b.order)
+        setupActions.sort((a, b) => a.order - b.order)
+        remoldActions.sort((a, b) => a.order - b.order)
+
+        const pathRelative = `zones/${zone}/${entry.id}`
 
         const internal: _MonoEntryInternal = {
             ...entry,
-            _type: type,
-            _path: resolveRootPath(`${type}s/${entry.id}`),
-            _actions: actions,
+            _zone: zone,
+            _path: resolveRootPath(pathRelative),
+            _pathRelative: pathRelative,
+            _remoldActions: remoldActions,
             _meta: {}
         }
 
         map.set(entry.id, internal)
+
+        for (const action of setupActions) {
+            // execute the action
+            action.callback(internal)
+        }
+
         result.push(internal)
     }
 
@@ -86,14 +110,48 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
             )
         }
 
-        const apps = internalizeEntries(setup.apps || [], map, 'app')
-        const modules = internalizeEntries(setup.modules || [], map, 'module')
+        const internalZones: Record<string, _MonoEntryInternal[]> = {}
+
+        for (const [zone, entries] of Object.entries(setup.zones)) {
+            internalZones[zone] = internalizeEntries(entries, map, zone)
+        }
+
+        const workspacesMap = new Map<string, _MonoEntryInternal[]>()
+
+        // make sure workspaces are well-formed
+        if (setup.workspaces) {
+            for (const [wsName, wsEntries] of Object.entries(setup.workspaces)) {
+                if (!Array.isArray(wsEntries) || wsEntries.length === 0) {
+                    throw new Error(
+                        `Workspace "${wsName}" must be an array of entry identifiers and cannot be empty.`
+                    )
+                }
+
+                if (!workspacesMap.has(wsName)) {
+                    workspacesMap.set(wsName, [])
+                }
+
+                for (const eid of wsEntries) {
+                    if (!map.has(eid)) {
+                        throw new Error(
+                            `Workspace "${wsName}" references an unknown entry identifier "${eid}".`
+                        )
+                    }
+
+                    const value = workspacesMap.get(wsName)!
+                    value.push(map.get(eid)!)
+                    value.sort((a, b) => a.id.localeCompare(b.id))
+                }
+            }
+        }
 
         return {
-            apps: apps,
-            modules: modules,
+            zones: internalZones,
+            workspaces: setup.workspaces || {},
+            env: await _monoEnvSetup(),
+
             _entriesMap: map,
-            env: await _monoEnvSetup()
+            _workspacesMap: workspacesMap
         }
     } catch (e: unknown) {
         cli.handleError(e)
@@ -128,36 +186,55 @@ export async function _monoEnvSetup(): Promise<MonoEnvSetup> {
     }
 }
 
-export async function assertMonoSetup(): Promise<void> {
-    try {
-        const setup: MonoSetupInternal = await import(monoSetupPath).then(m => m.default)
+// export async function assertMonoSetup(): Promise<void> {
+//     try {
+//         const setup: MonoSetupInternal = await import(monoSetupPath).then(m => m.default)
 
-        const appsDir = await readDir(resolveRootPath('apps'))
-        const modulesDir = await readDir(resolveRootPath('modules'))
+//         const entries = [...appsDir, ...modulesDir]
 
-        const entries = [...appsDir, ...modulesDir]
+//         for (const entry of entries) {
+//             if (!entry.isDirectory()) {
+//                 throw new Error(
+//                     `Invalid entry "${entry.name}" found in the monorepo. All entries must be directories.`
+//                 )
+//             }
 
-        for (const entry of entries) {
-            if (!entry.isDirectory()) {
-                throw new Error(
-                    `Invalid entry "${entry.name}" found in the monorepo. All entries must be directories.`
-                )
-            }
+//             if (entry.isSymbolicLink()) {
+//                 throw new Error(
+//                     `Invalid entry "${entry.name}" found in the monorepo. Symbolic links are not allowed for entries.`
+//                 )
+//             }
 
-            if (entry.isSymbolicLink()) {
-                throw new Error(
-                    `Invalid entry "${entry.name}" found in the monorepo. Symbolic links are not allowed for entries.`
-                )
-            }
+//             if (!setup._entriesMap.has(entry.name)) {
+//                 throw new Error(
+//                     `Entry "${entry.name}" found in "${entry.parentPath}" does not have a corresponding entry in the .mono.ts configuration. Please ensure that all entries are defined in the setup.`
+//                 )
+//             }
+//         }
+//     } catch (e: unknown) {
+//         cli.handleError(e)
+//         process.exit(1)
+//     }
+// }
 
-            if (!setup._entriesMap.has(entry.name)) {
-                throw new Error(
-                    `Entry "${entry.name}" found in "${entry.parentPath}" does not have a corresponding entry in the .mono.ts configuration. Please ensure that all entries are defined in the setup.`
-                )
-            }
-        }
-    } catch (e: unknown) {
-        cli.handleError(e)
-        process.exit(1)
+export function parseFormattedPersonText(author: string): MonoPerson {
+    const match = FORMATTED_PERSON_TEXT_REGEX.exec(author)
+
+    if (!match?.groups) {
+        throw new Error(
+            `Invalid author string "${author}". Expected format: "name <email> (url)" where email and url are optional.`
+        )
     }
+
+    const { name, email, url } = match.groups
+
+    return {
+        name: name!.trim(),
+        email: email?.trim(),
+        url: url?.trim()
+    }
+}
+
+export async function readMonoSetup(): Promise<MonoSetupInternal> {
+    return await mono(await import(monoSetupPath).then(m => m.default))
 }

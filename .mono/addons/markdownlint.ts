@@ -21,16 +21,18 @@ export function $markdownlint(): MonoAddon {
     return {
         name: '$markdownlint',
         unique: true,
-        actions: [
-            {
-                name: '$markdownlint.writeMDLintFile',
-                order: 0,
-                callback: writeMDLintFile
-            },
+        setup: [
             {
                 name: '$markdownlint.syncNPMDependencies',
                 order: 1,
                 callback: syncNPMDependencies
+            }
+        ],
+        remold: [
+            {
+                name: '$markdownlint.writeMDLintFile',
+                order: 0,
+                callback: writeMDLintFile
             }
         ]
     }

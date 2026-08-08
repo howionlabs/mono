@@ -59,6 +59,8 @@ export interface MonoAddonActionOptions {
     verbose?: boolean
 }
 
+export type MonoAddonActionCallback = (entry: _MonoEntryInternal) => void | Promise<void>
+
 export interface MonoAddonAction {
     /**
      * Name of the addon action for debugging and logging purposes. It should
@@ -73,7 +75,11 @@ export interface MonoAddonAction {
      */
     order: number
 
-    callback: (entry: _MonoEntryInternal, opts: MonoAddonActionOptions) => void | Promise<void>
+    /**
+     * The callback function that will be executed when the addon action is
+     * run.
+     */
+    callback: MonoAddonActionCallback
 }
 
 export interface MonoAddon {
@@ -93,18 +99,35 @@ export interface MonoAddon {
     unique?: boolean
 
     /**
-     * Non-empty list of actions provided by the addon. Could have multiple
-     * actions with the same name which will be executed in their respective
-     * order.
+     * Non-empty lsit of actions which will always be executed on every mono
+     * setup is loaded.
      */
-    actions: [MonoAddonAction, ...MonoAddonAction[]]
+    setup?: [MonoAddonAction, ...MonoAddonAction[]]
+
+    /**
+     * Non-empty list of actions which will be executed when the remold command
+     * is run.
+     */
+    remold?: [MonoAddonAction, ...MonoAddonAction[]]
+
+    // /**
+    //  * Non-empty list of actions which will be executed when the pull command
+    //  * is run.
+    //  */
+    // pull?: [MonoAddonAction, ...MonoAddonAction[]]
+
+    // /**
+    //  * Non-empty list of actions which will be executed when the push command
+    //  * is run.
+    //  */
+    // push?: [MonoAddonAction, ...MonoAddonAction[]]
 }
 
 export interface MonoEntry {
     /**
      * Unique identifier for the project, used for referencing in other parts
      * of the configuration.
-     * - Must be unique both in apps and modules.
+     * - Must be unique among all entries in all zones.
      * - Should match the folder name of the project and
      * must be in lowercase ascii with hyphens without leading or trailing
      * whitespace.
@@ -145,10 +168,8 @@ export interface MonoEntry {
      */
     keywords?: string[]
 
-    addons?: (MonoAddon | MonoAddon[])[]
+    addons?: MonoAddon[]
 }
-
-export type _MonoEntryType = 'app' | 'module'
 
 export interface PJSON extends Record<string, unknown> {
     name: string
@@ -160,19 +181,22 @@ export interface PJSON extends Record<string, unknown> {
     peerDependencies: Record<string, string>
 }
 
-export interface _MonoEntryInternal<T extends _MonoEntryType = _MonoEntryType> extends MonoEntry {
-    _type: T
+export interface _MonoEntryInternal extends MonoEntry {
+    _zone: string
 
     /**
      * Absolute path to the project folder.
      */
     _path: string
+    _pathRelative: string
 
     /**
      * Order-ascending list of actions provided by addons. Could have multiple
      * (non-unique) actions with the same name.
      */
-    _actions: MonoAddonAction[]
+    _remoldActions: MonoAddonAction[]
+    // _pullActions: MonoAddonAction[]
+    // _pushActions: MonoAddonAction[]
 
     /**
      * Internal metadata for the mono setup, used for storing additional
@@ -262,16 +286,15 @@ export type MonoEnvValueMap = Map<string, string | number | boolean>
 // }
 
 export interface MonoSetup {
-    apps?: MonoEntry[]
-    modules?: MonoEntry[]
-    // workspaces?: MonoSetupWorkspace[]
+    zones: Record<string, MonoEntry[]>
+    workspaces?: Record<string, string[]>
 }
 
 export interface MonoSetupInternal extends Required<MonoSetup> {
-    apps: _MonoEntryInternal[]
-    modules: _MonoEntryInternal[]
     env: MonoEnvSetup
+    zones: Record<string, _MonoEntryInternal[]>
 
+    _workspacesMap: Map<string, _MonoEntryInternal[]>
     _entriesMap: Map<string, _MonoEntryInternal>
 }
 

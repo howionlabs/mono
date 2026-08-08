@@ -1,5 +1,4 @@
-import type { MonoSetupInternal } from 'mono'
-import { monoSetupPath } from './constants'
+import { readMonoSetup } from './mono'
 import { cli } from './utils/cli'
 
 export interface PullOptions {
@@ -16,7 +15,7 @@ export async function commit(id?: string, options?: PullOptions): Promise<number
             ...options
         }
 
-        const setup: MonoSetupInternal = await import(monoSetupPath).then(m => m.default)
+        const setup = await readMonoSetup()
 
         if (!id) {
             cli.info('Committing on all tracked entries...', 'green.bold').indent()
@@ -28,7 +27,7 @@ export async function commit(id?: string, options?: PullOptions): Promise<number
             for (const entry of setup._entriesMap.values()) {
                 if (entry._meta.git === undefined) {
                     cli.item(
-                        `Skipping "${entry._type}s/${entry.id}" because it is not git tracked.`,
+                        `Skipping "${entry._pathRelative}" because it is not git tracked.`,
                         'gray'
                     )
                 }
@@ -53,9 +52,8 @@ export async function commit(id?: string, options?: PullOptions): Promise<number
 
         // make sure the entry path exists
         const folder = entry._path
-        const linkablePath = `${entry._type}s/${entry.id}`
 
-        cli.indent().item(linkablePath, 'white.bold').indent()
+        cli.indent().item(entry._pathRelative, 'white.bold').indent()
 
         cli.reset()
 

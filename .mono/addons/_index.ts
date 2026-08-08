@@ -1,4 +1,3 @@
-export * from './action'
 export * from './author'
 export * from './biomejs'
 export * from './env'
@@ -23,6 +22,8 @@ export * from './vscode'
  * Moreover, this ordering also makes it fail-safe so that no matter what order
  * the addons are registered, the actions will always be executed in the
  * correct order.
+ *
+ * Up to 100...
  */
 
 /**
