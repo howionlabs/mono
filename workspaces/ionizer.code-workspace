@@ -1,0 +1,16 @@
+{
+    "folders": [
+        {
+            "name": "ionizer",
+            "path": "../zones/apps/ionizer"
+        },
+        {
+            "name": "ui",
+            "path": "../zones/modules/ui"
+        },
+        {
+            "name": "utils-ts",
+            "path": "../zones/modules/utils-ts"
+        }
+    ]
+}

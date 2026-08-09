@@ -25,20 +25,16 @@ async function constructGitignoreContent(): Promise<string> {
     return content
 }
 
-async function writeGitignoreFile(entry: _MonoEntryInternal) {
-    if (!entry._meta.git) {
-        throw new Error(
-            `Cannot write .gitignore file for the entry "${entry.id}" because Git information is missing. Please ensure that the $git addon has been properly applied to this entry before attempting to write the .gitignore file.`
-        )
-    }
-
-    const newGitignoreContent = await constructGitignoreContent()
-    const newGitignoreFile = Bun.file(resolveEntryPath(entry, '.gitignore'))
-
-    await writeFile(newGitignoreContent, newGitignoreFile, true)
+export interface GitAddonOptions {
+    /**
+     * @default true
+     */
+    gitignore?: boolean
 }
 
-export function $git($uri: MonoGitURI): MonoAddon {
+export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
+    const useGitignore = opts?.gitignore ?? true
+
     const monoGit = parseGitURI($uri)
 
     async function addGitDataToMeta(entry: _MonoEntryInternal) {
@@ -49,6 +45,21 @@ export function $git($uri: MonoGitURI): MonoAddon {
         }
 
         entry._meta.git = monoGit
+    }
+
+    async function writeGitignoreFile(entry: _MonoEntryInternal) {
+        if (useGitignore === false) return
+
+        if (!entry._meta.git) {
+            throw new Error(
+                `Cannot write .gitignore file for the entry "${entry.id}" because Git information is missing. Please ensure that the $git addon has been properly applied to this entry before attempting to write the .gitignore file.`
+            )
+        }
+
+        const newGitignoreContent = await constructGitignoreContent()
+        const newGitignoreFile = Bun.file(resolveEntryPath(entry, '.gitignore'))
+
+        await writeFile(newGitignoreContent, newGitignoreFile, true)
     }
 
     async function initializeGit(

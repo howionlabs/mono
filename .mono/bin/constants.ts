@@ -54,3 +54,5 @@ export const monoAddonGitignoreFile = Bun.file(resolveRootPath('static/addons/.g
 export const monoAddonEditorConfigFile = Bun.file(resolveRootPath('static/addons/.editorconfig'))
 
 export const ROOT_GIT_BRANCH_NAME = await rootGitBranchName()
+
+export { monoPJSON }

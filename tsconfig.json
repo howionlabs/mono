@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "tsBuildInfoFile": "./node_modules/.mono/cache/.tsbuildinfo",
         "lib": ["ESNext"],
         "target": "ESNext",
         "module": "Preserve",

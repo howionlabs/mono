@@ -33,6 +33,22 @@ export default {
         ],
         modules: [
             {
+                id: 'ui',
+                name: 'Howion UI',
+                description: 'Collection of common user interface components of Howion ecosystem',
+                version: '0.1.0',
+                public: false,
+                addons: [
+                    // $license(''),
+                    $howion,
+                    $vscode(),
+                    $markdownlint(),
+                    $biomejs(),
+                    // $git('ssh://git@github.com/howionlabs/ionizer.git'),
+                    $npm('@howionlabs/ui')
+                ]
+            },
+            {
                 id: 'utils-ts',
                 name: "Howion's Typescript Utilities",
                 version: '0.1.0',
@@ -80,6 +96,7 @@ export default {
         ]
     },
     workspaces: {
+        ionizer: ['ionizer', 'ui', 'utils-ts'],
         huid: ['huid-spec', 'huid-ts']
     }
 } as const satisfies MonoSetup

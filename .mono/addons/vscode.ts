@@ -33,7 +33,7 @@ async function copyDotVSCodeFolder(entry: _MonoEntryInternal) {
     const rootVSCodeFolder = resolveRootPath('.vscode')
     const entryVSCodeFolder = resolveEntryPath(entry, '.vscode')
 
-    await Bun.$`cp -r ${rootVSCodeFolder} ${entryVSCodeFolder}`
+    await Bun.$`cp -rT ${rootVSCodeFolder}/. ${entryVSCodeFolder}`
 }
 
 export function $vscode(): MonoAddon {

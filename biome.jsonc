@@ -39,7 +39,6 @@
             "!biome.jsonc",
             "!package.json",
             "!!static",
-            "!!.vscode",
             "!!public",
             "!!dist",
             "!!out"
