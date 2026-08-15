@@ -177,10 +177,12 @@ export interface PJSON extends Record<string, unknown> {
     name: string
     version: string
     description?: string
+    contributors?: unknown[]
 
     dependencies: Record<string, string>
     devDependencies: Record<string, string>
     peerDependencies: Record<string, string>
+    engines: Record<string, string>
 }
 
 export interface _MonoEntryInternal extends MonoEntry {
@@ -213,6 +215,7 @@ export interface _MonoEntryInternal extends MonoEntry {
         author?: MonoPerson
         contributors?: MonoPerson[]
         env?: {
+            didWrote: boolean
             variables: Set<string>
         }
         npm?: {

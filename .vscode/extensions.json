@@ -10,7 +10,7 @@
         "editorconfig.editorconfig",
         "unifiedjs.vscode-mdx",
         "typescriptteam.native-preview",
-        "vunguyentuan.vscode-postcss",
+        "vunguyentuan.vscode-postcss"
     ],
     "unwantedRecommendations": []
 }

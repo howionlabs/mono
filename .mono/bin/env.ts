@@ -100,7 +100,12 @@ export function readEnvFile(source: string | Buffer, schema: MonoEnvMap): MonoEn
 
     for (const required of requireds) {
         if (!result.has(required._name)) {
-            throw new Error(`Missing required environment variable: "${required._name}"`)
+            // throw new Error(`Missing required environment variable: "${required._name}"`)
+            result.set(
+                required._name,
+                required._default ??
+                    (required._type === 'text' ? '' : required._type === 'number' ? 0 : false)
+            )
         }
     }
 

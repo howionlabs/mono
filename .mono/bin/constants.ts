@@ -44,15 +44,10 @@ export const FORMATTED_PERSON_TEXT_REGEX =
 
 // biome is not a dev dependency at the root
 export const monoBiomeVersion = monoPJSON.dependencies['@biomejs/biome']
-export { monoBiomeConf }
-
-// markdownlint is not a dev dependency at the root
-export const monoMDLintVersion = monoPJSON.dependencies.markdownlint
-export { monoMDLintConf }
 
 export const monoAddonGitignoreFile = Bun.file(resolveRootPath('static/addons/.gitignore'))
 export const monoAddonEditorConfigFile = Bun.file(resolveRootPath('static/addons/.editorconfig'))
 
 export const ROOT_GIT_BRANCH_NAME = await rootGitBranchName()
 
-export { monoPJSON }
+export { monoBiomeConf, monoMDLintConf, monoPJSON }

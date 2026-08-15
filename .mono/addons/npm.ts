@@ -43,7 +43,13 @@ import { readJSONFile, resolveEntryPath, writeFile } from '../bin/utils/fs.ts'
 // }
 
 export function $npm(name: string): MonoAddon {
-    async function constructAndAddPjsonDataToMeta(entry: _MonoEntryInternal) {
+    async function populateEntryMeta(entry: _MonoEntryInternal) {
+        if (entry._meta.npm) {
+            throw new Error(
+                `Failed to populate entry metadata for "${entry._zone}/${entry.id}" because the entry's metadata already contains npm data.`
+            )
+        }
+
         const pjsonPath = resolveEntryPath(entry, 'package.json')
         const previous = await readJSONFile(pjsonPath)
         const next: any = {}
@@ -52,11 +58,24 @@ export function $npm(name: string): MonoAddon {
             Object.assign(next, previous)
         }
 
+        entry._meta.npm = {
+            nextPJSON: next
+        }
+    }
+
+    async function constructAndAddPjsonDataToMeta(entry: _MonoEntryInternal) {
+        if (!entry._meta.npm) {
+            throw new Error(
+                `Failed to construct and add package.json data to entry metadata for "${entry._zone}/${entry.id}" because the entry's metadata does not contain npm data.`
+            )
+        }
+
+        const next = entry._meta.npm.nextPJSON
         next.name = name
 
         if (next.version && next.version !== entry.version) {
             cli.info(
-                `Updating the NPM version of "${entry.id}" from "${next.version}" to "${entry.version}" based on the entry's current metadata.`
+                `Updating the NPM version of "${entry._zone}/${entry.id}" from "${next.version}" to "${entry.version}" based on the entry's current metadata.`
             )
 
             next.version = entry.version
@@ -77,11 +96,11 @@ export function $npm(name: string): MonoAddon {
         } else {
             if (next.author) {
                 cli.warn(
-                    `Removing previous author data from "${entry.id}" because no author was found in the entry's current metadata.`
+                    `Removing previous author data from "${entry._zone}/${entry.id}" because no author was found in the entry's current metadata.`
                 )
             } else {
                 cli.warn(
-                    `No author information found for "${entry.id}". Please consider adding an author to the entry's current metadata.`
+                    `No author information found for "${entry._zone}/${entry.id}". Please consider adding an author to the entry's current metadata.`
                 )
             }
 
@@ -89,15 +108,11 @@ export function $npm(name: string): MonoAddon {
         }
 
         if (entry._meta.contributors && entry._meta.contributors.length > 0) {
-            next.contributors = entry._meta.contributors.map(contributor => ({
-                email: contributor.email,
-                name: contributor.name,
-                url: contributor.url
-            }))
+            next.contributors = entry._meta.contributors.map(c => c)
         } else {
             if (next.contributors && next.contributors.length > 0) {
                 cli.warn(
-                    `Removing previous contributors data from "${entry.id}" because no contributors were found in the entry's current metadata.`
+                    `Removing previous contributors data from "${entry._zone}/${entry.id}" because no contributors were found in the entry's current metadata.`
                 )
             }
 
@@ -109,12 +124,10 @@ export function $npm(name: string): MonoAddon {
         } else {
             if (next.license) {
                 cli.warn(
-                    `Removing previous license data from "${entry.id}" because no license was found in the entry's current metadata.`
+                    `Removing previous license data from "${entry._zone}/${entry.id}" because no license was found in the entry's current metadata.`
                 )
             } else {
-                cli.warn(
-                    `No license information found for "${entry.id}". Please consider adding a license to the entry's current metadata.`
-                )
+                cli.warn(`No license information found for "${entry._zone}/${entry.id}".`)
             }
 
             delete next.license
@@ -171,7 +184,7 @@ export function $npm(name: string): MonoAddon {
 
         if (!pjson) {
             throw new Error(
-                `Failed to write package.json for "${entry.id}" because the latest package.json data is missing from the entry's metadata.`
+                `Failed to write package.json to "${entry._zone}/${entry.id}" because the latest package.json data is missing from the entry's metadata.`
             )
         }
 
@@ -185,6 +198,10 @@ export function $npm(name: string): MonoAddon {
         name: $npm.name,
         unique: true,
         setup: [
+            {
+                callback: populateEntryMeta,
+                order: -10
+            },
             {
                 callback: constructAndAddPjsonDataToMeta,
                 order: 20

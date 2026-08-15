@@ -9,7 +9,7 @@ export function $author(author: MonoPerson | MonoFormattedPersonText): MonoAddon
     async function addAuthorToMeta(entry: _MonoEntryInternal) {
         if (entry._meta.author) {
             cli.warn(
-                `Author is already set to "${entry._meta.author.name}" for "${entry.id}". Overwriting with new author "${details.name}".`
+                `Author is already set to "${entry._meta.author.name}" for "${entry._zone}/${entry.id}". Overwriting with new author "${details.name}".`
             )
         }
 

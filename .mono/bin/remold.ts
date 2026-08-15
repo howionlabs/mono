@@ -1,4 +1,5 @@
 import type { MonoSetupInternal } from 'mono'
+import { monoPJSON } from './constants'
 import { constructAndWriteEnvFiles } from './env'
 import { readMonoSetup } from './mono'
 import { cli } from './utils/cli'
@@ -81,8 +82,6 @@ export async function remold(
 
             cli.info('Remolding all entries...', 'green.bold').indent()
 
-            let exitCode = 0
-
             cli.reset()
 
             // TODO: Consider parallelizing?
@@ -90,19 +89,23 @@ export async function remold(
                 const code = await remold(entry.id, opts, setup)
 
                 if (code !== 0) {
-                    exitCode = code
-                    break
+                    cli.error('Remolding failed for one or more entries.', 'red.bold').reset()
+                    return code
                 }
             }
 
-            if (exitCode !== 0) {
-                cli.error('Remolding failed for one or more entries.', 'red.bold')
-                cli.reset()
-                return exitCode
+            cli.log('').success('Remolded all entries successfully!', 'green.bold')
+
+            const formatResult = await Bun.$`bunx --bun @biomejs/biome format --write`.quiet()
+
+            if (formatResult.exitCode !== 0) {
+                cli.error('Failed to format the monorepo after remolding.', 'red.bold').reset()
+                return formatResult.exitCode
             } else {
-                cli.log('').success('Remolded all entries successfully!', 'green.bold').reset()
-                return 0
+                cli.success('Formatted the monorepo successfully!', 'green.bold').reset()
             }
+
+            return 0
         }
 
         const entry = setup._entriesMap.get(id)

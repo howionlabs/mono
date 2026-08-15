@@ -42,7 +42,7 @@ async function internalizeEntries(
             for (const addon of entry.addons) {
                 if (addon.unique !== false && addonSet.has(addon.name)) {
                     throw new Error(
-                        `Unique addon "${addon.name}" is already registered for the entry "${entry.id}". Unique addons can only be registered once per entry.`
+                        `Unique addon "${addon.name}" is already registered for the entry "${zone}/${entry.id}". Unique addons can only be registered once per entry.`
                     )
                 }
 

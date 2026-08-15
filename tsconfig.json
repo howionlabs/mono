@@ -1,28 +1,11 @@
 {
+    "extends": "@tsconfig/bun/tsconfig.json",
     "compilerOptions": {
-        "tsBuildInfoFile": "./node_modules/.mono/cache/.tsbuildinfo",
-        "lib": ["ESNext"],
-        "target": "ESNext",
-        "module": "Preserve",
-        "moduleDetection": "force",
-        "jsx": "react-jsx",
-        "allowJs": true,
+        "isolatedModules": true,
         "types": ["bun", "node"],
-        "moduleResolution": "bundler",
-        "allowImportingTsExtensions": true,
-        "verbatimModuleSyntax": true,
-        "noEmit": true,
-        "strict": true,
-        "skipLibCheck": true,
-        "noFallthroughCasesInSwitch": true,
-        "noUncheckedIndexedAccess": true,
-        "noImplicitOverride": true,
         "paths": {
             "mono": ["./.mono/mono.ts"]
-        },
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
-        "noPropertyAccessFromIndexSignature": false
+        }
     },
     "include": [".mono/**/*", ".mono.ts", ".mono.env.ts"],
     "exclude": ["**/node_modules", "zones"]

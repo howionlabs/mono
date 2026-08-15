@@ -1,5 +1,5 @@
 {
-    "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.5.8/schema.json",
     "assist": {
         "actions": {
             "preset": "recommended",
@@ -54,7 +54,11 @@
         "expand": "auto",
         "formatWithErrors": true,
         "lineWidth": 100,
-        "useEditorconfig": true
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineEnding": "lf",
+        "trailingNewline": true,
+        "useEditorconfig": false
     },
     "graphql": {},
     "grit": {},

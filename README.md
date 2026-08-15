@@ -1,12 +1,12 @@
 # <sup><samp>howionlabs</samp></sup>mono
 
-Howion's custom (and quite opinionated) monorepo to manage all of its (public and private) [@howionlabs](http://github.com/howionlabs) repositories.
+Howion's custom (hence quite opinionated) monorepo to manage all of its (public and private) [@howionlabs](https://git.howion.com/howionlabs) repositories and/or packages.
 
 ## Motivation
 
 None of the existing monorepo tools or structures were good enough and always resulted writing custom scripts. Google's Bazel seemed like a solid choice but the complexity and management of it wasn't worth it. Therefore, hereby we represent our custom monorepo (skeleton) by us for us.
 
-This monorepo is currently is being used by us therefore, especially `.mono.ts`, is subject to change. You probably just don't get to see `apps` and `modules` contents unless you have access to relative (sub)repositories.
+This monorepo is currently is being used by us therefore, especially `.mono.ts`, is subject to change.
 
 ## Dependencies
 
@@ -37,7 +37,6 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 * `$markdownlint()`
 * `$npm(name: string)`
 * `$static(from: string, to?: string, alwaysOverwrite = false)`
-* `$typescript()` Not implemented yet.
 * `$vscode()`
 
 ## Mono CLI
@@ -52,8 +51,8 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 
 ## Best Practices
 
-* This monorepo supports single branch for managing it's git-tracked entries. By default it uses the "main" branch, however you could overwrite this per entry.
-<!-- * Each entry must be indepent of  -->
+1. This monorepo supports single branch for managing it's git-tracked entries. By default it uses the current branch of the root (mono) and throws if tracked entries are on different branch.
+2. Each entry must be independent repository in a way that they should be standalone developable assuming access to possibly private packages. Therefore, assume each entry is its own repository and avoid relative file access outside the entry. Note that this monorepo supports monorepo dependencies via [Bun workspaces](https://bun.com/docs/pm/workspaces).
 
 ## Tech Stack
 
@@ -66,7 +65,9 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 5. `bun mono push` safety checks.
 6. Better key management via `keys` addon.
 7. Gitleaks or Betterleaks?
+8. Add cache for faster remold?
+9. Maybe support multiple git remotes? Will probably be abandoned as many git providers provide mirroring.
 
 ## License
 
-The code related to the monorepo skeleton (which excludes `./apps` and `./modules` that contain proprietary code) is licensed under the [MIT License](./LICENSE).
+The code related to the monorepo skeleton (which excludes `./zones` that contain proprietary code) is licensed under the [MIT License](./LICENSE).

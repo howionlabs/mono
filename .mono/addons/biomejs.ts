@@ -1,5 +1,5 @@
 import type { _MonoEntryInternal, MonoAddon } from '../mono'
-import { monoBiomeConf } from '../bin/constants'
+import { monoBiomeConf, monoPJSON } from '../bin/constants'
 import { resolveEntryPath, writeFile } from '../bin/utils/fs'
 
 async function writeBiomeFile(entry: _MonoEntryInternal) {
@@ -16,7 +16,8 @@ async function syncPJSONDependencies(entry: _MonoEntryInternal) {
     if (!entry._meta.npm?.nextPJSON) return
 
     delete entry._meta.npm.nextPJSON.dependencies['@biomejs/biome']
-    entry._meta.npm.nextPJSON.devDependencies['@biomejs/biome'] = monoBiomeConf
+    entry._meta.npm.nextPJSON.devDependencies['@biomejs/biome'] =
+        monoPJSON.dependencies['@biomejs/biome']
 }
 
 export function $biomejs(): MonoAddon {
@@ -25,7 +26,7 @@ export function $biomejs(): MonoAddon {
         unique: true,
         setup: [
             {
-                order: 1,
+                order: -1,
                 callback: syncPJSONDependencies
             }
         ],

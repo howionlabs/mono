@@ -1,11 +1,21 @@
 import { env, type MonoEnv } from 'mono'
 
 export default [
-    env.number('PORT').optional.desc('The port number for the server to listen on.'),
-    env.string('STRIPE_PUBLIC_KEY').optional.desc('The Public API key for Stripe integration.'),
-    env.string('STRIPE_API_KEY').optional.desc('The API key for Stripe integration.').default('sk_')
-    // env
-    //     .boolean('MONO_GIT_TRIM')
-    //     .optional.desc('')
-    //     .default(true)
-] as const satisfies MonoEnv
+    // AUTH
+    env.number('AUTH_PORT').optional.desc('The port for the Auth service.').default(8001),
+    env
+        .number('AUTH_PORT_BACKEND')
+        .optional.desc('The port for the Auth service backend.')
+        .default(8001),
+    env.string('AUTH_DATABASE_URI').required.desc('The database URI for the Auth service.'),
+    env.string('AUTH_REDIS_URI').required.desc('The Redis URI for the Auth service.'),
+    env
+        .string('BETTER_AUTH_URL')
+        .optional.desc('The URL for the BetterAuth service.')
+        .default('http://localhost:3000'),
+    env.string('BETTER_AUTH_SECRETS').required.desc('...,5:base64,2:base64'),
+    env
+        .boolean('AUTH_IS_SERVERLESS')
+        .optional.desc('Whether the Auth service is running in serverless mode.')
+        .default(false)
+] satisfies MonoEnv

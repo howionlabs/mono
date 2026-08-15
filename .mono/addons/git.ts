@@ -52,7 +52,7 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
 
         if (!entry._meta.git) {
             throw new Error(
-                `Cannot write .gitignore file for the entry "${entry.id}" because Git information is missing. Please ensure that the $git addon has been properly applied to this entry before attempting to write the .gitignore file.`
+                `Cannot write .gitignore file for the entry "${entry._zone}/${entry.id}" because Git information is missing. Please ensure that the $git addon has been properly applied to this entry before attempting to write the .gitignore file.`
             )
         }
 
@@ -67,7 +67,7 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
     ) {
         if (!entry._meta.git) {
             throw new Error(
-                `Cannot initialize Git for the entry "${entry.id}" because Git information is missing. Please ensure that the $git addon has been properly applied to this entry before attempting to initialize Git.`
+                `Cannot initialize Git for the entry "${entry._zone}/${entry.id}" because Git information is missing. Please ensure that the $git addon has been properly applied to this entry before attempting to initialize Git.`
             )
         }
 
@@ -89,7 +89,7 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
 
             if (!remoteOrigin) {
                 throw new Error(
-                    `Git repository for entry "${entry.id}" is missing the "origin" remote. Please either uninitialize the repository or add the correct "origin" remote manually.`
+                    `Git repository for entry "${entry._zone}/${entry.id}" is missing the "origin" remote. Please either uninitialize the repository or add the correct "origin" remote manually.`
                 )
             }
 
@@ -99,7 +99,7 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
 
             if (fetch !== correctRemoteUrl || push !== correctRemoteUrl) {
                 throw new Error(
-                    `Git repository for entry "${entry.id}" has an "origin" remote that does not match the expected URL. Expected: fetch=push=${correctRemoteUrl}, Found: fetch=${fetch}, push=${push}. Please either uninitialize the repository or update the "origin" remote manually.`
+                    `Git repository for entry "${entry._zone}/${entry.id}" has an "origin" remote that does not match the expected URL. Expected: fetch=push=${correctRemoteUrl}, Found: fetch=${fetch}, push=${push}. Please either uninitialize the repository or update the "origin" remote manually.`
                 )
             }
 
@@ -109,7 +109,7 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
 
             if (currentBranch !== monoBranch) {
                 throw new Error(
-                    `Git repository for entry "${entry.id}" is on branch "${currentBranch}", but the expected branch is "${monoBranch}". Please either uninitialize the repository or switch to the correct branch manually.`
+                    `Git repository for entry "${entry._zone}/${entry.id}" is on branch "${currentBranch}", but the expected branch is "${monoBranch}". Please either uninitialize the repository or switch to the correct branch manually.`
                 )
             }
 

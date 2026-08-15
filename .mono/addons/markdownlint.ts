@@ -1,5 +1,5 @@
 import type { _MonoEntryInternal, MonoAddon } from '../mono'
-import { monoMDLintConf, monoMDLintVersion } from '../bin/constants'
+import { monoMDLintConf, monoPJSON } from '../bin/constants'
 import { resolveEntryPath, writeFile } from '../bin/utils/fs'
 
 async function writeMDLintFile(entry: _MonoEntryInternal) {
@@ -14,7 +14,7 @@ async function addMDLintToPJSON(entry: _MonoEntryInternal) {
     if (!entry._meta.npm?.nextPJSON) return
 
     delete entry._meta.npm.nextPJSON.dependencies.markdownlint
-    entry._meta.npm.nextPJSON.devDependencies.markdownlint = monoMDLintVersion
+    entry._meta.npm.nextPJSON.devDependencies.markdownlint = monoPJSON.dependencies.markdownlint
 }
 
 export function $markdownlint(): MonoAddon {

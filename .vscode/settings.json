@@ -59,5 +59,8 @@
     },
     "[css]": {
         "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[dockercompose]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-containers"
     }
 }

@@ -1,6 +1,7 @@
 import {
     $author,
     $biomejs,
+    $env,
     $git,
     $license,
     $markdownlint,
@@ -8,12 +9,31 @@ import {
     $vscode,
     type MonoSetup
 } from 'mono'
+import { $bun } from './.mono/addons/bun'
 
 const $howion = $author('howion <me@howion.com> (https://howion.com)')
 
 export default {
     zones: {
         apps: [
+            {
+                id: 'internal-auth',
+                name: 'Auth',
+                description: '',
+                version: '0.1.0',
+                public: false,
+                addons: [
+                    // $license(''),
+                    $howion,
+                    $vscode(),
+                    $bun(),
+                    $markdownlint(),
+                    $biomejs(),
+                    // $git('ssh://git@github.com/howionlabs/ionizer.git'),
+                    $npm('@howionlabs/internal-auth'),
+                    $env('AUTH_*', 'BETTER_AUTH_*')
+                ]
+            },
             {
                 id: 'ionizer',
                 name: 'Ionizer',
@@ -93,10 +113,27 @@ export default {
                     $vscode()
                 ]
             }
+        ],
+        devops: [
+            {
+                id: 'barebone',
+                name: "Howion's Barebones DevOps",
+                version: '0.0.1',
+                public: false,
+                description: '',
+                addons: [
+                    $howion,
+                    $git('https://git.howion.com/howionlabs/devops-barebone.git'),
+                    $biomejs(),
+                    $markdownlint(),
+                    $vscode()
+                ]
+            }
         ]
     },
     workspaces: {
         ionizer: ['ionizer', 'ui', 'utils-ts'],
-        huid: ['huid-spec', 'huid-ts']
+        huid: ['huid-spec', 'huid-ts'],
+        devops: ['barebone']
     }
-} as const satisfies MonoSetup
+} satisfies MonoSetup
