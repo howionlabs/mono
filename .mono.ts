@@ -6,6 +6,7 @@ import {
     $license,
     $markdownlint,
     $npm,
+    $static,
     $vscode,
     type MonoSetup
 } from 'mono'
@@ -74,7 +75,7 @@ export default {
                 version: '0.1.0',
                 addons: [
                     $howion,
-                    $git('ssh://git@github.com/howionlabs/utils-ts.git'),
+                    $git('https://git.howion.com/howionlabs/utils-ts.git'),
                     $license('mit'),
                     $biomejs(),
                     $markdownlint(),
@@ -89,11 +90,9 @@ export default {
                 description: "RFC-like specification of Howion's Unique IDentifier (HUID)",
                 addons: [
                     $howion,
-                    $git('ssh://git@github.com/howionlabs/huid-spec.git'),
+                    $git('https://git.howion.com/howionlabs/huid-spec.git'),
                     $license('cc-by-sa-30'),
-                    $biomejs(),
-                    $markdownlint(),
-                    $vscode()
+                    $markdownlint()
                 ]
             },
             {
@@ -105,7 +104,7 @@ export default {
                     "The official reference implementation of Howion's Unique IDentifier in TypeScript.",
                 addons: [
                     $howion,
-                    $git('ssh://git@github.com/howionlabs/huid-ts.git'),
+                    $git('https://git.howion.com/howionlabs/huid-ts.git'),
                     $license('mit'),
                     $npm('@howionlabs/huid'),
                     $biomejs(),
@@ -128,12 +127,31 @@ export default {
                     $markdownlint(),
                     $vscode()
                 ]
+            },
+            {
+                id: 'forgejo-custom',
+                name: "Howion's Forgejo Customization",
+                version: '0.0.1',
+                public: true,
+                addons: [
+                    $howion,
+                    $git('https://git.howion.com/howionlabs/forgejo-custom.git'),
+                    $biomejs(),
+                    $npm('@howionlabs/forgejo-custom'),
+                    $markdownlint(),
+                    $vscode(),
+                    $static('assets/favicon.svg', 'public/assets/img/favicon.svg'),
+                    $static('assets/favicon.png', 'public/assets/img/favicon.png'),
+                    $static('assets/howion-raw-white.svg', 'public/assets/img/logo.svg'),
+                    $static('assets/howion-emblem-dark.svg', 'public/assets/img/logo.png')
+                ]
             }
         ]
     },
     workspaces: {
         ionizer: ['ionizer', 'ui', 'utils-ts'],
         huid: ['huid-spec', 'huid-ts'],
-        devops: ['barebone']
+        devops: ['barebone'],
+        auth: ['internal-auth']
     }
 } satisfies MonoSetup

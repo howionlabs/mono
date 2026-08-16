@@ -200,11 +200,11 @@ export function $npm(name: string): MonoAddon {
         setup: [
             {
                 callback: populateEntryMeta,
-                order: -10
+                order: -20
             },
             {
                 callback: constructAndAddPjsonDataToMeta,
-                order: 20
+                order: -10
             }
         ],
         remold: [

@@ -38,6 +38,7 @@
             "**",
             "!biome.jsonc",
             "!package.json",
+            "!*.svg",
             "!!static",
             "!!public",
             "!!dist",

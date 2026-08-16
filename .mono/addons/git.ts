@@ -101,11 +101,12 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
                 throw new Error(
                     `Git repository for entry "${entry._zone}/${entry.id}" has an "origin" remote that does not match the expected URL. Expected: fetch=push=${correctRemoteUrl}, Found: fetch=${fetch}, push=${push}. Please either uninitialize the repository or update the "origin" remote manually.`
                 )
+                // await git.removeRemote('origin').addRemote('origin', correctRemoteUrl).fetch()
             }
 
             // make sure the branch is correct
             const monoBranch = ROOT_GIT_BRANCH_NAME
-            const currentBranch = (await git.branchLocal()).current
+            const currentBranch = (await git.branch(['--show-current'])).current
 
             if (currentBranch !== monoBranch) {
                 throw new Error(

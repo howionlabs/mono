@@ -61,7 +61,8 @@ export function readEnvFile(source: string | Buffer, schema: MonoEnvMap): MonoEn
 
     for (const [key, value] of Object.entries(parsed)) {
         if (!schema.has(key)) {
-            throw new Error(`Unknown environment variable: "${key}"`)
+            // throw new Error(`Unknown environment variable: "${key}"`)
+            continue
         }
 
         const variable = schema.get(key)!

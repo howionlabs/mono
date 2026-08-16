@@ -1,6 +1,8 @@
 import type { _MonoEntryInternal, MonoAddon } from '../mono'
 import { copyFile, resolveEntryPath, resolveRootPath } from '../bin/utils/fs'
 
+// TODO: Support matching via star.
+
 /**
  * Resolves a static file from `.mono/static` and copies it to the target
  * project. Does not overwrite existing file if the target file contents are

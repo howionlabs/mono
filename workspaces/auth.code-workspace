@@ -1,0 +1,8 @@
+{
+    "folders": [
+        {
+            "name": "internal-auth",
+            "path": "../zones/apps/internal-auth"
+        }
+    ]
+}
