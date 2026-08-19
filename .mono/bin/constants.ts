@@ -46,6 +46,7 @@ export const FORMATTED_PERSON_TEXT_REGEX =
 export const monoBiomeVersion = monoPJSON.dependencies['@biomejs/biome']
 
 export const monoAddonGitignoreFile = Bun.file(resolveRootPath('static/addons/.gitignore'))
+export const monoAddonGitattributesFile = Bun.file(resolveRootPath('static/addons/.gitattributes'))
 export const monoAddonEditorConfigFile = Bun.file(resolveRootPath('static/addons/.editorconfig'))
 
 export const ROOT_GIT_BRANCH_NAME = await rootGitBranchName()

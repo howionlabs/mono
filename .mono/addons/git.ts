@@ -2,6 +2,7 @@ import type { _MonoEntryInternal, MonoAddon, MonoGitURI } from '../mono'
 import {
     MONO_AUTOGEN_DISCLAIMER,
     MONO_HASHTAG_BAR,
+    monoAddonGitattributesFile,
     monoAddonGitignoreFile,
     ROOT_GIT_BRANCH_NAME
 } from '../bin/constants'
@@ -10,6 +11,7 @@ import { cli } from '../bin/utils/cli'
 import { dirExists, resolveEntryPath, writeFile } from '../bin/utils/fs'
 
 let constructedGitignore = ''
+let constructedGitattributes = ''
 
 async function constructGitignoreContent(): Promise<string> {
     if (constructedGitignore) return constructedGitignore
@@ -25,15 +27,35 @@ async function constructGitignoreContent(): Promise<string> {
     return content
 }
 
+async function constructGitattributesContent(): Promise<string> {
+    if (constructedGitattributes) return constructedGitattributes
+
+    let content = `${MONO_HASHTAG_BAR}\n`
+    content += MONO_AUTOGEN_DISCLAIMER
+    content += `\n${MONO_HASHTAG_BAR}\n\n`
+
+    content += await monoAddonGitattributesFile.text()
+
+    constructedGitattributes = content
+
+    return content
+}
+
 export interface GitAddonOptions {
     /**
      * @default true
      */
     gitignore?: boolean
+
+    /**
+     * @default true
+     */
+    gitattributes?: boolean
 }
 
 export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
     const useGitignore = opts?.gitignore ?? true
+    const useGitattributes = opts?.gitattributes ?? true
 
     const monoGit = parseGitURI($uri)
 
@@ -60,6 +82,21 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
         const newGitignoreFile = Bun.file(resolveEntryPath(entry, '.gitignore'))
 
         await writeFile(newGitignoreContent, newGitignoreFile, true)
+    }
+
+    async function writeGitattributesFile(entry: _MonoEntryInternal) {
+        if (useGitattributes === false) return
+
+        if (!entry._meta.git) {
+            throw new Error(
+                `Cannot write .gitattributes file for the entry "${entry._zone}/${entry.id}" because Git information is missing. Please ensure that the $git addon has been properly applied to this entry before attempting to write the .gitattributes file.`
+            )
+        }
+
+        const newGitattributesContent = await constructGitattributesContent()
+        const newGitattributesFile = Bun.file(resolveEntryPath(entry, '.gitattributes'))
+
+        await writeFile(newGitattributesContent, newGitattributesFile, true)
     }
 
     async function initializeGit(
@@ -141,6 +178,10 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
             {
                 order: 10,
                 callback: writeGitignoreFile
+            },
+            {
+                order: 10,
+                callback: writeGitattributesFile
             },
             {
                 order: 20,

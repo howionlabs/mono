@@ -62,8 +62,6 @@ async function updatePJSONForBun(entry: _MonoEntryInternal) {
         const include = new Set([...tsFileData.include, ...(oldFileContent.include ?? [])])
         const exclude = new Set([...tsFileData.exclude, ...(oldFileContent.exclude ?? [])])
 
-        console.log('types:', types)
-
         const newData = {
             ...tsFileData,
             ...oldFileContent,

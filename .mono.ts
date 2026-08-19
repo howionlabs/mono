@@ -1,6 +1,7 @@
 import {
     $author,
     $biomejs,
+    $bun,
     $env,
     $git,
     $license,
@@ -10,31 +11,30 @@ import {
     $vscode,
     type MonoSetup
 } from 'mono'
-import { $bun } from './.mono/addons/bun'
 
 const $howion = $author('howion <me@howion.com> (https://howion.com)')
 
 export default {
     zones: {
         apps: [
-            {
-                id: 'internal-auth',
-                name: 'Auth',
-                description: '',
-                version: '0.1.0',
-                public: false,
-                addons: [
-                    // $license(''),
-                    $howion,
-                    $vscode(),
-                    $bun(),
-                    $markdownlint(),
-                    $biomejs(),
-                    // $git('ssh://git@github.com/howionlabs/ionizer.git'),
-                    $npm('@howionlabs/internal-auth'),
-                    $env('AUTH_*', 'BETTER_AUTH_*')
-                ]
-            },
+            // {
+            //     id: 'internal-auth',
+            //     name: 'Auth',
+            //     description: '',
+            //     version: '0.1.0',
+            //     public: false,
+            //     addons: [
+            //         // $license(''),
+            //         $howion,
+            //         $vscode(),
+            //         $bun(),
+            //         $markdownlint(),
+            //         $biomejs(),
+            //         $git('https://git.howion.com/howionlabs/internal-auth.git'),
+            //         $npm('@howionlabs/internal-auth'),
+            //         $env('AUTH_*', 'BETTER_AUTH_*')
+            //     ]
+            // },
             {
                 id: 'ionizer',
                 name: 'Ionizer',
@@ -47,7 +47,6 @@ export default {
                     $vscode(),
                     $markdownlint(),
                     $biomejs(),
-                    // $git('ssh://git@github.com/howionlabs/ionizer.git'),
                     $npm('@howionlabs/ionizer')
                 ]
             }
@@ -65,7 +64,6 @@ export default {
                     $vscode(),
                     $markdownlint(),
                     $biomejs(),
-                    // $git('ssh://git@github.com/howionlabs/ionizer.git'),
                     $npm('@howionlabs/ui')
                 ]
             },
@@ -90,7 +88,9 @@ export default {
                 description: "RFC-like specification of Howion's Unique IDentifier (HUID)",
                 addons: [
                     $howion,
-                    $git('https://git.howion.com/howionlabs/huid-spec.git'),
+                    $git('https://git.howion.com/howionlabs/huid-spec.git', {
+                        gitattributes: false
+                    }),
                     $license('cc-by-sa-30'),
                     $markdownlint()
                 ]
@@ -139,7 +139,10 @@ export default {
                     $biomejs(),
                     $npm('@howionlabs/forgejo-custom'),
                     $markdownlint(),
-                    $vscode(),
+                    $static(
+                        'assets/apple-touch-icon.png',
+                        'public/assets/img/apple-touch-icon.png'
+                    ),
                     $static('assets/favicon.svg', 'public/assets/img/favicon.svg'),
                     $static('assets/favicon.png', 'public/assets/img/favicon.png'),
                     $static('assets/howion-raw-white.svg', 'public/assets/img/logo.svg'),
@@ -151,7 +154,6 @@ export default {
     workspaces: {
         ionizer: ['ionizer', 'ui', 'utils-ts'],
         huid: ['huid-spec', 'huid-ts'],
-        devops: ['barebone'],
-        auth: ['internal-auth']
+        devops: ['barebone', 'forgejo-custom']
     }
 } satisfies MonoSetup

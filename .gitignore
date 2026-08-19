@@ -1,5 +1,9 @@
 ## CUSTOM #####################################################################
 
+# FOR INFRA SECURITY -- YOU MAY DISABLE IT
+.mono.ts
+.mono.env.ts
+
 # IGNORE ZONE CONTENTS
 /zones
 

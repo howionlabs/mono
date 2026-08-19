@@ -1,6 +1,8 @@
 import type { WriteStream } from 'node:tty'
 import { type InspectColor, styleText } from 'node:util'
+import StackUtils from 'stack-utils'
 import { CLI_INDENT_WIDTH } from '../constants'
+import { CWD } from './fs'
 
 export type CLIModifier = InspectColor | `${InspectColor}.${InspectColor}`
 
@@ -171,15 +173,22 @@ export const cli = {
     },
 
     handleError(e: unknown) {
-        const stack =
-            new Error().stack
-                ?.split('\n')
-                .map(l => l.trim())
-                .slice(2)
-                .join('\n') ?? 'No stack trace available'
+        const stack = new StackUtils({
+            cwd: CWD,
+            internals: StackUtils.nodeInternals()
+        })
+
+        const stackClean = stack.clean(e.stack ?? '')
+
+        // const stack =
+        //     new Error().stack
+        //         ?.split('\n')
+        //         .map(l => l.trim())
+        //         .slice(2)
+        //         .join('\n') ?? 'No stack trace available'
 
         if (e instanceof Error) {
-            this.error(e.message, 'red.bold').indent().log(stack, 'gray')
+            this.error(e.message, 'red.bold').indent().indent().log(stackClean, 'gray').dedent()
         } else {
             this.error(`Unknown error: ${e}`, 'red.bold')
         }

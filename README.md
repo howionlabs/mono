@@ -28,7 +28,6 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 * `$author(author: MonoPerson | MonoFormattedPersonText)`
 * `$biomejs()`
 * `$contributor(contributor: MonoPerson | MonoFormattedPersonText)`
-* `$dependency(id: string)`
 * `$env(...variables: string[])`
 * `$git(uri: MonoGitURI)`
 * `$github()` Not implemented yet.

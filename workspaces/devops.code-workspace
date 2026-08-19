@@ -3,6 +3,10 @@
         {
             "name": "barebone",
             "path": "../zones/devops/barebone"
+        },
+        {
+            "name": "forgejo-custom",
+            "path": "../zones/devops/forgejo-custom"
         }
     ]
 }
