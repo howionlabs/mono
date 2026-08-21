@@ -23,7 +23,7 @@ async function updatePJSONForBun(entry: _MonoEntryInternal) {
     entry._meta.npm.nextPJSON.devDependencies.typescript = monoPJSON.dependencies.typescript
 
     entry._meta.npm.nextPJSON.engines ??= {}
-    entry._meta.npm.nextPJSON.engines.bun ??= monoPJSON.engines.bun
+    entry._meta.npm.nextPJSON.engines.bun = monoPJSON.engines.bun
 
     const tsFile = Bun.file(resolveEntryPath(entry, 'tsconfig.json'))
     const tsFileData = {

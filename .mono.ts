@@ -122,7 +122,7 @@ export default {
                 description: '',
                 addons: [
                     $howion,
-                    $git('https://git.howion.com/howionlabs/devops-barebone.git'),
+                    $git('https://git.howion.com/howionlabs/barebone.git'),
                     $biomejs(),
                     $markdownlint(),
                     $vscode()
