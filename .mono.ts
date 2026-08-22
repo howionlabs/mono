@@ -117,7 +117,7 @@ export default {
             {
                 id: 'barebone',
                 name: "Howion's Barebones DevOps",
-                version: '0.0.1',
+                version: '0.1.0',
                 public: false,
                 description: '',
                 addons: [
@@ -126,6 +126,42 @@ export default {
                     $biomejs(),
                     $markdownlint(),
                     $vscode()
+                ]
+            },
+            {
+                id: 'barebone-opt',
+                name: "Howion's Barbones DevOps Opt",
+                version: '0.1.0',
+                public: false,
+                description: '',
+                addons: [
+                    $howion,
+                    $git('https://git.howion.com/howionlabs/barebone-opt.git'),
+                    $biomejs(),
+                    $markdownlint()
+                ]
+            },
+            {
+                id: 'keycloak-theme',
+                name: "Howion's Keycloak Theme",
+                version: '0.0.1',
+                public: true,
+                addons: [
+                    $howion,
+                    $bun(),
+                    $git('https://git.howion.com/howionlabs/keycloak-theme.git'),
+                    $biomejs(),
+                    $npm('@howionlabs/keycloak-theme'),
+                    $markdownlint(),
+                    $vscode(),
+                    $static('assets/fonts/inter/*', 'public/assets/fonts/inter/*'),
+                    $static(
+                        'assets/img/apple-touch-icon.png',
+                        'public/assets/img/apple-touch-icon.png'
+                    ),
+                    $static('assets/img/favicon.*', 'public/assets/img/favicon.*'),
+                    $static('assets/img/howion-raw-white.svg', 'public/assets/img/logo.svg'),
+                    $static('assets/img/howion-emblem-dark.svg', 'public/assets/img/logo.png')
                 ]
             },
             {
@@ -139,14 +175,16 @@ export default {
                     $biomejs(),
                     $npm('@howionlabs/forgejo-custom'),
                     $markdownlint(),
+                    $vscode(),
+                    $static('assets/fonts/inter/*', 'public/assets/fonts/inter/*'),
                     $static(
-                        'assets/apple-touch-icon.png',
+                        'assets/img/apple-touch-icon.png',
                         'public/assets/img/apple-touch-icon.png'
                     ),
-                    $static('assets/favicon.svg', 'public/assets/img/favicon.svg'),
-                    $static('assets/favicon.png', 'public/assets/img/favicon.png'),
-                    $static('assets/howion-raw-white.svg', 'public/assets/img/logo.svg'),
-                    $static('assets/howion-emblem-dark.svg', 'public/assets/img/logo.png')
+                    $static('assets/img/favicon.svg', 'public/assets/img/favicon.svg'),
+                    $static('assets/img/favicon.png', 'public/assets/img/favicon.png'),
+                    $static('assets/img/howion-raw-white.svg', 'public/assets/img/logo.svg'),
+                    $static('assets/img/howion-emblem-dark.svg', 'public/assets/img/logo.png')
                 ]
             }
         ]
@@ -154,6 +192,6 @@ export default {
     workspaces: {
         ionizer: ['ionizer', 'ui', 'utils-ts'],
         huid: ['huid-spec', 'huid-ts'],
-        devops: ['barebone', 'forgejo-custom']
+        devops: ['barebone', 'barebone-opt', 'forgejo-custom']
     }
 } satisfies MonoSetup

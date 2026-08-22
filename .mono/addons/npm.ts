@@ -1,4 +1,4 @@
-import type { _MonoEntryInternal, MonoAddon } from '../mono.ts'
+import type { _MonoEntryInternal, MonoAddon, PJSON } from '../mono.ts'
 import { cli } from '../bin/utils/cli.ts'
 import { readJSONFile, resolveEntryPath, writeFile } from '../bin/utils/fs.ts'
 
@@ -52,7 +52,16 @@ export function $npm(name: string): MonoAddon {
 
         const pjsonPath = resolveEntryPath(entry, 'package.json')
         const previous = await readJSONFile(pjsonPath)
-        const next: any = {}
+        const next: PJSON = {
+            name: entry.name,
+            version: entry.version,
+            description: entry.description,
+
+            dependencies: {},
+            devDependencies: {},
+            peerDependencies: {},
+            engines: {}
+        }
 
         if (previous) {
             Object.assign(next, previous)

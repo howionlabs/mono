@@ -16,6 +16,8 @@ async function updatePJSONForBun(entry: _MonoEntryInternal) {
     delete entry._meta.npm.nextPJSON.dependencies['@tsconfig/bun']
     delete entry._meta.npm.nextPJSON.dependencies['@tsconfig/bun']
 
+    entry._meta.npm.nextPJSON.type ??= 'module'
+
     entry._meta.npm.nextPJSON.devDependencies['@types/bun'] = monoPJSON.dependencies['@types/bun']
     entry._meta.npm.nextPJSON.devDependencies['@types/node'] = monoPJSON.dependencies['@types/node']
     entry._meta.npm.nextPJSON.devDependencies['@tsconfig/bun'] =

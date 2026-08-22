@@ -45,10 +45,24 @@ export const FORMATTED_PERSON_TEXT_REGEX =
 // biome is not a dev dependency at the root
 export const monoBiomeVersion = monoPJSON.dependencies['@biomejs/biome']
 
-export const monoAddonGitignoreFile = Bun.file(resolveRootPath('static/addons/.gitignore'))
-export const monoAddonGitattributesFile = Bun.file(resolveRootPath('static/addons/.gitattributes'))
-export const monoAddonEditorConfigFile = Bun.file(resolveRootPath('static/addons/.editorconfig'))
+export const monoStaticPath = resolveRootPath('static')
+export const monoStaticPathAddons = `${monoStaticPath}/addons`
+
+export const monoAddonGitignoreFile = Bun.file(`${monoStaticPathAddons}/.gitignore`)
+export const monoAddonGitattributesFile = Bun.file(`${monoStaticPathAddons}/.gitattributes`)
+export const monoAddonEditorConfigFile = Bun.file(`${monoStaticPathAddons}/.editorconfig`)
 
 export const ROOT_GIT_BRANCH_NAME = await rootGitBranchName()
 
 export { monoBiomeConf, monoMDLintConf, monoPJSON }
+
+export const staticFilesGlob = new Bun.Glob(`**/*`)
+export const staticFilesList = [
+    ...staticFilesGlob.scanSync({
+        cwd: monoStaticPath,
+        dot: false,
+        absolute: false,
+        followSymlinks: true,
+        onlyFiles: true
+    })
+]

@@ -99,3 +99,23 @@ export async function readDir(dirPath: string): Promise<Dirent[]> {
         throw new Error(`Failed to read directory "${dirPath}": ${error}`)
     }
 }
+
+export function pathGlobToRegex(glob: string): RegExp {
+    const dirs = glob.split('/').map(dir => {
+        if (dir === '**') {
+            throw new Error(
+                'Glob pattern "**" is not supported in this context. Use "*"\'s instead.'
+            )
+        } else if (dir === '*') {
+            return '([^\\/]+?)'
+        } else if (dir.includes('*')) {
+            return dir.replace(/\*/g, '([^\\/]+?)')
+        } else {
+            return dir
+        }
+    })
+
+    const regex = dirs.join('\\/')
+
+    return new RegExp(`^${regex}$`)
+}
