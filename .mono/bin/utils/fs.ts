@@ -109,9 +109,9 @@ export function pathGlobToRegex(glob: string): RegExp {
         } else if (dir === '*') {
             return '([^\\/]+?)'
         } else if (dir.includes('*')) {
-            return dir.replace(/\*/g, '([^\\/]+?)')
+            return dir.replaceAll('.', '\\.').replace(/\*/g, '([^\\/]+?)')
         } else {
-            return dir
+            return dir.replaceAll('.', '\\.')
         }
     })
 

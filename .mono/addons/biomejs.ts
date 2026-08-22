@@ -4,7 +4,9 @@ import { resolveEntryPath, writeFile } from '../bin/utils/fs'
 
 async function writeBiomeFile(entry: _MonoEntryInternal) {
     const newBiomeConf = structuredClone(monoBiomeConf)
+
     newBiomeConf.root = false
+    newBiomeConf.vcs.useIgnoreFile = true
 
     const newBiomeContents = JSON.stringify(newBiomeConf, null, 4)
     const newBiomeFile = Bun.file(resolveEntryPath(entry, 'biome.jsonc'))

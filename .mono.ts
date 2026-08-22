@@ -154,8 +154,8 @@ export default {
                     $npm('@howionlabs/keycloak-theme'),
                     $markdownlint(),
                     $vscode(),
-                    $static('assets/img/favicon.*', 'public/*'),
-                    $static('assets/img/apple-touch-icon.png', 'public/*'),
+                    $static('assets/img/apple-touch-icon.png', 'public/apple-touch-icon.png'),
+                    $static('assets/img/favicon*', 'public/favicon*'),
                     $static('assets/fonts/inter/*', 'src/login/assets/fonts/inter/*'),
                     $static('assets/img/howion-emblem-light.svg', 'src/login/*')
                 ]
@@ -173,9 +173,8 @@ export default {
                     $markdownlint(),
                     $vscode(),
                     $static('assets/fonts/inter/*', 'public/assets/fonts/inter/*'),
-                    $static('assets/img/apple-touch-icon.png', 'public/*'),
-                    $static('assets/img/favicon.svg', 'public/*'),
-                    $static('assets/img/favicon.png', 'public/*'),
+                    $static('assets/img/apple-touch-icon.png', 'public/apple-touch-icon.png'),
+                    $static('assets/img/favicon.*', 'public/favicon.*'),
                     $static('assets/img/howion-raw-white.svg', 'public/assets/img/logo.svg'),
                     $static('assets/img/howion-emblem-dark.svg', 'public/assets/img/logo.png')
                 ]

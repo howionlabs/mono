@@ -25,7 +25,6 @@ export function $static(fromGlob: string, toGlob: string, alwaysOverwrite = fals
             }
 
             const to = toGlob.replace(/\*/g, () => values.shift() ?? '')
-            console.log('from:to', from, '::', to, values)
 
             if (toSet.has(to)) {
                 throw new Error(`Duplicate target path: ${to}`)
