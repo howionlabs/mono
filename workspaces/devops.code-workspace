@@ -11,6 +11,10 @@
         {
             "name": "forgejo-custom",
             "path": "../zones/devops/forgejo-custom"
+        },
+        {
+            "name": "keycloak-theme",
+            "path": "../zones/devops/keycloak-theme"
         }
     ]
 }

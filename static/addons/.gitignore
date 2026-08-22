@@ -10,6 +10,9 @@
 out
 build
 dist
+dist_*
+storybook-static
+.rendered
 
 ## KEYS FOLDER
 keys

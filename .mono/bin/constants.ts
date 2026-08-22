@@ -49,7 +49,7 @@ export const monoStaticPath = resolveRootPath('static')
 export const monoStaticPathAddons = `${monoStaticPath}/addons`
 
 export const monoAddonGitignoreFile = Bun.file(`${monoStaticPathAddons}/.gitignore`)
-export const monoAddonGitattributesFile = Bun.file(`${monoStaticPathAddons}/.gitattributes`)
+export const monoAddonGitattributesFile = Bun.file(resolveRootPath('.gitattributes'))
 export const monoAddonEditorConfigFile = Bun.file(`${monoStaticPathAddons}/.editorconfig`)
 
 export const ROOT_GIT_BRANCH_NAME = await rootGitBranchName()

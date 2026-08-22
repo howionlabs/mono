@@ -6,6 +6,7 @@ import {
     monoAddonGitignoreFile,
     ROOT_GIT_BRANCH_NAME
 } from '../bin/constants'
+import { renderH1 } from '../bin/env'
 import { buildRemoteUrl, parseGitURI, simpleGitFactory } from '../bin/git'
 import { cli } from '../bin/utils/cli'
 import { dirExists, resolveEntryPath, writeFile } from '../bin/utils/fs'
@@ -13,12 +14,23 @@ import { dirExists, resolveEntryPath, writeFile } from '../bin/utils/fs'
 let constructedGitignore = ''
 let constructedGitattributes = ''
 
-async function constructGitignoreContent(): Promise<string> {
+async function constructGitignoreContent(custom?: string[]): Promise<string> {
     if (constructedGitignore) return constructedGitignore
 
     let content = `${MONO_HASHTAG_BAR}\n`
     content += MONO_AUTOGEN_DISCLAIMER
     content += `\n${MONO_HASHTAG_BAR}\n\n`
+
+    if (custom && custom.length > 0) {
+        content += renderH1('CUSTOM')
+        content += '\n\n'
+
+        for (const line of custom) {
+            content += `${line}\n`
+        }
+
+        content += '\n'
+    }
 
     content += await monoAddonGitignoreFile.text()
 
@@ -45,7 +57,7 @@ export interface GitAddonOptions {
     /**
      * @default true
      */
-    gitignore?: boolean
+    gitignore?: boolean | string[]
 
     /**
      * @default true
@@ -56,6 +68,8 @@ export interface GitAddonOptions {
 export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
     const useGitignore = opts?.gitignore ?? true
     const useGitattributes = opts?.gitattributes ?? true
+
+    const customGitignores = Array.isArray(useGitignore) ? useGitignore : []
 
     const monoGit = parseGitURI($uri)
 
@@ -78,7 +92,7 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
             )
         }
 
-        const newGitignoreContent = await constructGitignoreContent()
+        const newGitignoreContent = await constructGitignoreContent(customGitignores)
         const newGitignoreFile = Bun.file(resolveEntryPath(entry, '.gitignore'))
 
         await writeFile(newGitignoreContent, newGitignoreFile, true)

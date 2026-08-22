@@ -154,14 +154,10 @@ export default {
                     $npm('@howionlabs/keycloak-theme'),
                     $markdownlint(),
                     $vscode(),
-                    $static('assets/fonts/inter/*', 'public/assets/fonts/inter/*'),
-                    $static(
-                        'assets/img/apple-touch-icon.png',
-                        'public/assets/img/apple-touch-icon.png'
-                    ),
-                    $static('assets/img/favicon.*', 'public/assets/img/favicon.*'),
-                    $static('assets/img/howion-raw-white.svg', 'public/assets/img/logo.svg'),
-                    $static('assets/img/howion-emblem-dark.svg', 'public/assets/img/logo.png')
+                    $static('assets/img/favicon.*', 'public/*'),
+                    $static('assets/img/apple-touch-icon.png', 'public/*'),
+                    $static('assets/fonts/inter/*', 'src/login/assets/fonts/inter/*'),
+                    $static('assets/img/howion-emblem-light.svg', 'src/login/*')
                 ]
             },
             {
@@ -177,12 +173,9 @@ export default {
                     $markdownlint(),
                     $vscode(),
                     $static('assets/fonts/inter/*', 'public/assets/fonts/inter/*'),
-                    $static(
-                        'assets/img/apple-touch-icon.png',
-                        'public/assets/img/apple-touch-icon.png'
-                    ),
-                    $static('assets/img/favicon.svg', 'public/assets/img/favicon.svg'),
-                    $static('assets/img/favicon.png', 'public/assets/img/favicon.png'),
+                    $static('assets/img/apple-touch-icon.png', 'public/*'),
+                    $static('assets/img/favicon.svg', 'public/*'),
+                    $static('assets/img/favicon.png', 'public/*'),
                     $static('assets/img/howion-raw-white.svg', 'public/assets/img/logo.svg'),
                     $static('assets/img/howion-emblem-dark.svg', 'public/assets/img/logo.png')
                 ]
@@ -192,6 +185,6 @@ export default {
     workspaces: {
         ionizer: ['ionizer', 'ui', 'utils-ts'],
         huid: ['huid-spec', 'huid-ts'],
-        devops: ['barebone', 'barebone-opt', 'forgejo-custom']
+        devops: ['barebone', 'barebone-opt', 'forgejo-custom', 'keycloak-theme']
     }
 } satisfies MonoSetup

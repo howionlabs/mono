@@ -19,6 +19,11 @@ export function $static(fromGlob: string, toGlob: string, alwaysOverwrite = fals
 
         if (match) {
             const values = match.slice(1)
+
+            if (values.length === 0) {
+                values.push(match[0])
+            }
+
             const to = toGlob.replace(/\*/g, () => values.shift() ?? '')
             console.log('from:to', from, '::', to, values)
 
