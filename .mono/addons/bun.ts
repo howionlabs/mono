@@ -49,7 +49,8 @@ async function updatePJSONForBun(entry: _MonoEntryInternal) {
             '.astro',
             '.next',
             '.vercel',
-            '.git'
+            '.git',
+            '**/public'
         ]
     }
 

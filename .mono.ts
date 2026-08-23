@@ -148,6 +148,7 @@ export default {
                 public: true,
                 addons: [
                     $howion,
+                    $license('mit'),
                     $bun(),
                     $git('https://git.howion.com/howionlabs/keycloak-theme.git'),
                     $biomejs(),
@@ -167,6 +168,7 @@ export default {
                 public: true,
                 addons: [
                     $howion,
+                    $license('mit'),
                     $git('https://git.howion.com/howionlabs/forgejo-custom.git'),
                     $biomejs(),
                     $npm('@howionlabs/forgejo-custom'),
