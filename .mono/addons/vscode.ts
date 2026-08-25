@@ -1,9 +1,5 @@
 import type { _MonoEntryInternal, MonoAddon } from '../mono'
-import {
-    MONO_AUTOGEN_DISCLAIMER,
-    MONO_HASHTAG_BAR,
-    monoAddonEditorConfigFile
-} from '../bin/constants'
+import { MONO_AUTOGEN_DISCLAIMER, MONO_HASHTAG_BAR, monoAddonEditorConfigFile } from '../bin/constants'
 import { resolveEntryPath, resolveRootPath, writeFile } from '../bin/utils/fs'
 
 let constructedEditorConfig = ''

@@ -18,8 +18,7 @@ async function syncPJSONDependencies(entry: _MonoEntryInternal) {
     if (!entry._meta.npm?.nextPJSON) return
 
     delete entry._meta.npm.nextPJSON.dependencies['@biomejs/biome']
-    entry._meta.npm.nextPJSON.devDependencies['@biomejs/biome'] =
-        monoPJSON.dependencies['@biomejs/biome']
+    entry._meta.npm.nextPJSON.devDependencies['@biomejs/biome'] = monoPJSON.dependencies['@biomejs/biome']
 }
 
 export function $biomejs(): MonoAddon {

@@ -74,9 +74,7 @@ export function readEnvFile(source: string | Buffer, schema: MonoEnvMap): MonoEn
                 const numberValue = Number(value)
 
                 if (Number.isNaN(numberValue)) {
-                    throw new Error(
-                        `Invalid value for the environment variable "${key}". Expected number, got "${value}".`
-                    )
+                    throw new Error(`Invalid value for the environment variable "${key}". Expected number, got "${value}".`)
                 }
 
                 result.set(key, numberValue)
@@ -88,9 +86,7 @@ export function readEnvFile(source: string | Buffer, schema: MonoEnvMap): MonoEn
                 } else if (lowerValue === 'false') {
                     result.set(key, false)
                 } else {
-                    throw new Error(
-                        `Invalid value for the environment variable "${key}". Expected "true" or "false", got "${value}".`
-                    )
+                    throw new Error(`Invalid value for the environment variable "${key}". Expected "true" or "false", got "${value}".`)
                 }
             }
         }
@@ -102,11 +98,7 @@ export function readEnvFile(source: string | Buffer, schema: MonoEnvMap): MonoEn
     for (const required of requireds) {
         if (!result.has(required._name)) {
             // throw new Error(`Missing required environment variable: "${required._name}"`)
-            result.set(
-                required._name,
-                required._default ??
-                    (required._type === 'text' ? '' : required._type === 'number' ? 0 : false)
-            )
+            result.set(required._name, required._default ?? (required._type === 'text' ? '' : required._type === 'number' ? 0 : false))
         }
     }
 
@@ -216,32 +208,17 @@ export async function constructAndWriteEnvFiles(
     await envProductionFile.write(envProductionContent)
 }
 
-export type MonoEnvBuilderVariable = Omit<
-    EnvVariableBuilder<'text' | 'number' | 'boolean'>,
-    'required' | 'optional' | 'default' | 'desc'
->
+export type MonoEnvBuilderVariable = Omit<EnvVariableBuilder<'text' | 'number' | 'boolean'>, 'required' | 'optional' | 'default' | 'desc'>
 
 /**
  * Environment variable builder utility.
  */
 export const env = {
-    number: (name: string) =>
-        new EnvVariableBuilder(name, 'number') as Omit<
-            EnvVariableBuilder<'number'>,
-            'default' | 'desc'
-        >,
+    number: (name: string) => new EnvVariableBuilder(name, 'number') as Omit<EnvVariableBuilder<'number'>, 'default' | 'desc'>,
 
-    string: (name: string) =>
-        new EnvVariableBuilder(name, 'text') as Omit<
-            EnvVariableBuilder<'text'>,
-            'default' | 'desc'
-        >,
+    string: (name: string) => new EnvVariableBuilder(name, 'text') as Omit<EnvVariableBuilder<'text'>, 'default' | 'desc'>,
 
-    boolean: (name: string) =>
-        new EnvVariableBuilder(name, 'boolean') as Omit<
-            EnvVariableBuilder<'boolean'>,
-            'default' | 'desc'
-        >
+    boolean: (name: string) => new EnvVariableBuilder(name, 'boolean') as Omit<EnvVariableBuilder<'boolean'>, 'default' | 'desc'>
 }
 
 export class EnvVariableBuilder<T extends 'text' | 'number' | 'boolean'> {
@@ -258,9 +235,7 @@ export class EnvVariableBuilder<T extends 'text' | 'number' | 'boolean'> {
 
     desc(description: string) {
         if (description.trim() !== description) {
-            throw new Error(
-                `Invalid description for the environment variable "${this._name}". Must not have leading or trailing whitespace.`
-            )
+            throw new Error(`Invalid description for the environment variable "${this._name}". Must not have leading or trailing whitespace.`)
         }
 
         this._description = description
@@ -284,9 +259,7 @@ export class EnvVariableBuilder<T extends 'text' | 'number' | 'boolean'> {
             (this._type === 'number' && typeof value !== 'number') ||
             (this._type === 'boolean' && typeof value !== 'boolean')
         ) {
-            throw new Error(
-                `Invalid default value for the environment variable "${this._name}". Expected ${this._type}, got ${typeof value}.`
-            )
+            throw new Error(`Invalid default value for the environment variable "${this._name}". Expected ${this._type}, got ${typeof value}.`)
         }
 
         this._default = value
@@ -313,9 +286,7 @@ export type MonoEnv = readonly MonoEnvBuilderVariable[]
 
 export async function readMonoEnv(): Promise<_MonoEnvInternal> {
     try {
-        const monoEnvBuilderVariables: MonoEnv = await import(monoEnvPath).then(
-            module => module.default
-        )
+        const monoEnvBuilderVariables: MonoEnv = await import(monoEnvPath).then(module => module.default)
 
         const envSchema: MonoEnvMap = new Map()
 
@@ -327,9 +298,7 @@ export async function readMonoEnv(): Promise<_MonoEnvInternal> {
             }
 
             if (internal._name.trim() !== internal._name) {
-                throw new Error(
-                    `Invalid environment variable name: "${internal._name}". Must not have leading or trailing whitespace.`
-                )
+                throw new Error(`Invalid environment variable name: "${internal._name}". Must not have leading or trailing whitespace.`)
             }
 
             // name must be uppercase ascii letters, numbers, and underscores only

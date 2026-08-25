@@ -3,8 +3,7 @@ import { parseFormattedPersonText } from '../bin/mono'
 import { cli } from '../bin/utils/cli'
 
 export function $author(author: MonoPerson | MonoFormattedPersonText): MonoAddon {
-    const details: MonoPerson =
-        typeof author === 'string' ? parseFormattedPersonText(author) : author
+    const details: MonoPerson = typeof author === 'string' ? parseFormattedPersonText(author) : author
 
     async function addAuthorToMeta(entry: _MonoEntryInternal) {
         if (entry._meta.author) {

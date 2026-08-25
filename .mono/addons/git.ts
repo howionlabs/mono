@@ -1,11 +1,5 @@
 import type { _MonoEntryInternal, MonoAddon, MonoGitURI } from '../mono'
-import {
-    MONO_AUTOGEN_DISCLAIMER,
-    MONO_HASHTAG_BAR,
-    monoAddonGitattributesFile,
-    monoAddonGitignoreFile,
-    ROOT_GIT_BRANCH_NAME
-} from '../bin/constants'
+import { MONO_AUTOGEN_DISCLAIMER, MONO_HASHTAG_BAR, monoAddonGitattributesFile, monoAddonGitignoreFile, ROOT_GIT_BRANCH_NAME } from '../bin/constants'
 import { renderH1 } from '../bin/env'
 import { buildRemoteUrl, parseGitURI, simpleGitFactory } from '../bin/git'
 import { cli } from '../bin/utils/cli'
@@ -75,9 +69,7 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
 
     async function addGitDataToMeta(entry: _MonoEntryInternal) {
         if (entry._meta.git) {
-            cli.warn(
-                `Git information already exists for the entry ${entry.id}. Overwriting existing Git information.`
-            )
+            cli.warn(`Git information already exists for the entry ${entry.id}. Overwriting existing Git information.`)
         }
 
         entry._meta.git = monoGit
@@ -113,9 +105,7 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
         await writeFile(newGitattributesContent, newGitattributesFile, true)
     }
 
-    async function initializeGit(
-        entry: _MonoEntryInternal /*, { verbose }: MonoAddonActionOptions */
-    ) {
+    async function initializeGit(entry: _MonoEntryInternal /*, { verbose }: MonoAddonActionOptions */) {
         if (!entry._meta.git) {
             throw new Error(
                 `Cannot initialize Git for the entry "${entry._zone}/${entry.id}" because Git information is missing. Please ensure that the $git addon has been properly applied to this entry before attempting to initialize Git.`

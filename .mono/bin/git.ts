@@ -1,11 +1,7 @@
 import type { MonoGit, MonoGitURI } from 'mono'
 import { availableParallelism } from 'node:os'
 import { type SimpleGit, type SimpleGitOptions, simpleGit } from 'simple-git'
-import {
-    MONO_GIT_URI_HTTPS_REGEX,
-    MONO_GIT_URI_SCP_REGEX,
-    MONO_GIT_URI_SSH_REGEX
-} from './constants'
+import { MONO_GIT_URI_HTTPS_REGEX, MONO_GIT_URI_SCP_REGEX, MONO_GIT_URI_SSH_REGEX } from './constants'
 import { CWD } from './utils/fs'
 
 export async function rootGitBranchName(): Promise<string> {

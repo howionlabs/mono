@@ -1,5 +1,5 @@
 {
-    "$schema": "https://biomejs.dev/schemas/2.5.9/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.5.10/schema.json",
     "assist": {
         "actions": {
             "preset": "recommended",
@@ -34,16 +34,7 @@
     "extends": [],
     "files": {
         "ignoreUnknown": true,
-        "includes": [
-            "**",
-            "!biome.jsonc",
-            "!package.json",
-            "!*.svg",
-            "!!static",
-            "!!public",
-            "!!dist",
-            "!!out"
-        ],
+        "includes": ["**", "!biome.jsonc", "!package.json", "!*.svg", "!!static", "!!public", "!!dist", "!!out"],
         "maxSize": 1000000
     },
     "formatter": {
@@ -54,7 +45,7 @@
         "enabled": true,
         "expand": "auto",
         "formatWithErrors": true,
-        "lineWidth": 100,
+        "lineWidth": 150,
         "indentStyle": "space",
         "indentWidth": 4,
         "lineEnding": "lf",

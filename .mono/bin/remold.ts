@@ -48,11 +48,7 @@ export async function remoldWorkspacesFolder(setup: MonoSetupInternal): Promise<
     }
 }
 
-export async function remold(
-    id?: string,
-    options?: RemoldOptions,
-    _setup?: MonoSetupInternal
-): Promise<number> {
+export async function remold(id?: string, options?: RemoldOptions, _setup?: MonoSetupInternal): Promise<number> {
     try {
         const opts = {
             verbose: false,
@@ -65,12 +61,7 @@ export async function remold(
             cli.info('Remolding the monorepo itself...', 'green.bold').indent()
             cli.item("Set up root .env's...", 'white').indent()
 
-            await constructAndWriteEnvFiles(
-                CWD,
-                setup.env.schema,
-                setup.env.values,
-                setup.env.valuesProduction
-            )
+            await constructAndWriteEnvFiles(CWD, setup.env.schema, setup.env.values, setup.env.valuesProduction)
 
             cli.dedent().item('Set up workspaces...', 'white').indent()
 
@@ -128,11 +119,7 @@ export async function remold(
 
         for (const action of entry._remoldActions) {
             if (opts.verbose) {
-                cli.item(
-                    `${action.callback.name || '<anonymous action callback>'}`,
-                    'gray',
-                    '$'
-                ).indent()
+                cli.item(`${action.callback.name || '<anonymous action callback>'}`, 'gray', '$').indent()
             }
 
             await action.callback(entry)

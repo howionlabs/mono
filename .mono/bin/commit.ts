@@ -9,11 +9,7 @@ export interface PullOptions {
     verbose?: boolean
 }
 
-export async function commit(
-    id?: string,
-    options?: PullOptions,
-    _setup?: MonoSetupInternal
-): Promise<number> {
+export async function commit(id?: string, options?: PullOptions, _setup?: MonoSetupInternal): Promise<number> {
     try {
         const opts = {
             verbose: false,
@@ -31,10 +27,7 @@ export async function commit(
 
             for (const entry of setup._entriesMap.values()) {
                 if (entry._meta.git === undefined) {
-                    cli.item(
-                        `Skipping "${entry._zone}/${entry.id}" because it is not git tracked.`,
-                        'gray'
-                    )
+                    cli.item(`Skipping "${entry._zone}/${entry.id}" because it is not git tracked.`, 'gray')
                 }
 
                 const code = await commit(entry.id, opts, setup)

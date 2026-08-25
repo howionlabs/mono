@@ -5,9 +5,7 @@ import { resolveEntryPath } from '../bin/utils/fs'
 async function updatePJSONForBun(entry: _MonoEntryInternal) {
     // make sure npm meta is set
     if (!entry._meta.npm?.nextPJSON) {
-        throw new Error(
-            `Could not update package.json for bun because npm addon is not enabled or misconfigured.`
-        )
+        throw new Error(`Could not update package.json for bun because npm addon is not enabled or misconfigured.`)
     }
 
     delete entry._meta.npm.nextPJSON.dependencies['@types/bun']
@@ -20,8 +18,7 @@ async function updatePJSONForBun(entry: _MonoEntryInternal) {
 
     entry._meta.npm.nextPJSON.devDependencies['@types/bun'] = monoPJSON.dependencies['@types/bun']
     entry._meta.npm.nextPJSON.devDependencies['@types/node'] = monoPJSON.dependencies['@types/node']
-    entry._meta.npm.nextPJSON.devDependencies['@tsconfig/bun'] =
-        monoPJSON.dependencies['@tsconfig/bun']
+    entry._meta.npm.nextPJSON.devDependencies['@tsconfig/bun'] = monoPJSON.dependencies['@tsconfig/bun']
     entry._meta.npm.nextPJSON.devDependencies.typescript = monoPJSON.dependencies.typescript
 
     entry._meta.npm.nextPJSON.engines ??= {}
@@ -41,26 +38,13 @@ async function updatePJSONForBun(entry: _MonoEntryInternal) {
             types: ['bun', 'node']
         },
         include: ['.astro/types.d.ts', '**/*'],
-        exclude: [
-            '**/node_modules',
-            '**/out',
-            '**/build',
-            '**/dist',
-            '.astro',
-            '.next',
-            '.vercel',
-            '.git',
-            '**/public'
-        ]
+        exclude: ['**/node_modules', '**/out', '**/build', '**/dist', '.astro', '.next', '.vercel', '.git', '**/public']
     }
 
     if (await tsFile.exists()) {
         const oldFileContent = JSON.parse(await tsFile.text())
 
-        const types = new Set([
-            ...tsFileData.compilerOptions.types,
-            ...(oldFileContent.compilerOptions?.types ?? [])
-        ])
+        const types = new Set([...tsFileData.compilerOptions.types, ...(oldFileContent.compilerOptions?.types ?? [])])
 
         const include = new Set([...tsFileData.include, ...(oldFileContent.include ?? [])])
         const exclude = new Set([...tsFileData.exclude, ...(oldFileContent.exclude ?? [])])

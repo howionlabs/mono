@@ -2,8 +2,7 @@ import type { _MonoEntryInternal, MonoAddon, MonoFormattedPersonText, MonoPerson
 import { parseFormattedPersonText } from '../bin/mono'
 
 export function $contributor(contributor: MonoPerson | MonoFormattedPersonText): MonoAddon {
-    const details =
-        typeof contributor === 'string' ? parseFormattedPersonText(contributor) : contributor
+    const details = typeof contributor === 'string' ? parseFormattedPersonText(contributor) : contributor
 
     async function addContributorToMeta(entry: _MonoEntryInternal) {
         entry._meta.contributors ??= []

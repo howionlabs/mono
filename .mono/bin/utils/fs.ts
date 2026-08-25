@@ -38,11 +38,7 @@ export async function readJSONFile<T>(absolutePath: string): Promise<T | null> {
     return JSON.parse(text) as T
 }
 
-export async function copyFile(
-    from: string | Bun.BunFile,
-    to: string | Bun.BunFile,
-    checkDiff = true
-): Promise<boolean> {
+export async function copyFile(from: string | Bun.BunFile, to: string | Bun.BunFile, checkDiff = true): Promise<boolean> {
     const fromFile = typeof from === 'string' ? Bun.file(from) : from
 
     if (!(await fromFile.exists())) {
@@ -54,11 +50,7 @@ export async function copyFile(
     return await writeFile(fromBuffer, to, checkDiff)
 }
 
-export async function writeFile(
-    data: string | ArrayBuffer,
-    to: string | Bun.BunFile,
-    checkDiff = true
-): Promise<boolean> {
+export async function writeFile(data: string | ArrayBuffer, to: string | Bun.BunFile, checkDiff = true): Promise<boolean> {
     const toFile = typeof to === 'string' ? Bun.file(to) : to
     const dataBuffer = typeof data === 'string' ? new TextEncoder().encode(data).buffer : data
 
@@ -103,9 +95,7 @@ export async function readDir(dirPath: string): Promise<Dirent[]> {
 export function pathGlobToRegex(glob: string): RegExp {
     const dirs = glob.split('/').map(dir => {
         if (dir === '**') {
-            throw new Error(
-                'Glob pattern "**" is not supported in this context. Use "*"\'s instead.'
-            )
+            throw new Error('Glob pattern "**" is not supported in this context. Use "*"\'s instead.')
         } else if (dir === '*') {
             return '([^\\/]+?)'
         } else if (dir.includes('*')) {

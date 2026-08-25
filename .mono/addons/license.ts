@@ -9,9 +9,7 @@ export function $license(id: MonoLicenseId): MonoAddon {
             throw new Error(`Invalid license type: ${id}`)
         }
 
-        const licenseDetail = await readJSONFile<Omit<MonoLicense, 'id'>>(
-            resolveDotMonoPath(`licenses/${id}/details.json`)
-        )
+        const licenseDetail = await readJSONFile<Omit<MonoLicense, 'id'>>(resolveDotMonoPath(`licenses/${id}/details.json`))
 
         if (!licenseDetail) {
             throw new Error(`License details for "${id}" are missing or invalid.`)
@@ -23,13 +21,9 @@ export function $license(id: MonoLicenseId): MonoAddon {
 
         if (!licenseDetail.npm || typeof licenseDetail.npm !== 'string') {
             if (entry.public) {
-                throw new Error(
-                    `License "${id}" does not have a valid npm field in its details. For public projects, this field is required.`
-                )
+                throw new Error(`License "${id}" does not have a valid npm field in its details. For public projects, this field is required.`)
             } else {
-                cli.warn(
-                    `License "${id}" does not have a valid npm field in its details. This may cause issues when publishing to npm.`
-                )
+                cli.warn(`License "${id}" does not have a valid npm field in its details. This may cause issues when publishing to npm.`)
             }
         }
 

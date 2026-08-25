@@ -24,11 +24,7 @@ export interface PullOptions {
     verbose?: boolean
 }
 
-export async function pull(
-    id?: string,
-    options?: PullOptions,
-    _setup?: MonoSetupInternal
-): Promise<number> {
+export async function pull(id?: string, options?: PullOptions, _setup?: MonoSetupInternal): Promise<number> {
     try {
         const opts = {
             verbose: false,
@@ -42,10 +38,7 @@ export async function pull(
 
             for (const entry of setup._entriesMap.values()) {
                 if (entry._meta.git === undefined) {
-                    cli.item(
-                        `Skipping "${entry._zone}/${entry.id}" because it is not git tracked.`,
-                        'gray'
-                    )
+                    cli.item(`Skipping "${entry._zone}/${entry.id}" because it is not git tracked.`, 'gray')
                     continue
                 }
 
@@ -74,15 +67,11 @@ export async function pull(
         const identifierZoned = `${entry._zone}/${entry.id}`
 
         if (!(await dirExists(baseDir))) {
-            throw new Error(
-                `Tracked entry "${identifierZoned}" folder does not exist. Please run "bun mono remold" first.`
-            )
+            throw new Error(`Tracked entry "${identifierZoned}" folder does not exist. Please run "bun mono remold" first.`)
         }
 
         if (!(await dirExists(gitFolder))) {
-            throw new Error(
-                `Tracked entry "${identifierZoned}" is not a git repository. Please run "bun mono remold" first.`
-            )
+            throw new Error(`Tracked entry "${identifierZoned}" is not a git repository. Please run "bun mono remold" first.`)
         }
 
         const git = simpleGitFactory(baseDir)

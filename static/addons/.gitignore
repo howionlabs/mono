@@ -76,6 +76,7 @@ next-env.d.ts
 *.p8
 
 ## ENV FILES
+docker.env
 .env
 .env.production
 .env.*
