@@ -1,5 +1,11 @@
 import type { _MonoEntryInternal, MonoAddon, MonoGitURI } from '../mono'
-import { MONO_AUTOGEN_DISCLAIMER, MONO_HASHTAG_BAR, monoAddonGitattributesFile, monoAddonGitignoreFile, ROOT_GIT_BRANCH_NAME } from '../bin/constants'
+import {
+    MONO_AUTOGEN_DISCLAIMER,
+    MONO_HASHTAG_BAR,
+    monoAddonGitattributesFile,
+    monoAddonGitignoreFile,
+    ROOT_GIT_BRANCH_NAME
+} from '../bin/constants'
 import { renderH1 } from '../bin/env'
 import { buildRemoteUrl, parseGitURI, simpleGitFactory } from '../bin/git'
 import { cli } from '../bin/utils/cli'

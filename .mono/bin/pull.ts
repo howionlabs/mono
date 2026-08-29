@@ -67,11 +67,15 @@ export async function pull(id?: string, options?: PullOptions, _setup?: MonoSetu
         const identifierZoned = `${entry._zone}/${entry.id}`
 
         if (!(await dirExists(baseDir))) {
-            throw new Error(`Tracked entry "${identifierZoned}" folder does not exist. Please run "bun mono remold" first.`)
+            throw new Error(
+                `Tracked entry "${identifierZoned}" folder does not exist. Please run "bun mono remold" first.`
+            )
         }
 
         if (!(await dirExists(gitFolder))) {
-            throw new Error(`Tracked entry "${identifierZoned}" is not a git repository. Please run "bun mono remold" first.`)
+            throw new Error(
+                `Tracked entry "${identifierZoned}" is not a git repository. Please run "bun mono remold" first.`
+            )
         }
 
         const git = simpleGitFactory(baseDir)

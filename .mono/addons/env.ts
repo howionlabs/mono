@@ -41,7 +41,9 @@ export function $env(...patterns: string[]): MonoAddon {
 
         const newSchema = new Map([...monoEnv.schema].filter(filter))
         const newValues = monoEnv.values ? new Map([...monoEnv.values].filter(filter)) : undefined
-        const newValuesProduction = monoEnv.valuesProduction ? new Map([...monoEnv.valuesProduction].filter(filter)) : undefined
+        const newValuesProduction = monoEnv.valuesProduction
+            ? new Map([...monoEnv.valuesProduction].filter(filter))
+            : undefined
 
         await constructAndWriteEnvFiles(entry._path, newSchema, newValues, newValuesProduction)
     }

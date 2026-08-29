@@ -38,7 +38,11 @@ export async function readJSONFile<T>(absolutePath: string): Promise<T | null> {
     return JSON.parse(text) as T
 }
 
-export async function copyFile(from: string | Bun.BunFile, to: string | Bun.BunFile, checkDiff = true): Promise<boolean> {
+export async function copyFile(
+    from: string | Bun.BunFile,
+    to: string | Bun.BunFile,
+    checkDiff = true
+): Promise<boolean> {
     const fromFile = typeof from === 'string' ? Bun.file(from) : from
 
     if (!(await fromFile.exists())) {
@@ -50,7 +54,11 @@ export async function copyFile(from: string | Bun.BunFile, to: string | Bun.BunF
     return await writeFile(fromBuffer, to, checkDiff)
 }
 
-export async function writeFile(data: string | ArrayBuffer, to: string | Bun.BunFile, checkDiff = true): Promise<boolean> {
+export async function writeFile(
+    data: string | ArrayBuffer,
+    to: string | Bun.BunFile,
+    checkDiff = true
+): Promise<boolean> {
     const toFile = typeof to === 'string' ? Bun.file(to) : to
     const dataBuffer = typeof data === 'string' ? new TextEncoder().encode(data).buffer : data
 

@@ -1,10 +1,22 @@
-import type { _MonoEntryInternal, MonoAddonAction, MonoEntry, MonoFormattedPersonText, MonoPerson, MonoSetup, MonoSetupInternal } from './types'
+import type {
+    _MonoEntryInternal,
+    MonoAddonAction,
+    MonoEntry,
+    MonoFormattedPersonText,
+    MonoPerson,
+    MonoSetup,
+    MonoSetupInternal
+} from './types'
 import { ENTRY_ID_REGEX, FORMATTED_PERSON_TEXT_REGEX, monoEnvPath, monoSetupPath } from './constants'
 import { readMonoEnv } from './env'
 import { cli } from './utils/cli'
 import { resolveRootPath } from './utils/fs'
 
-async function internalizeEntries(entries: readonly MonoEntry[], map: Map<string, _MonoEntryInternal>, zone: string): Promise<_MonoEntryInternal[]> {
+async function internalizeEntries(
+    entries: readonly MonoEntry[],
+    map: Map<string, _MonoEntryInternal>,
+    zone: string
+): Promise<_MonoEntryInternal[]> {
     const result: _MonoEntryInternal[] = []
 
     for (const entry of entries) {
@@ -83,7 +95,9 @@ export async function mono(setup: MonoSetup): Promise<MonoSetupInternal> {
         const map = new Map<string, _MonoEntryInternal>()
 
         if (!(await Bun.file(monoEnvPath).exists())) {
-            throw new Error(`Mono environment file ".mono.env.ts" could not be found. Please ensure that the file exists and is accessible.`)
+            throw new Error(
+                `Mono environment file ".mono.env.ts" could not be found. Please ensure that the file exists and is accessible.`
+            )
         }
 
         const internalZones: Record<string, _MonoEntryInternal[]> = {}
@@ -140,7 +154,9 @@ export function parseFormattedPersonText(author: MonoFormattedPersonText): MonoP
     const match = FORMATTED_PERSON_TEXT_REGEX.exec(author)
 
     if (!match?.groups) {
-        throw new Error(`Invalid author string "${author}". Expected format: "name <email> (url)" where email and url are optional.`)
+        throw new Error(
+            `Invalid author string "${author}". Expected format: "name <email> (url)" where email and url are optional.`
+        )
     }
 
     const { name, email, url } = match.groups

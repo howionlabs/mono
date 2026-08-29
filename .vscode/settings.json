@@ -12,28 +12,22 @@
         "**/node_modules": true,
         "**/.vscode": true,
         "**/dist": true,
-        "**/build": true
-        // "**/.mono": true,
-        // ".editorconfig": true,
-        // ".markdownlint.jsonc": true,
-        // "biome.jsonc": true,
-        // "bun.lock": true,
-        // "package-lock.json": true,
-        // "README.md": true,
-        // "tsconfig.json": true
+        "**/build": true,
+        ".editorconfig": true,
+        ".markdownlint.jsonc": true,
+        "bun.lock": true,
+        "package-lock.json": true,
+        "README.md": true
     },
     "files.exclude": {
         "**/.git": true,
         "**/node_modules": true,
-        "**/.DS_Store": true
-        // "**/.mono": true,
-        // ".editorconfig": true,
-        // ".markdownlint.jsonc": true,
-        // "biome.jsonc": true,
-        // "bun.lock": true,
-        // "package-lock.json": true,
-        // "README.md": true,
-        // "tsconfig.json": true
+        "**/.DS_Store": true,
+        ".editorconfig": true,
+        ".markdownlint.jsonc": true,
+        "bun.lock": true,
+        "package-lock.json": true,
+        "README.md": true
     },
     "files.watcherExclude": {
         "**/routeTree.gen.ts": true

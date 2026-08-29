@@ -1,5 +1,5 @@
 {
-    "$schema": "https://biomejs.dev/schemas/2.5.10/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.5.11/schema.json",
     "assist": {
         "actions": {
             "preset": "recommended",
@@ -45,7 +45,7 @@
         "enabled": true,
         "expand": "auto",
         "formatWithErrors": true,
-        "lineWidth": 150,
+        "lineWidth": 120,
         "indentStyle": "space",
         "indentWidth": 4,
         "lineEnding": "lf",
@@ -95,6 +95,9 @@
                 "noSvgWithoutTitle": "info",
                 "noStaticElementInteractions": "info",
                 "useKeyWithClickEvents": "info"
+            },
+            "correctness": {
+                "noUnknownTypeSelector": "off"
             },
             "style": {
                 "noDefaultExport": "off",

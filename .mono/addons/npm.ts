@@ -43,10 +43,10 @@ import { readJSONFile, resolveEntryPath, writeFile } from '../bin/utils/fs.ts'
 // }
 
 export function $npm(name: string): MonoAddon {
-    async function populateEntryMeta(entry: _MonoEntryInternal) {
+    async function populateMetaNPM(entry: _MonoEntryInternal) {
         if (entry._meta.npm) {
             throw new Error(
-                `Failed to populate entry metadata for "${entry._zone}/${entry.id}" because the entry's metadata already contains npm data.`
+                `Failed to populate entry NPM metadata for "${entry._zone}/${entry.id}" because the entry's metadata already contains npm data.`
             )
         }
 
@@ -208,7 +208,7 @@ export function $npm(name: string): MonoAddon {
         unique: true,
         setup: [
             {
-                callback: populateEntryMeta,
+                callback: populateMetaNPM,
                 order: -50
             },
             {

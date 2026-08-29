@@ -104,25 +104,25 @@ export interface MonoAddon {
      * Non-empty lsit of actions which will always be executed on every mono
      * setup is loaded.
      */
-    readonly setup?: readonly [MonoAddonAction, ...MonoAddonAction[]]
+    readonly setup?: readonly MonoAddonAction[]
 
     /**
      * Non-empty list of actions which will be executed when the remold command
      * is run.
      */
-    readonly remold?: readonly [MonoAddonAction, ...MonoAddonAction[]]
+    readonly remold?: readonly MonoAddonAction[]
 
     // /**
     //  * Non-empty list of actions which will be executed when the pull command
     //  * is run.
     //  */
-    // pull?: [MonoAddonAction, ...MonoAddonAction[]]
+    // pull?: readonly MonoAddonAction[]
 
     // /**
     //  * Non-empty list of actions which will be executed when the push command
     //  * is run.
     //  */
-    // push?: [MonoAddonAction, ...MonoAddonAction[]]
+    // push?: readonly MonoAddonAction[]
 }
 
 export interface MonoEntry {
@@ -218,6 +218,7 @@ export interface _MonoEntryInternal extends MonoEntry {
             didWrote: boolean
             variables: Set<string>
         }
+        go?: {}
         npm?: {
             nextPJSON: PJSON
         }

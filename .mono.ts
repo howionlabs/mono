@@ -1,4 +1,4 @@
-import { $author, $biomejs, $bun, $env, $git, $license, $markdownlint, $npm, $static, $vscode, type MonoSetup } from 'mono'
+import { $author, $biomejs, $bun, $git, $license, $markdownlint, $npm, $static, $vscode, type MonoSetup } from 'mono'
 
 const $howion = $author('howion <me@howion.com> (https://howion.com)')
 
@@ -23,6 +23,22 @@ export default {
             //         $env('AUTH_*', 'BETTER_AUTH_*')
             //     ]
             // },
+            {
+                id: 'howion.com',
+                name: 'howion.com',
+                description: '',
+                version: '2.2.0',
+                public: true,
+                addons: [
+                    $license('mit'),
+                    $howion,
+                    $vscode(),
+                    $markdownlint(),
+                    $biomejs(),
+                    $git('https://git.howion.com/howionlabs/howion.com.git'),
+                    $npm('@howionlabs/howion.com')
+                ]
+            },
             {
                 id: 'ionizer',
                 name: 'Ionizer',
@@ -59,7 +75,14 @@ export default {
                 id: 'utils-ts',
                 name: "Howion's Typescript Utilities",
                 version: '0.1.0',
-                addons: [$howion, $git('https://git.howion.com/howionlabs/utils-ts.git'), $license('mit'), $biomejs(), $markdownlint(), $vscode]
+                addons: [
+                    $howion,
+                    $git('https://git.howion.com/howionlabs/utils-ts.git'),
+                    $license('mit'),
+                    $biomejs(),
+                    $markdownlint(),
+                    $vscode
+                ]
             },
             {
                 id: 'huid-spec',
@@ -100,7 +123,13 @@ export default {
                 version: '0.1.0',
                 public: false,
                 description: '',
-                addons: [$howion, $git('https://git.howion.com/howionlabs/barebone.git'), $biomejs(), $markdownlint(), $vscode()]
+                addons: [
+                    $howion,
+                    $git('https://git.howion.com/howionlabs/barebone.git'),
+                    $biomejs(),
+                    $markdownlint(),
+                    $vscode()
+                ]
             },
             {
                 id: 'barebone-opt',
@@ -113,9 +142,10 @@ export default {
                     $git('https://git.howion.com/howionlabs/barebone-opt.git'),
                     $biomejs(),
                     $markdownlint(),
+                    // opengist
                     $static('assets/img/favicon.png', 'opengist/custom/favicon.png'),
                     $static('assets/img/howion-emblem-light.svg', 'opengist/custom/logo.svg'),
-                    $static('assets/img/howion-emblem-light.svg', 'vaultwarden/custom/howion-emblem-light.svg'),
+                    // vaultwarden
                     $static('assets/img/howion-raw-black.png', 'vaultwarden/custom/images/icon-dark.png'),
                     $static('assets/img/howion-raw-white.png', 'vaultwarden/custom/images/icon-white.png'),
                     $static('assets/img/favicon-96x96.png', 'vaultwarden/custom/images/logo-dark@2x.png'),
@@ -123,13 +153,22 @@ export default {
                     $static('assets/img/howion-raw-white.svg', 'vaultwarden/custom/images/icon-white.svg'),
                     $static('assets/img/howion-emblem-dark.svg', 'vaultwarden/custom/images/logo.svg'),
                     $static('assets/img/howion-emblem-light.svg', 'vaultwarden/custom/images/logo-white.svg'),
-                    $static('assets/img/web-app-manifest-white-192x192.png', 'vaultwarden/custom/images/icons/android-chrome-192x192.png'),
-                    $static('assets/img/web-app-manifest-white-512x512.png', 'vaultwarden/custom/images/icons/android-chrome-512x512.png'),
-                    $static('assets/img/apple-touch-icon-white.png', 'vaultwarden/custom/images/icons/apple-touch-icon.png'),
-                    $static('assets/img/favicon-white-16x16.png', 'vaultwarden/custom/images/icons/favicon-16x16.png'),
-                    $static('assets/img/favicon-white-32x32.png', 'vaultwarden/custom/images/icons/favicon-32x32.png'),
-                    $static('assets/img/mstile-white-150x150.png', 'vaultwarden/custom/images/icons/mstile-150x150.png'),
-                    $static('assets/img/howion-emblem-light.svg', 'vaultwarden/custom/images/icons/safari-pinned-tab.svg')
+                    $static('assets/img/howion-emblem-light.svg', 'vaultwarden/custom/images/howion-emblem-light.svg'),
+                    // vaultwarden/icons
+                    $static('assets/img/favicon.ico', 'vaultwarden/custom/images/favicon.ico'),
+                    $static(
+                        'assets/img/web-app-manifest-white-192x192.png',
+                        'vaultwarden/custom/images/android-chrome-192x192.png'
+                    ),
+                    $static(
+                        'assets/img/web-app-manifest-white-512x512.png',
+                        'vaultwarden/custom/images/android-chrome-512x512.png'
+                    ),
+                    $static('assets/img/apple-touch-icon-white.png', 'vaultwarden/custom/images/apple-touch-icon.png'),
+                    $static('assets/img/favicon-white-16x16.png', 'vaultwarden/custom/images/favicon-16x16.png'),
+                    $static('assets/img/favicon-white-32x32.png', 'vaultwarden/custom/images/favicon-32x32.png'),
+                    $static('assets/img/mstile-white-150x150.png', 'vaultwarden/custom/images/mstile-150x150.png'),
+                    $static('assets/img/howion-emblem-light.svg', 'vaultwarden/custom/images/safari-pinned-tab.svg')
                 ]
             },
             {
@@ -170,6 +209,20 @@ export default {
                     $static('assets/img/favicon.*', 'public/favicon.*'),
                     $static('assets/img/howion-raw-white.svg', 'public/assets/img/logo.svg'),
                     $static('assets/img/howion-emblem-dark.svg', 'public/assets/img/logo.png')
+                ]
+            }
+        ],
+        personal: [
+            {
+                id: 'comprimo',
+                name: 'The Ultimate Compression Toolkit',
+                version: '0.1.0',
+                addons: [
+                    $howion,
+                    $git('https://git.howion.com/howion/comprimo.git'),
+                    $license('mit'),
+                    $markdownlint(),
+                    $vscode
                 ]
             }
         ]
