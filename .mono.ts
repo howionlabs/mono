@@ -18,8 +18,8 @@ export default {
             //         $bun(),
             //         $markdownlint(),
             //         $biomejs(),
-            //         $git('https://git.howion.com/howionlabs/internal-auth.git'),
             //         $npm('@howionlabs/internal-auth'),
+            //         $git('https://git.howion.com/howionlabs/internal-auth.git'),
             //         $env('AUTH_*', 'BETTER_AUTH_*')
             //     ]
             // },
@@ -32,6 +32,7 @@ export default {
                 addons: [
                     $license('mit'),
                     $howion,
+                    $bun(),
                     $vscode(),
                     $markdownlint(),
                     $biomejs(),
@@ -81,7 +82,7 @@ export default {
                     $license('mit'),
                     $biomejs(),
                     $markdownlint(),
-                    $vscode
+                    $vscode()
                 ]
             },
             {
@@ -222,7 +223,24 @@ export default {
                     $git('https://git.howion.com/howion/comprimo.git'),
                     $license('mit'),
                     $markdownlint(),
-                    $vscode
+                    $vscode()
+                ]
+            },
+            {
+                id: 'speculo',
+                name: 'P2P mobile to desktop device orientation mirroring.',
+                version: '1.0.0',
+                addons: [
+                    $howion,
+                    $git('https://git.howion.com/howion/speculo.git'),
+                    $license('mit'),
+                    $markdownlint(),
+                    $bun(),
+                    $vscode(),
+                    $biomejs(),
+                    $npm('speculojs'),
+                    $static('assets/img/favicon.ico', 'public/favicon.ico'),
+                    $static('assets/fonts/inter/*', 'public/assets/fonts/inter/*')
                 ]
             }
         ]
@@ -230,6 +248,7 @@ export default {
     workspaces: {
         ionizer: ['ionizer', 'ui', 'utils-ts'],
         huid: ['huid-spec', 'huid-ts'],
-        devops: ['barebone', 'barebone-opt', 'forgejo-custom', 'keycloak-theme']
+        devops: ['barebone', 'barebone-opt', 'forgejo-custom', 'keycloak-theme'],
+        personal: ['comprimo', 'speculo']
     }
 } satisfies MonoSetup

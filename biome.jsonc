@@ -34,7 +34,17 @@
     "extends": [],
     "files": {
         "ignoreUnknown": true,
-        "includes": ["**", "!biome.jsonc", "!package.json", "!*.svg", "!!static", "!!public", "!!dist", "!!out"],
+        "includes": [
+            "**",
+            "!biome.jsonc",
+            "!package.json",
+            "!*.svg",
+            "!!.vscode",
+            "!!static",
+            "!!public",
+            "!!dist",
+            "!!out"
+        ],
         "maxSize": 1000000
     },
     "formatter": {

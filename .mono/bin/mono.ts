@@ -35,6 +35,10 @@ async function internalizeEntries(
             const addonSet = new Set<string>()
 
             for (const addon of entry.addons) {
+                if (typeof addon === 'function') {
+                    throw new Error(`Unknown addon format "${typeof addon}" for entry "${zone}/${entry.id}".`)
+                }
+
                 if (addon.unique !== false && addonSet.has(addon.name)) {
                     throw new Error(
                         `Unique addon "${addon.name}" is already registered for the entry "${zone}/${entry.id}". Unique addons can only be registered once per entry.`

@@ -16,8 +16,7 @@
         ".editorconfig": true,
         ".markdownlint.jsonc": true,
         "bun.lock": true,
-        "package-lock.json": true,
-        "README.md": true
+        "package-lock.json": true
     },
     "files.exclude": {
         "**/.git": true,
@@ -26,8 +25,7 @@
         ".editorconfig": true,
         ".markdownlint.jsonc": true,
         "bun.lock": true,
-        "package-lock.json": true,
-        "README.md": true
+        "package-lock.json": true
     },
     "files.watcherExclude": {
         "**/routeTree.gen.ts": true
@@ -60,6 +58,9 @@
         "editor.defaultFormatter": "ms-azuretools.vscode-containers"
     },
     "[xml]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[html]": {
         "editor.defaultFormatter": "biomejs.biome"
     }
 }

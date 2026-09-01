@@ -2,6 +2,7 @@ import type { Dirent } from 'node:fs'
 import type { _MonoEntryInternal } from '../types'
 import { readdir } from 'node:fs/promises'
 import path from 'node:path'
+import stripJsonComments from 'strip-json-comments'
 
 export const CWD = process.cwd()
 
@@ -35,7 +36,7 @@ export async function readJSONFile<T>(absolutePath: string): Promise<T | null> {
 
     const text = await file.text()
 
-    return JSON.parse(text) as T
+    return JSON.parse(stripJsonComments(text)) as T
 }
 
 export async function copyFile(

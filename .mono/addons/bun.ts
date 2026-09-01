@@ -1,6 +1,7 @@
 import type { _MonoEntryInternal, MonoAddon } from '../mono'
 import { monoPJSON } from '../bin/constants'
 import { resolveEntryPath } from '../bin/utils/fs'
+import stripJsonComments from 'strip-json-comments'
 
 async function updatePJSONForBun(entry: _MonoEntryInternal) {
     // make sure npm meta is set
@@ -42,7 +43,7 @@ async function updatePJSONForBun(entry: _MonoEntryInternal) {
     }
 
     if (await tsFile.exists()) {
-        const oldFileContent = JSON.parse(await tsFile.text())
+        const oldFileContent = JSON.parse(stripJsonComments(await tsFile.text()))
 
         const types = new Set([...tsFileData.compilerOptions.types, ...(oldFileContent.compilerOptions?.types ?? [])])
 

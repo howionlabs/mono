@@ -91,6 +91,7 @@ next-env.d.ts
 ## ENV FILES
 docker.env
 .env
+.env.local
 .env.production
 .env.*
 !.env.example
