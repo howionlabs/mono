@@ -1,0 +1,48 @@
+{
+    "name": "@howionlabs/mono",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Howion's custom (and quite opinionated) monorepo to manage all of its repositories.",
+    "keywords": ["howion", "monorepo", "monorepository"],
+    "homepage": "https://www.howion.com/",
+    "license": "MIT",
+    "author": {
+        "name": "howion",
+        "email": "me@howion.com",
+        "url": "https://www.howion.com"
+    },
+    "main": "./.mono/mono.ts",
+    "bin": "./.mono/cli.ts",
+    "scripts": {
+        "mono": "bun run ./.mono/cli.ts",
+        "format": "bunx --bun @biomejs/biome format --write",
+        "lint": "bunx --bun @biomejs/biome lint --write"
+    },
+    "dependencies": {
+        "@biomejs/biome": "2.5.11",
+        "@tsconfig/bun": "1.0.11",
+        "@types/bun": "1.4.0",
+        "@types/node": "26.4.0",
+        "@types/stack-utils": "^2.0.3",
+        "cac": "7.0.0",
+        "dotenv": "^17.4.2",
+        "markdownlint": "0.41.1",
+        "matcher": "^6.0.0",
+        "path-to-regexp": "^8.4.2",
+        "simple-git": "3.36.0",
+        "strip-json-comments": "^5.0.3",
+        "typescript": "^7.0.2"
+    },
+    "engines": {
+        "bun": ">=1.4.0"
+    },
+    "workspaces": [
+        "zones/*/*",
+        "!zones/apps/howion.com",
+        "!zones/devops/keycloak-theme",
+        "!zones/personal/speculo"
+    ],
+    "devDependencies": {
+        "stack-utils": "^2.0.6"
+    }
+}

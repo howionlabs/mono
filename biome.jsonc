@@ -1,0 +1,150 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.5.11/schema.json",
+    "assist": {
+        "actions": {
+            "preset": "recommended",
+            "recommended": true,
+            "source": {
+                "useSortedInterfaceMembers": "off",
+                "useSortedKeys": "off",
+                "useSortedPackageJson": "off",
+                "organizeImports": {
+                    "level": "on",
+                    "options": {
+                        "identifierOrder": "natural",
+                        "groups": [
+                            {
+                                "type": true
+                            },
+                            ":URL:",
+                            ":BUN:",
+                            ":PACKAGE_WITH_PROTOCOL:",
+                            ":NODE:",
+                            ":PACKAGE:",
+                            ":PATH:",
+                            ":STYLE:"
+                        ]
+                    }
+                }
+            }
+        },
+        "enabled": true
+    },
+    "css": {},
+    "extends": [],
+    "files": {
+        "ignoreUnknown": true,
+        "includes": [
+            "**",
+            "!biome.jsonc",
+            "!package.json",
+            "!*.svg",
+            "!!.vscode",
+            "!!static",
+            "!!public",
+            "!!dist",
+            "!!out"
+        ],
+        "maxSize": 1000000
+    },
+    "formatter": {
+        "attributePosition": "auto",
+        "bracketSameLine": false,
+        "bracketSpacing": true,
+        "delimiterSpacing": false,
+        "enabled": true,
+        "expand": "auto",
+        "formatWithErrors": true,
+        "lineWidth": 120,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineEnding": "lf",
+        "trailingNewline": true,
+        "useEditorconfig": false
+    },
+    "graphql": {},
+    "grit": {},
+    "html": {
+        "experimentalFullSupportEnabled": true
+    },
+    "javascript": {
+        "formatter": {
+            "arrowParentheses": "asNeeded",
+            "attributePosition": "auto",
+            "bracketSameLine": false,
+            "bracketSpacing": true,
+            "enabled": true,
+            "expand": "auto",
+            "indentStyle": "space",
+            "jsxQuoteStyle": "double",
+            "quoteProperties": "asNeeded",
+            "quoteStyle": "single",
+            "semicolons": "asNeeded",
+            "trailingCommas": "none"
+        },
+        "parser": {
+            "jsxEverywhere": false
+        },
+        "resolver": {}
+    },
+    "json": {
+        "assist": {},
+        "formatter": {},
+        "linter": {},
+        "parser": {}
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "preset": "recommended",
+            "security": {
+                "noDangerouslySetInnerHtml": "info"
+            },
+            "a11y": {
+                "useValidAriaRole": "info",
+                "noSvgWithoutTitle": "info",
+                "noStaticElementInteractions": "info",
+                "useKeyWithClickEvents": "info"
+            },
+            "correctness": {
+                "noUnknownTypeSelector": "off"
+            },
+            "style": {
+                "noDefaultExport": "off",
+                "noNonNullAssertion": "off"
+            },
+            "suspicious": {
+                "noExplicitAny": "info",
+                "noEmptyInterface": "info"
+            },
+            "nursery": {
+                "noFloatingPromises": "warn"
+            }
+        }
+    },
+    "overrides": [
+        {
+            "includes": ["**/*.svelte", "**/*.astro", "**/*.vue"],
+            "linter": {
+                "rules": {
+                    "a11y": {},
+                    "complexity": {},
+                    "correctness": {},
+                    "nursery": {},
+                    "performance": {},
+                    "preset": "recommended",
+                    "style": {},
+                    "security": {},
+                    "suspicious": {}
+                }
+            }
+        }
+    ],
+    "plugins": [],
+    "root": true,
+    "vcs": {
+        "clientKind": "git",
+        "enabled": true,
+        "useIgnoreFile": false
+    }
+}
