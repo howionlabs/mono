@@ -1,7 +1,7 @@
 import type { _MonoEntryInternal, MonoAddon } from '../mono'
+import stripJsonComments from 'strip-json-comments'
 import { monoPJSON } from '../bin/constants'
 import { resolveEntryPath } from '../bin/utils/fs'
-import stripJsonComments from 'strip-json-comments'
 
 async function updatePJSONForBun(entry: _MonoEntryInternal) {
     // make sure npm meta is set
