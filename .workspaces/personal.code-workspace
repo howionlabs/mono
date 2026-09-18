@@ -1,0 +1,12 @@
+{
+    "folders": [
+        {
+            "name": "comprimo",
+            "path": "../zones/personal/comprimo"
+        },
+        {
+            "name": "speculo",
+            "path": "../zones/personal/speculo"
+        }
+    ]
+}

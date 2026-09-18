@@ -32,6 +32,7 @@ export const MONO_AUTOGEN_DISCLAIMER = breakTextToLines(
 
 export const monoSetupPath = resolveRootPath('.mono.ts')
 export const monoEnvPath = resolveRootPath('.mono.env.ts')
+export const monoWorkspacesPath = resolveRootPath('.workspaces')
 
 export const rootEnvFile = Bun.file(resolveRootPath('.env'))
 export const rootEnvExampleFile = Bun.file(resolveRootPath('.env.example'))

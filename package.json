@@ -19,13 +19,13 @@
         "lint": "bunx --bun @biomejs/biome lint --write"
     },
     "dependencies": {
-        "@biomejs/biome": "2.5.12",
+        "@biomejs/biome": "2.5.14",
         "@tsconfig/bun": "1.0.11",
-        "@types/bun": "1.4.1",
-        "@types/node": "26.4.1",
+        "@types/bun": "1.4.2",
+        "@types/node": "26.6.1",
         "@types/stack-utils": "^2.0.3",
         "cac": "7.0.0",
-        "dotenv": "^17.4.2",
+        "dotenv": "^18.0.0",
         "markdownlint": "0.41.1",
         "matcher": "^6.0.0",
         "path-to-regexp": "^8.4.2",

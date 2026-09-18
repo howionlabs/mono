@@ -1,0 +1,12 @@
+{
+    "folders": [
+        {
+            "name": "howion.com",
+            "path": "../zones/apps/howion.com"
+        },
+        {
+            "name": "ui",
+            "path": "../zones/modules/ui"
+        }
+    ]
+}

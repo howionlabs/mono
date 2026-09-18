@@ -1,0 +1,12 @@
+{
+    "folders": [
+        {
+            "name": "huid-spec",
+            "path": "../zones/modules/huid-spec"
+        },
+        {
+            "name": "huid-ts",
+            "path": "../zones/modules/huid-ts"
+        }
+    ]
+}

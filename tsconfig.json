@@ -7,6 +7,6 @@
             "mono": ["./.mono/mono.ts"]
         }
     },
-    "include": [".mono/**/*", ".mono.ts", ".mono.env.ts"],
+    "include": [".mono/**/*", ".*.*.ts", ".*.ts"],
     "exclude": ["**/node_modules", "zones"]
 }

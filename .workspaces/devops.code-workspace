@@ -1,0 +1,20 @@
+{
+    "folders": [
+        {
+            "name": "barebone",
+            "path": "../zones/devops/barebone"
+        },
+        {
+            "name": "barebone-opt",
+            "path": "../zones/devops/barebone-opt"
+        },
+        {
+            "name": "forgejo-custom",
+            "path": "../zones/devops/forgejo-custom"
+        },
+        {
+            "name": "keycloak-theme",
+            "path": "../zones/devops/keycloak-theme"
+        }
+    ]
+}

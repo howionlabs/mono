@@ -1,5 +1,5 @@
 import type { MonoSetupInternal } from 'mono'
-import { monoPJSON } from './constants'
+import { monoPJSON, monoWorkspacesPath } from './constants'
 import { constructAndWriteEnvFiles } from './env'
 import { readMonoSetup } from './mono'
 import { cli } from './utils/cli'
@@ -14,17 +14,16 @@ export interface RemoldOptions {
 
 export async function remoldWorkspacesFolder(setup: MonoSetupInternal): Promise<void> {
     const map = setup._workspacesMap
-    const workspacePath = resolveRootPath('workspaces')
 
     // clear all workspace files first
-    const allWorkspaceDirents = await readDir(workspacePath)
+    const allWorkspaceDirents = await readDir(monoWorkspacesPath)
     const doNotTouch = new Set<string>()
 
     for (const [name, entries] of map.entries()) {
         const filename = `${name}.code-workspace`
         doNotTouch.add(filename)
 
-        const codeWorkspacePath = `${workspacePath}/${name}.code-workspace`
+        const codeWorkspacePath = `${monoWorkspacesPath}/${name}.code-workspace`
 
         const folders = entries.map(entry => ({
             name: entry.id,
@@ -41,7 +40,7 @@ export async function remoldWorkspacesFolder(setup: MonoSetupInternal): Promise<
 
     for (const dirent of allWorkspaceDirents) {
         if (!doNotTouch.has(dirent.name)) {
-            const filePath = `${workspacePath}/${dirent.name}`
+            const filePath = `${monoWorkspacesPath}/${dirent.name}`
             cli.item(`Removing previous workspace file ${absoluteToRelative(filePath)}`)
             await Bun.$`rm -f ${filePath}`.quiet()
         }
