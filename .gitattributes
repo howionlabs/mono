@@ -1,20 +1,16 @@
 # normalize cross-os eol to lf for text-based files
 * text=auto eol=lf
-
 # windows batch/install files should use crlf
 *.bat text eol=crlf
 *.cmd text eol=crlf
-
 # make sure svg files are treated as text files
 *.svg text eol=lf
-
 # fonts
 *.ttf filter=lfs diff=lfs -text
 *.eot filter=lfs diff=lfs -text
 *.otf filter=lfs diff=lfs -text
 *.woff filter=lfs diff=lfs -text
 *.woff2 filter=lfs diff=lfs -text
-
 # graphics
 *.ai filter=lfs diff=lfs -text
 *.png filter=lfs diff=lfs -text
@@ -26,7 +22,6 @@
 *.bmp filter=lfs diff=lfs -text
 *.psd filter=lfs diff=lfs -text
 *.svgz filter=lfs diff=lfs -text
-
 # audio/video
 *.mp3 filter=lfs diff=lfs -text
 *.wav filter=lfs diff=lfs -text
@@ -38,7 +33,6 @@
 *.mpeg filter=lfs diff=lfs -text
 *.avi filter=lfs diff=lfs -text
 *.mkv filter=lfs diff=lfs -text
-
 # archives
 *.7z filter=lfs diff=lfs -text
 *.gz filter=lfs diff=lfs -text
@@ -46,13 +40,11 @@
 *.rar filter=lfs diff=lfs -text
 *.tar filter=lfs diff=lfs -text
 *.zip filter=lfs diff=lfs -text
-
 # compiled
 *.wasm filter=lfs diff=lfs -text
 *.exe filter=lfs diff=lfs -text
 *.dll filter=lfs diff=lfs -text
 *.pyc filter=lfs diff=lfs -text
-
 # other binary formats
 bun.lockb filter=lfs diff=lfs -text
 *.epub filter=lfs diff=lfs -text
@@ -62,3 +54,5 @@ bun.lockb filter=lfs diff=lfs -text
 *.dmg filter=lfs diff=lfs -text
 *.iso filter=lfs diff=lfs -text
 *.msi filter=lfs diff=lfs -text
+*.vcf filter=lfs diff=lfs -text
+*.icns filter=lfs diff=lfs -text
