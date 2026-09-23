@@ -6,7 +6,7 @@ Howion's custom (hence quite opinionated) monorepo to manage all of its (public 
 
 None of the existing monorepo tools or structures were good enough and always resulted writing custom scripts. Google's Bazel seemed like a solid choice but the complexity and management of it wasn't worth it. Therefore, hereby we represent our custom monorepo (skeleton) by us for us.
 
-This monorepo is currently is being used by us therefore, especially `.mono.ts`, is subject to change.
+This monorepo is intended to be used with Visual Studio Code, however it is not a necessity, just possible lack of DX features.
 
 ## Dependencies
 
@@ -23,19 +23,22 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 * **`.mono.ts`** is the configuration file to customize the setup.
 * **`.editorconfig`**, **`.gitignore`**, **`.markdownlint.jsonc`**, and **`biome.jsonc`** are opinionated configurations whose definitions should match of those in `apps` and `modules`. -->
 
-## Addons
+## Entry Addons
 
 * `$author(author: MonoPerson | MonoFormattedPersonText)`
 * `$biomejs()`
+* `$bun()`
 * `$contributor(contributor: MonoPerson | MonoFormattedPersonText)`
+* `$disableTelemetry()` Not implemented yet.
 * `$env(...variables: string[])`
 * `$git(uri: MonoGitURI)`
-* `$github()` Not implemented yet.
+* `$go()` Not implemented yet.
 * `$keys()` Not implemented yet.
 * `$license(id: MonoLicenseId)`
 * `$markdownlint()`
 * `$npm(name: string)`
 * `$static(from: string, to?: string, alwaysOverwrite = false)`
+* `$vercel()` Not implemented yet.
 * `$vscode()`
 
 ## Mono CLI
@@ -57,15 +60,17 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 
 ## Roadmap
 
-1. Better mono documentation.
+1. Write a proper documentation both in code and as markdown. Add diagrams as well maybe?
 2. Git branch management.
 3. Better tracking reporting both by mono and git for all workspace directories.
 4. Consider adding `.example` to mono env schema/builder for `.env.example`.
 5. `bun mono push` safety checks.
 6. Better key management via `keys` addon.
-7. Gitleaks or Betterleaks?
-8. Add cache for faster remold?
-9. Maybe support multiple git remotes? Will probably be abandoned as many git providers provide mirroring.
+7. Add skills and so on so that AI and their IDEs know about the mono sturcture. Maybe introduce opinionated skills/MCPs as well?
+8. Add flows for custom flows.
+9. Gitleaks or Betterleaks?
+10. Add cache for faster remold?
+11. Maybe support multiple git remotes? Will probably be abandoned as many git providers provide mirroring.
 
 ## License
 
