@@ -37,6 +37,7 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 * `$license(id: MonoLicenseId)`
 * `$markdownlint()`
 * `$npm(name: string)`
+* `$python(name: string)` Not implemented yet.
 * `$static(from: string, to?: string, alwaysOverwrite = false)`
 * `$vercel()` Not implemented yet.
 * `$vscode()`

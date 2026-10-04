@@ -177,7 +177,7 @@ export function $git($uri: MonoGitURI, opts?: GitAddonOptions): MonoAddon {
 
     return {
         name: $git.name,
-        unique: true,
+        unique: true, // TODO: allow multiple gits?
         setup: [
             {
                 order: 0,

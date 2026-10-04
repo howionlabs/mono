@@ -38,7 +38,11 @@ export const rootEnvFile = Bun.file(resolveRootPath('.env'))
 export const rootEnvExampleFile = Bun.file(resolveRootPath('.env.example'))
 export const rootEnvProductionFile = Bun.file(resolveRootPath('.env.production'))
 
-export const ENTRY_ID_REGEX = /^[a-z0-9]+[a-z0-9-.]+$/
+export const rootCodeOfConductFile = Bun.file(resolveRootPath('CODE_OF_CONDUCT.md'))
+export const rootContributingFile = Bun.file(resolveRootPath('CONTRIBUTING.md'))
+export const rootSecurityFile = Bun.file(resolveRootPath('SECURITY.md'))
+
+export const ENTRY_ID_REGEX = /^\.?[a-z0-9]+[a-z0-9-.]+$/
 
 export const FORMATTED_PERSON_TEXT_REGEX = /^(?<name>[^<]+?)\s*(?:<(?<email>[^@>]+@[^>]+)>)?\s*(?:\((?<url>[^)]+)\))?$/
 
