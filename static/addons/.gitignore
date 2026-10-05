@@ -51,10 +51,10 @@ yarn-error.log*
 !.vscode/*.code-snippets
 
 ## NEXTJS
-/.next
+.next
 
 ## ASTRO
-/.astro
+.astro
 
 ## SvelteKit
 .svelte-kit
@@ -78,6 +78,7 @@ next-env.d.ts
 ## ENV FILES
 docker.env
 .env
+.env.local
 .env.production
 .env.*
 !.env.example

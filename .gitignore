@@ -64,10 +64,10 @@ yarn-error.log*
 !.vscode/*.code-snippets
 
 ## NEXTJS
-/.next
+.next
 
 ## ASTRO
-/.astro
+.astro
 
 ## SvelteKit
 .svelte-kit
