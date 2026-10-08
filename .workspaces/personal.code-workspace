@@ -1,12 +1,16 @@
 {
     "folders": [
         {
-            "name": "comprimo",
-            "path": "../zones/personal/comprimo"
+            "name": "howion.com",
+            "path": "../zones/apps/howion.com"
         },
         {
-            "name": "speculo",
-            "path": "../zones/personal/speculo"
+            "name": "notes",
+            "path": "../zones/personal/notes"
+        },
+        {
+            "name": "comprimo",
+            "path": "../zones/personal/comprimo"
         }
     ]
 }

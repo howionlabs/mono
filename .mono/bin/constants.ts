@@ -64,7 +64,7 @@ export const staticFilesGlob = new Bun.Glob(`**/*`)
 export const staticFilesList = [
     ...staticFilesGlob.scanSync({
         cwd: monoStaticPath,
-        dot: false,
+        dot: true,
         absolute: false,
         followSymlinks: true,
         onlyFiles: true
