@@ -104,7 +104,8 @@ export async function readDir(dirPath: string): Promise<Dirent[]> {
 export function pathGlobToRegex(glob: string): RegExp {
     const dirs = glob.split('/').map(dir => {
         if (dir === '**') {
-            throw new Error('Glob pattern "**" is not supported in this context. Use "*"\'s instead.')
+            // throw new Error('Glob pattern "**" is not supported in this context. Use "*"\'s instead.')
+            return '(.+?)'
         } else if (dir === '*') {
             return '([^\\/]+?)'
         } else if (dir.includes('*')) {
