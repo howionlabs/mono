@@ -1,28 +1,8 @@
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
-
 Contact: mailto:security@howion.com
-Expires: 2027-12-30T21:00:00.000Z
+Expires: 2027-10-07T21:51:01Z
 Encryption: https://howion.com/.well-known/pgp-key.txt
 Preferred-Languages: en
 Canonical: https://howion.com/.well-known/security.txt
 Hiring: https://www.linkedin.com/company/howion/jobs
 # Policy: https://howion.com/security-policy
 # Acknowledgments: https://hackerone.com/howion/hacktivity
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE1DbrsLiB7cIsymhbvq1Z+vlGwwYFAmrC+W8ACgkQvq1Z+vlG
-wwaSLBAAuEuWsyyjo2pC5ZjVg0cQ9XLx2uECgX6Z4XilJ9vxAXkwQW+ply//6ENH
-ACahmWZJL7xZ+7IbRbNLxxAXnoe4bYlo9pdQ0KTj9331kqIxI5Pn+jXdez5pil4c
-aRmGmYYIcT5XyTi9PnxprHt+44/NWSAAyuvL0E21Dy78AUGlCQBoLXpMOZFC+y6r
-p6EI+U40aPjVfu4Ku14HD4cRXekf22yd7IlpM4f5h7HSzWW/2HtVnuB/fR0EJPNb
-zkMy2HJzWME3krNPZmOXPmqEHr7K5evPWeq0GX+7JdtoZatBWalhpTqyihZf4gX9
-6KeazaEcSwtElAfTc4XzMqShQcMUEirVwgKcrG00GWzwYnN91jGCMHeReMCKf4wd
-1RUXQmjeacYRD253+A+hdqSanuoqhpSVz+a1LD1EfZQYWvjUswQYNiUs8pnkj6u8
-gY54E3D5Xb1yuu4KSLjnL0E4Vk1ULpsy3G6T7+SuHWdfZgxX0DUdkHfkGy8fpbhj
-GY6wqiZNbaBrbv4WneFVJ0bE0bb/CNotFLIy3VwrizReYIQibtnujBduelS4Sos8
-/LdD/Mi0ctET2qzGBJe4E6bsaQ+7PeBxgcX7C36zvpl0cadDMe6b0Mo2GnHcC36C
-f0mM1upN9qArauYvMTh6Sm3lSRobtLlppZrEzSV/GtldcMq3hDE=
-=nyx/
------END PGP SIGNATURE-----
