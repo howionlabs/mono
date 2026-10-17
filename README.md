@@ -73,6 +73,10 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 10. Add cache for faster remold?
 11. Maybe support multiple git remotes? Will probably be abandoned as many git providers provide mirroring.
 
+## Contributor Code of Conduct
+
+However you choose to contribute, please abide by our [Contributor Covenant 3.0 Code of Conduct](./CODE_OF_CONDUCT.md) to keep our community a healthy and welcoming place.
+
 ## License
 
 The code related to the monorepo skeleton (which excludes `./zones` that contain proprietary code) is licensed under the [MIT License](./LICENSE).

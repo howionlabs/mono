@@ -39,7 +39,7 @@ async function updatePJSONForBun(entry: _MonoEntryInternal) {
             types: ['bun', 'node']
         },
         include: ['.astro/types.d.ts', '**/*'],
-        exclude: ['**/node_modules', '**/out', '**/build', '**/dist', '.astro', '.next', '.vercel', '.git', '**/public']
+        exclude: ['**/node_modules', '**/out', '**/build', '**/dist', '.next', '.vercel', '.git', '**/public']
     }
 
     if (await tsFile.exists()) {
