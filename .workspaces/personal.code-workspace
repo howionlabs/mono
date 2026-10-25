@@ -9,8 +9,8 @@
             "path": "../zones/personal/comprimo"
         },
         {
-            "name": "notes-v2",
-            "path": "../zones/apps/notes-v2"
+            "name": "notes",
+            "path": "../zones/personal/notes"
         }
     ]
 }

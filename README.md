@@ -25,22 +25,22 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 
 ## Entry Addons
 
-* `$author(author: MonoPerson | MonoFormattedPersonText)`
-* `$biomejs()`
-* `$bun()`
-* `$contributor(contributor: MonoPerson | MonoFormattedPersonText)`
-* `$disableTelemetry()` Not implemented yet.
-* `$env(...variables: string[])`
-* `$git(uri: MonoGitURI)`
-* `$go()` Not implemented yet.
-* `$keys()` Not implemented yet.
-* `$license(id: MonoLicenseId)`
-* `$markdownlint()`
-* `$npm(name: string)`
-* `$python(name: string)` Not implemented yet.
-* `$static(from: string, to?: string, alwaysOverwrite = false)`
-* `$vercel()` Not implemented yet.
-* `$vscode()`
+- `$author(author: MonoPerson | MonoFormattedPersonText)`
+- `$biomejs()`
+- `$bun()`
+- `$contributor(contributor: MonoPerson | MonoFormattedPersonText)`
+- `$disableTelemetry()` Not implemented yet.
+- `$env(...variables: string[])`
+- `$git(uri: MonoGitURI)`
+- `$go()` Not implemented yet.
+- `$keys()` Not implemented yet.
+- `$license(id: MonoLicenseId)`
+- `$markdownlint()`
+- `$npm(name: string)`
+- `$python(name: string)` Not implemented yet.
+- `$static(from: string, to?: string, alwaysOverwrite = false)`
+- `$vercel()` Not implemented yet.
+- `$vscode()`
 
 ## Mono CLI
 
