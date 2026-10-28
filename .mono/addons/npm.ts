@@ -42,7 +42,7 @@ import { readJSONFile, resolveEntryPath, writeFile } from '../bin/utils/fs.ts'
 //     return deps
 // }
 
-export function $npm(name: string): MonoAddon {
+export function $npm(name?: string): MonoAddon {
     async function populateMetaNPM(entry: _MonoEntryInternal) {
         if (entry._meta.npm) {
             throw new Error(
@@ -52,6 +52,7 @@ export function $npm(name: string): MonoAddon {
 
         const pjsonPath = resolveEntryPath(entry, 'package.json')
         const previous = await readJSONFile(pjsonPath)
+
         const next: PJSON = {
             name: entry.name,
             version: entry.version,
@@ -72,7 +73,7 @@ export function $npm(name: string): MonoAddon {
         }
     }
 
-    async function constructAndAddPjsonDataToMeta(entry: _MonoEntryInternal) {
+    async function constructAndAddPJSONDataToMeta(entry: _MonoEntryInternal) {
         if (!entry._meta.npm) {
             throw new Error(
                 `Failed to construct and add package.json data to entry metadata for "${entry._zone}/${entry.id}" because the entry's metadata does not contain npm data.`
@@ -80,7 +81,12 @@ export function $npm(name: string): MonoAddon {
         }
 
         const next = entry._meta.npm.nextPJSON
-        next.name = name
+
+        if (name === undefined) {
+            delete next.name
+        } else {
+            next.name = name
+        }
 
         if (next.version && next.version !== entry.version) {
             cli.info(
@@ -212,7 +218,7 @@ export function $npm(name: string): MonoAddon {
                 order: -50
             },
             {
-                callback: constructAndAddPjsonDataToMeta,
+                callback: constructAndAddPJSONDataToMeta,
                 order: 0
             }
         ],

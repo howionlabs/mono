@@ -174,7 +174,7 @@ export interface MonoEntry {
 }
 
 export interface PJSON extends Record<string, unknown> {
-    name: string
+    name?: string
     version: string
     description?: string
     contributors?: unknown[]

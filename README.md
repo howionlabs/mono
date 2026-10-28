@@ -23,7 +23,7 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 * **`.mono.ts`** is the configuration file to customize the setup.
 * **`.editorconfig`**, **`.gitignore`**, **`.markdownlint.jsonc`**, and **`biome.jsonc`** are opinionated configurations whose definitions should match of those in `apps` and `modules`. -->
 
-## Entry Addons
+## Addons
 
 - `$author(author: MonoPerson | MonoFormattedPersonText)`
 - `$biomejs()`
@@ -46,11 +46,11 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 
 ### `remold`
 
-### `pull [id]`
+<!-- ### `pull [id]`
 
 ### `commit [id]`
 
-### `push [id]`
+### `push [id]` -->
 
 ## Best Practices
 
@@ -61,17 +61,18 @@ Moreover, existence of fundamental unix commands such as `rm`, `cp` and `mkdir` 
 
 ## Roadmap
 
-1. Write a proper documentation both in code and as markdown. Add diagrams as well maybe?
-2. Git branch management.
-3. Better tracking reporting both by mono and git for all workspace directories.
-4. Consider adding `.example` to mono env schema/builder for `.env.example`.
-5. `bun mono push` safety checks.
-6. Better key management via `keys` addon.
-7. Add skills and so on so that AI and their IDEs know about the mono sturcture. Maybe introduce opinionated skills/MCPs as well?
-8. Add flows for custom flows.
-9. Gitleaks or Betterleaks?
-10. Add cache for faster remold?
-11. Maybe support multiple git remotes? Will probably be abandoned as many git providers provide mirroring.
+1. More verbose output on `remold` for addons, and possibly even more verbose with `--verbose`?
+2. Write a proper documentation both in code and as markdown. Add diagrams as well maybe?
+3. Git branch management.
+4. Better tracking reporting both by mono and git for all workspace directories.
+5. Consider adding `.example` to mono env schema/builder for `.env.example`.
+6. `bun mono push` safety checks.
+7. Better key management via `keys` addon.
+8. Add skills and so on so that AI and their IDEs know about the mono sturcture. Maybe introduce opinionated skills/MCPs as well?
+9. Add flows for custom flows.
+10. Gitleaks or Betterleaks?
+11. Add cache for faster remold?
+12. Maybe support multiple git remotes? Will probably be abandoned as many git providers provide mirroring.
 
 ## Contributor Code of Conduct
 
